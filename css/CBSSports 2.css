@@ -1,0 +1,71 @@
+/* CBS Sports Case Study Specific Styles */
+
+/* Intro Logo Specific Sizing for CBS Sports */
+.case-intro-logo {
+  max-width: 180px;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+
+/* Main hero image container */
+.case-hero-main-image--cbs {
+  position: relative;
+  z-index: 10;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.case-hero-main-image--cbs img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  
+}
+
+/* CBS Sports specific sketch image styling */
+.case-cbs-sketch {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  margin: 32px auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .floating-img-cbs-1,
+  .floating-img-cbs-2,
+  .floating-img-cbs-3,
+  .floating-img-cbs-4,
+  .floating-img-cbs-5 {
+    width: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .case-intro-logo {
+    max-width: 140px;
+  }
+  
+  .floating-img-cbs-1,
+  .floating-img-cbs-2,
+  .floating-img-cbs-3,
+  .floating-img-cbs-4,
+  .floating-img-cbs-5 {
+    width: 60px;
+  }
+  
+  .case-cbs-sketch {
+    margin: 24px auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .case-intro-logo {
+    max-width: 120px;
+  }
+}
