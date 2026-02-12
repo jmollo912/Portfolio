@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio — Giuseppe Mollo</title>
+    <link rel="preload" href="../media/HeroPage/HeroImage.png" as="image">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/Mose.css">
+    <link rel="stylesheet" href="../css/FlockSports.css">
+    <link rel="stylesheet" href="../css/Convoy.css">
+        <script defer src="../main.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js" onload="console.log('Lottie script loaded')" onerror="console.error('Failed to load Lottie script')"></script>
+</head>
+<body>
+    <div class="custom-cursor" aria-hidden="true"></div>
+    <!-- Mobile Hamburger Button (visible on tablet/mobile) -->
+    <button class="case-hamburger" aria-label="Toggle navigation menu">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+    </button>
+    <!-- Mobile Dropdown Menu -->
+    <nav class="case-mobile-nav">
+        <ul>
+            <li><a href="#hero" class="case-nav-link">Home</a></li>
+            <li><a href="#case-studies" class="case-nav-link">Work</a></li>
+            <li><a href="#about" class="case-nav-link">About</a></li>
+            <li><a href="../resume.pdf" target="_blank" rel="noopener" class="case-nav-link">Resume</a></li>
+        </ul>
+    </nav>
+    <header class="site-header">
+        <div class="nav-wrapper">
+            <!-- Combined Nav Group (centered) -->
+            <div class="nav-group">
+                <div class="nav-home-container">
+                    <a href="#hero" class="nav-home-link">
+                        <img src="../media/HeroPage/homebutton.svg" alt="Home" class="nav-home-icon">
+                    </a>
+                </div>
+                <nav class="floating-nav" aria-label="Primary">
+                    <ul>
+                        <div class="nav-marker"></div>
+                        <li><a href="#case-studies">Work</a></li>
+                        <li><a href="#about">About</a></li>
+                       
+                        <li><a href="#cResume">Resume</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" id="hero">
+            <div class="hero-container">
+                <div class="hero-bg"></div>
+                <!-- Wall pictures behind hero -->
+                <div class="wall-pictures">
+                    <img src="../media/HeroPage/WallPictures/Eagles Game.jpeg" alt="" class="wall-pic wall-pic-1">
+                    <img src="../media/HeroPage/WallPictures/Fishing.jpeg" alt="" class="wall-pic wall-pic-2">
+                    <img src="../media/HeroPage/WallPictures/Flying.jpeg" alt="" class="wall-pic wall-pic-3">
+                    <img src="../media/HeroPage/WallPictures/HDFC.jpeg" alt="" class="wall-pic wall-pic-4">
+                    <img src="../media/HeroPage/WallPictures/Hiking w mik.jpeg" alt="" class="wall-pic wall-pic-5">
+                    <img src="../media/HeroPage/WallPictures/Savannah.jpeg" alt="" class="wall-pic wall-pic-6">
+                </div>
+
+                <!-- Caption moved above the hero image so it sits outside the image area -->
+                <div class="hero-caption"><span class="caption-wave">👋</span> <span class="hero-caption-text"></span><span class="hero-caption-cursor">|</span></div>
+
+                <figure class="hero-figure">
+                    <img src="../media/HeroPage/HeroImage.png" alt="Giuseppe Mollo's Workspace" class="hero-image">
+
+                    <!-- Lottie animation positioned on computer screen -->
+                    <div class="screen-animation" aria-hidden="false">
+                        <div id="lottie-container" class="lottie-container" role="img" aria-label="animated design" ></div>
+                        <div class="lottie-label"><span class="lottie-label-bold">gm</span><span class="lottie-label-light">design</span></div>
+                    </div>
+                </figure>
+            </div>
+        </section>
+
+        <script>
+            let lottieAnimation = null;
+            let animationInitialized = false;
+            let lottieRetryCount = 0;
+            let containerRetryCount = 0;
+            const maxRetries = 40; // Try for up to 4 seconds
+            
+            function initLottieAnimation() {
+                // Prevent multiple initializations
+                if (animationInitialized) {
+                    console.log('Lottie animation already initialized');
+                    return;
+                }
+                
+                const container = document.getElementById('lottie-container');
+                if (!container) {
+                    // Container not found, retry
+                    if (containerRetryCount < maxRetries) {
+                        containerRetryCount++;
+                        setTimeout(initLottieAnimation, 100);
+                    } else {
+                        console.error('Lottie container not found after multiple attempts');
+                    }
+                    return;
+                }
+                
+                if (!window.lottie) {
+                    // If Lottie isn't loaded yet, wait and retry
+                    if (lottieRetryCount < maxRetries) {
+                        lottieRetryCount++;
+                        setTimeout(initLottieAnimation, 100);
+                    } else {
+                        console.error('Lottie library failed to load after multiple attempts');
+                    }
+                    return;
+                }
+                
+                // Reset retry counts since we found both
+                lottieRetryCount = 0;
+                containerRetryCount = 0;
+                
+                try {
+                    console.log('Initializing Lottie animation...');
+                    animationInitialized = true;
+                    lottieAnimation = lottie.loadAnimation({
+                        container: container,
+                        renderer: 'svg',
+                        loop: false,
+                        autoplay: false,
+                        path: '../media/HeroPage/gmdesign06.json'
+                    });
+                    
+                    console.log('Lottie animation object created');
+                    
+                    lottieAnimation.addEventListener('data_ready', () => {
+                        console.log('Lottie animation data ready');
+                        if (lottieAnimation && typeof lottieAnimation.setSpeed === 'function') {
+                            lottieAnimation.setSpeed(2);
+                        }
+                        // Delay animation start by 0.5 seconds
+                        setTimeout(() => {
+                            if (lottieAnimation) {
+                                console.log('Playing Lottie animation');
+                                lottieAnimation.play();
+                            }
+                        }, 500);
+                    });
+                    
+                    lottieAnimation.addEventListener('data_failed', (error) => {
+                        console.error('Lottie animation failed to load:', error);
+                        // Check if it's a CORS error
+                        if (window.location.protocol === 'file:') {
+                            console.error('CORS Error: Please access the site via http://localhost:8000 instead of opening the file directly');
+                            animationInitialized = true; // Stop retrying
+                        } else {
+                            animationInitialized = false; // Allow retry only if not CORS
+                            setTimeout(() => {
+                                if (!animationInitialized) {
+                                    initLottieAnimation();
+                                }
+                            }, 1000);
+                        }
+                    });
+                    
+                    lottieAnimation.addEventListener('DOMLoaded', () => {
+                        console.log('Lottie animation DOM loaded');
+                    });
+                    
+                    lottieAnimation.addEventListener('complete', () => {
+                        console.log('Lottie animation completed');
+                    });
+                    
+                } catch (error) {
+                    console.error('Error initializing Lottie animation:', error);
+                    // Check if it's a CORS error
+                    if (window.location.protocol === 'file:') {
+                        console.error('CORS Error: Please access the site via http://localhost:8000 instead of opening the file directly');
+                        animationInitialized = true; // Stop retrying
+                    } else {
+                        animationInitialized = false; // Allow retry only if not CORS
+                        setTimeout(() => {
+                            if (!animationInitialized) {
+                                initLottieAnimation();
+                            }
+                        }, 1000);
+                    }
+                }
+            }
+            
+            // Wait for Lottie script to load, then initialize
+            function waitForLottie() {
+                if (window.lottie) {
+                    console.log('Lottie library loaded, initializing animation');
+                    initLottieAnimation();
+                } else {
+                    if (lottieRetryCount < maxRetries) {
+                        lottieRetryCount++;
+                        setTimeout(waitForLottie, 50);
+                    } else {
+                        console.error('Lottie library not available after waiting');
+                    }
+                }
+            }
+            
+            // Start initialization when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    console.log('DOMContentLoaded fired');
+                    waitForLottie();
+                });
+            } else {
+                // DOM is already ready
+                console.log('DOM already ready');
+                waitForLottie();
+            }
+            
+            // Also try when window loads (fallback)
+            window.addEventListener('load', function() {
+                console.log('Window load event fired');
+                if (!animationInitialized) {
+                    waitForLottie();
+                }
+            });
+        </script>
+
+        <section id="case-studies" class="case-studies container">
+            <h2 class="section-title">What I've been working on 👇</h2>
+            <div class="grid">
+                
+
+                <a href="case-study-Convoy.html" class="card case-card">
+                    <figure class="case-figure">
+                        <img src="../media/HeroPage/ConvoyCover6.jpg" alt="Convoy app screens" class="case-image">
+                    </figure>
+                    <div class="case-body">
+                        <h3>Convoy</h3>
+                        <p class="case-meta">Reimagining home delivery with future technology</p>
+                    </div>
+                </a>
+
+                <a href="case-study-FlockSports.html" class="card case-card case-card-flock">
+                    <figure class="case-figure">
+                        <img src="../media/HeroPage/FlockCaseCover.webp" alt="Flock Sports" class="case-image">
+                    </figure>
+                    <div class="case-body">
+                        <h3>Flock Sports</h3>
+                        <p class="case-meta">Creating a Sports Media Brand</p>
+                    </div>
+                </a>
+
+                <article class="card case-card vigil-card">
+                    <figure class="case-figure">
+                        <img src="../media/Vigil/VigilCoverCard.jpg" alt="Vigil app screens" class="case-image">
+                    </figure>
+                    <div class="case-body">
+                        <h3>Vigil</h3>
+                        <p class="case-meta">Creating a safer hands free way of getting home.</p>
+                    </div>
+                </article>
+
+                <a href="case-study-CBSSports.html" class="card case-card cbs-card">
+                    <figure class="case-figure">
+                        <img src="../media/HeroPage/CBSCover.webp" alt="Case study placeholder" class="case-image">
+                    </figure>
+                    <div class="case-body">
+                        <h3>CBS Sports – Worlds Strongest Man</h3>
+                        <p class="case-meta">Exploring the world of sports media and design</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section id="about" class="about container">
+            <h2 class="section-title">About Me 📍</h2>
+            <div class="about-inner">
+                <div class="profile-card">
+                    <div class="profile-card-main">
+                        <h3 class="profile-card-name">Giuseppe Mollo</h3>
+                        <div class="profile-card-image">
+                            <img src="../media/HeroPage/AboutMe/Headshot.jpg" alt="Profile photo" class="profile-card-img">
+                        </div>
+                    </div>
+                    <div class="profile-card-footer">
+                        <div class="profile-card-info">
+                            <img src="../media/HeroPage/AboutMe/Headshot.jpg" alt="" class="profile-card-avatar">
+                            <div class="profile-card-details">
+                                <span class="profile-card-username">@giuseppe-mollo</span>
+                                <span class="profile-card-platform">LinkedIn</span>
+                            </div>
+                        </div>
+                        <a href="https://www.linkedin.com/in/giuseppe-mollo-898354274" target="_blank" rel="noopener" class="profile-card-connect">
+                            <span class="connect-plus">+</span> Connect
+                        </a>
+                    </div>
+                </div>
+                <div class="about-text">
+                    <p class="about-bio">I am a UX/UI Designer with a graphic design background. I love creating intuitive user experiences that flat out just make sense. </p>
+                    <div class="about-buttons">
+                        <a href="../resume.pdf" target="_blank" rel="noopener" class="about-btn">Resume</a>
+                        <a href="#contact" class="about-btn">Learn more</a>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 class="section-subtitle" style="margin-top: 60px; margin-bottom: 24px; text-align: center;">Applications I can't live without 🤞</h3>
+            <div class="skills-carousel-wrapper">
+                <div class="skills-carousel">
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/FigmaLogo.jpg" alt="Figma logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Figma</span>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/PhotshopLogo.jpg" alt="Photoshop logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Photoshop</span>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/IllustratorLogo.jpg" alt="Illustrator logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Illustrator</span>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/PremierProLogo.jpg" alt="Premier Pro logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Premier Pro</span>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/RhinoLogo.jpg" alt="Rhino logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Rhino</span>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/KeyshotLogo.jpg" alt="Keyshot logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Keyshot</span>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/BlenderLogo.jpg" alt="Blender logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Blender</span>
+                    </div>
+                    <!-- Duplicate items for seamless loop -->
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/FigmaLogo.jpg" alt="Figma logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Figma</span>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/PhotshopLogo.jpg" alt="Photoshop logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Photoshop</span>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/IllustratorLogo.jpg" alt="Illustrator logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Illustrator</span>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/PremierProLogo.jpg" alt="Premier Pro logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Premier Pro</span>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/RhinoLogo.jpg" alt="Rhino logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Rhino</span>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/KeyshotLogo.jpg" alt="Keyshot logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Keyshot</span>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">
+                            <img src="../media/HeroPage/BlenderLogo.jpg" alt="Blender logo" class="skill-icon-img">
+                        </div>
+                        <span class="skill-name">Blender</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Section with white space -->
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <!-- This creates white space before footer -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer-new">
+        <div class="container">
+            <div class="footer-content">
+                <!-- Left side - Brand and description -->
+                <div class="footer-brand">
+                    <h3 class="footer-brand-name">Giuseppe Mollo</h3>
+                    <p class="footer-description">More projects and experiences are always on the way. Let's keep in touch!</p>
+                    <p class="footer-copyright">© 2025 Giuseppe Mollo. All Rights Reserved.</p>
+                </div>
+                
+                <!-- Right side - Links columns -->
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4 class="footer-column-title">Connect</h4>
+                        <ul class="footer-link-list">
+                            <li><a href="mailto:giuseppe.mollo@example.com" class="footer-link">Copy Email</a></li>
+                            <li><a href="https://www.linkedin.com/in/giuseppe-mollo" target="_blank" rel="noopener" class="footer-link">LinkedIn</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4 class="footer-column-title">About</h4>
+                        <ul class="footer-link-list">
+                            <li><a href="#about" class="footer-link">About Me</a></li>
+                            <li><a href="../resume.pdf" target="_blank" rel="noopener" class="footer-link">Resume</a></li>
+                        </ul>
+                    </div>
+                    
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+        <defs>
+            <filter id="liquid-glass-filter" x="-5%" y="-5%" width="110%" height="110%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blurred" />
+                <feColorMatrix in="blurred" type="saturate" values="1.4" result="frosted" />
+            </filter>
+        </defs>
+    </svg>
+</body>
+</html>

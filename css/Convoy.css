@@ -1,0 +1,278 @@
+/* ==========================================
+   CONVOY CASE STUDY – SPECIFIC STYLES
+   Load with global.css on case-study-Convoy.html
+   ========================================== */
+
+/* Highlights: uniform 24px spacing between all three images */
+#highlights .case-template-grid {
+  margin: 24px 0;
+  gap: 24px;
+}
+
+/* Convoy hero main image – only class for this case’s hero image */
+.case-hero-main-image--convoy {
+  position: relative;
+  z-index: 2;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  flex-shrink: 1;
+  min-height: 0;
+}
+.case-hero-main-image--convoy img {
+  width: auto;
+  max-width: 90vw;
+  max-height: 75vh;
+  height: auto;
+  object-fit: contain;
+}
+@media (max-width: 900px) {
+  .case-hero-main-image--convoy img {
+    max-height: 35vh;
+  }
+}
+
+/* Convoy floating parallax images – only classes for this case’s hero background */
+.case-hero-floating-images--convoy {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+.case-hero-floating-images--convoy .floating-img-convoy-1,
+.case-hero-floating-images--convoy .floating-img-convoy-2,
+.case-hero-floating-images--convoy .floating-img-convoy-3,
+.case-hero-floating-images--convoy .floating-img-convoy-4,
+.case-hero-floating-images--convoy .floating-img-convoy-5,
+.case-hero-floating-images--convoy .floating-img-convoy-6 {
+  position: absolute;
+  z-index: 0;
+  height: auto;
+  border-radius: 12px;
+  
+}
+
+.floating-img-convoy-1.scroll-fade,
+.floating-img-convoy-1.scroll-fade-in,
+.floating-img-convoy-2.scroll-fade,
+.floating-img-convoy-2.scroll-fade-in,
+.floating-img-convoy-3.scroll-fade,
+.floating-img-convoy-3.scroll-fade-in,
+.floating-img-convoy-4.scroll-fade,
+.floating-img-convoy-4.scroll-fade-in,
+.floating-img-convoy-5.scroll-fade,
+.floating-img-convoy-5.scroll-fade-in,
+.floating-img-convoy-6.scroll-fade,
+.floating-img-convoy-6.scroll-fade-in {
+  transition: opacity 0.6s ease-out !important;
+}
+
+.floating-img-convoy-1 {
+  top: 5%;
+  left: 4%;
+  width: 300px;
+  opacity: 0.5;
+  filter: blur(2px);
+}
+.floating-img-convoy-2 {
+  top: 10%;
+  right: 0%;
+  width: 450px;
+  opacity: 0.9;
+  filter: blur(1px);
+}
+.floating-img-convoy-3 {
+  top: 56%;
+  left: 15%;
+  width: 220px;
+  opacity: 0.25;
+  filter: blur(3px);
+}
+.floating-img-convoy-4 {
+  bottom: 8%;
+  right: 10%;
+  width: 200px;
+  opacity: 0.45;
+  filter: blur(5px);
+}   
+.floating-img-convoy-5 {
+  top:  30%;
+  right: 26%;
+  width: 200px;
+  opacity: 0.9;
+  filter: blur(2px);
+}
+.floating-img-convoy-6 {
+  left: 2%;
+  bottom: 35%;
+  width: 200px;
+  opacity: 0.55;
+  filter: blur(2px);
+}
+
+.carousel{
+  position:relative;
+  width: 100%;
+  height:100%;
+  margin: 0 auto;
+}
+
+.carousel-image{
+  width: 100%;
+}
+
+.carousel-track-container{
+  background: #FBFBFB;
+  padding: 0;
+  height: 600px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.carousel-track{
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  position: relative;
+  height: 100%;
+  transition: transform 450ms ease-in-out;
+}
+
+.carousel-slide{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FBFBFB;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.carousel-slide.current-slide {
+  transform: translateX(0);
+}
+
+.carousel-slide.prev-slide {
+  transform: translateX(-100%);
+}
+
+.carousel-slide.next-slide {
+  transform: translateX(100%);
+}
+
+/* Navigation Buttons */
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.carousel-nav img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+  z-index: 11;
+  pointer-events: none;
+}
+
+.carousel-nav:hover {
+  background: rgba(0, 0, 0, 0.3);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-nav--prev {
+  left: 20px;
+}
+
+.carousel-nav--next {
+  right: 20px;
+}
+
+.carousel-nav.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Indicators */
+.carousel-indicators {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px 12px;
+  border-radius: 20px;
+}
+
+.carousel-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.31);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.carousel-indicator.current-slide {
+  background: white;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .carousel-track-container {
+    height: 300px;
+  }
+  
+  .carousel-nav {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+  
+  .carousel-nav--prev {
+    left: 10px;
+  }
+  
+  .carousel-nav--next {
+    right: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .floating-img-convoy-1 { width: 170px; }
+  .floating-img-convoy-2 { width: 140px; }
+  .floating-img-convoy-3 { width: 115px; }
+  .floating-img-convoy-4 { width: 88px; }
+  .floating-img-convoy-5 { width: 88px; }
+  .floating-img-convoy-6 { width: 100px; }
+}
+

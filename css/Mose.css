@@ -1,0 +1,138 @@
+/* ==========================================
+   MOSE CASE STUDY – SPECIFIC STYLES
+   Load with global.css on case-study-Mose.html
+   ========================================== */
+
+/* Mose hero main image – only class for this case’s hero image */
+.case-hero-main-image--mose {
+  position: relative;
+  z-index: 2;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  flex-shrink: 1;
+  min-height: 0;
+}
+.case-hero-main-image--mose img {
+  width: auto;
+  max-width: 90vw;
+  max-height: 80vh;
+  height: auto;
+  object-fit: contain;
+}
+@media (max-width: 900px) {
+  .case-hero-main-image--mose img {
+    max-height: 35vh;
+  }
+}
+
+/* MuseoModerno – hero title only on Mose case study */
+body.case-mose .case-hero-title {
+  font-family: "MuseoModerno", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+/* Mose floating parallax images – only classes for this case’s hero background */
+.case-hero-floating-images--mose {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+.case-hero-floating-images--mose .floating-img-mose-1,
+.case-hero-floating-images--mose .floating-img-mose-2,
+.case-hero-floating-images--mose .floating-img-mose-3,
+.case-hero-floating-images--mose .floating-img-mose-4,
+.case-hero-floating-images--mose .floating-img-mose-5 {
+  position: absolute;
+  z-index: 0;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.floating-img-mose-1.scroll-fade,
+.floating-img-mose-1.scroll-fade-in,
+.floating-img-mose-2.scroll-fade,
+.floating-img-mose-2.scroll-fade-in,
+.floating-img-mose-3.scroll-fade,
+.floating-img-mose-3.scroll-fade-in,
+.floating-img-mose-4.scroll-fade,
+.floating-img-mose-4.scroll-fade-in,
+.floating-img-mose-5.scroll-fade,
+.floating-img-mose-5.scroll-fade-in {
+  transition: opacity 0.6s ease-out !important;
+}
+
+.floating-img-mose-1 {
+  top: 5%;
+  left: 3%;
+  width: 260px;
+  opacity: 0.7;
+  filter: blur(0);
+}
+.floating-img-mose-2 {
+  top: 22%;
+  right: 1%;
+  width: 215px;
+  opacity: 0.65;
+  filter: blur(1px);
+}
+.floating-img-mose-3 {
+  top: 58%;
+  left: 2%;
+  width: 165px;
+  opacity: 0.55;
+  filter: blur(3px);
+}
+.floating-img-mose-4 {
+  bottom: 6%;
+  right: 8%;
+  width: 125px;
+  opacity: 0.45;
+  filter: blur(4px);
+}
+.floating-img-mose-5 {
+  bottom: 18%;
+  left: 18%;
+  width: 95px;
+  right: auto;
+  opacity: 0.4;
+  filter: blur(5px);
+}
+
+@media (max-width: 900px) {
+  .floating-img-mose-1 { width: 180px; }
+  .floating-img-mose-2 { width: 155px; }
+  .floating-img-mose-3 { width: 125px; }
+  .floating-img-mose-4 { width: 100px; }
+  .floating-img-mose-5 { width: 85px; }
+}
+
+/* Mose poster highlight – ensure it stays within container bounds */
+.Mose-Poster-Highlight {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+/* When case-image-grid contains only one image (Mose poster), full width */
+.case-image-grid:has(.Mose-Poster-Highlight) {
+  grid-template-columns: 1fr;
+  max-width: 100%;
+}
+
+/* Fallback for browsers that don't support :has() */
+.case-image-grid.single-image {
+  grid-template-columns: 1fr;
+  max-width: 100%;
+}
