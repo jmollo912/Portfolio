@@ -460,10 +460,37 @@
     <script>
         window.loadingComplete = false;
         (function() {
-            const loadingScreen = document.getElementById('loading-screen');
+            var loadingScreen = document.getElementById('loading-screen');
+            if (!loadingScreen) return;
+            
+            // Helper: Check if sessionStorage is available
+            function hasSessionStorage() {
+                try {
+                    var test = '__test__';
+                    sessionStorage.setItem(test, test);
+                    sessionStorage.removeItem(test);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+            
+            // Helper: Cross-browser CustomEvent
+            function dispatchLoadingComplete() {
+                var event;
+                if (typeof CustomEvent === 'function') {
+                    event = new CustomEvent('loadingComplete');
+                } else {
+                    // IE11 fallback
+                    event = document.createEvent('CustomEvent');
+                    event.initCustomEvent('loadingComplete', false, false, null);
+                }
+                window.dispatchEvent(event);
+            }
             
             // Check if user has already seen loading screen this session
-            if (sessionStorage.getItem('loadingShown')) {
+            var hasStorage = hasSessionStorage();
+            if (hasStorage && sessionStorage.getItem('loadingShown')) {
                 // Hide immediately without animation
                 loadingScreen.style.display = 'none';
                 // Set flag immediately so animations can start
@@ -475,12 +502,26 @@
             window.addEventListener('load', function() {
                 setTimeout(function() {
                     loadingScreen.classList.add('hidden');
-                    sessionStorage.setItem('loadingShown', 'true');
+                    if (hasStorage) {
+                        sessionStorage.setItem('loadingShown', 'true');
+                    }
                     // Set flag and dispatch event after loading screen hides
                     window.loadingComplete = true;
-                    window.dispatchEvent(new CustomEvent('loadingComplete'));
+                    dispatchLoadingComplete();
                 }, 800);
             });
+            
+            // Fallback: If load event already fired (cached page)
+            if (document.readyState === 'complete') {
+                setTimeout(function() {
+                    loadingScreen.classList.add('hidden');
+                    if (hasStorage) {
+                        sessionStorage.setItem('loadingShown', 'true');
+                    }
+                    window.loadingComplete = true;
+                    dispatchLoadingComplete();
+                }, 800);
+            }
         })();
     </script>
 </body>
