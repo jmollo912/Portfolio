@@ -44,7 +44,7 @@ animateCursor();
 // ==========================================
 // HERO ENTRANCE ANIMATION
 // ==========================================
-document.addEventListener('DOMContentLoaded', () => {
+function startHeroAnimations() {
   const navGroup = document.querySelector('.nav-group');
   const heroCaption = document.querySelector('.hero-container > .hero-caption');
   const heroImage = document.querySelector('.hero-image');
@@ -60,10 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     if (heroCaption) {
       heroCaption.classList.add('animate-in');
-      // Start typing animation after caption fades in
-      setTimeout(() => {
-        startTypingAnimation();
-      }, 700);
     }
     if (heroImage) {
       heroImage.classList.add('animate-in');
@@ -79,6 +75,16 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }, 300); // Wait for hero animation to mostly complete
   }, 100); // Small initial delay for page to settle
+}
+
+// Wait for loading screen to finish before starting animations
+// Check if loading already completed (on page reload), otherwise wait for event
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.loadingComplete) {
+    startHeroAnimations();
+  } else {
+    window.addEventListener('loadingComplete', startHeroAnimations);
+  }
 });
 
 // ==========================================

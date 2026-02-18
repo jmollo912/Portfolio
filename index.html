@@ -13,6 +13,14 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js" onload="console.log('Lottie script loaded')" onerror="console.error('Failed to load Lottie script')"></script>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-content">
+            <span class="loading-text"><span class="loading-bold">gm</span><span class="loading-light">design</span></span>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
     <div class="custom-cursor" aria-hidden="true"></div>
     <!-- Mobile Hamburger Button (visible on tablet/mobile) -->
     <button class="case-hamburger" aria-label="Toggle navigation menu">
@@ -66,7 +74,7 @@
                 </div>
 
                 <!-- Caption moved above the hero image so it sits outside the image area -->
-                <div class="hero-caption"><span class="caption-wave">👋</span> <span class="hero-caption-text"></span><span class="hero-caption-cursor">|</span></div>
+                <div class="hero-caption"><span class="caption-wave">👋</span> <span class="hero-caption-text">Hey, welcome to my <span class="caption-desk">desk</span></span></div>
 
                 <figure class="hero-figure">
                     <img src="../media/HeroPage/HeroImage.png" alt="Giuseppe Mollo's Workspace" class="hero-image">
@@ -447,5 +455,33 @@
             </filter>
         </defs>
     </svg>
+
+    <!-- Loading Screen Script -->
+    <script>
+        window.loadingComplete = false;
+        (function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            
+            // Check if user has already seen loading screen this session
+            if (sessionStorage.getItem('loadingShown')) {
+                // Hide immediately without animation
+                loadingScreen.style.display = 'none';
+                // Set flag immediately so animations can start
+                window.loadingComplete = true;
+                return;
+            }
+            
+            // First visit - show loading screen
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    loadingScreen.classList.add('hidden');
+                    sessionStorage.setItem('loadingShown', 'true');
+                    // Set flag and dispatch event after loading screen hides
+                    window.loadingComplete = true;
+                    window.dispatchEvent(new CustomEvent('loadingComplete'));
+                }, 800);
+            });
+        })();
+    </script>
 </body>
 </html>
