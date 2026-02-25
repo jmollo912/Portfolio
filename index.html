@@ -33,14 +33,11 @@
         <div class="nav-wrapper">
             <!-- Combined Nav Group (centered) -->
             <div class="nav-group">
-                <div class="nav-home-container">
-                    <a href="#hero" class="nav-home-link">
-                        <img src="../media/HeroPage/homebutton.svg" alt="Home" class="nav-home-icon">
-                    </a>
-                </div>
+             
                 <nav class="floating-nav" aria-label="Primary">
                     <ul>
                         <div class="nav-marker"></div>
+                        <li><a href="#hero">Home</a></li>
                         <li><a href="#case-studies">Work</a></li>
                         <li><a href="#about">About</a></li>
                        
@@ -79,98 +76,6 @@
                 </figure>
             </div>
         </section>
-
-        <script>
-            let lottieAnimation = null;
-            let animationInitialized = false;
-            let lottieRetryCount = 0;
-            let containerRetryCount = 0;
-            const maxRetries = 40;
-            
-            function initLottieAnimation() {
-                if (animationInitialized) return;
-                
-                const container = document.getElementById('lottie-container');
-                if (!container) {
-                    if (containerRetryCount < maxRetries) {
-                        containerRetryCount++;
-                        setTimeout(initLottieAnimation, 100);
-                    }
-                    return;
-                }
-                
-                if (!window.lottie) {
-                    if (lottieRetryCount < maxRetries) {
-                        lottieRetryCount++;
-                        setTimeout(initLottieAnimation, 100);
-                    }
-                    return;
-                }
-                
-                lottieRetryCount = 0;
-                containerRetryCount = 0;
-                
-                try {
-                    animationInitialized = true;
-                    lottieAnimation = lottie.loadAnimation({
-                        container: container,
-                        renderer: 'svg',
-                        loop: false,
-                        autoplay: false,
-                        path: '../media/HeroPage/gmdesign06.json'
-                    });
-                    
-                    lottieAnimation.addEventListener('data_ready', () => {
-                        if (lottieAnimation && typeof lottieAnimation.setSpeed === 'function') {
-                            lottieAnimation.setSpeed(2);
-                        }
-                        setTimeout(() => {
-                            if (lottieAnimation) lottieAnimation.play();
-                        }, 500);
-                    });
-                    
-                    lottieAnimation.addEventListener('data_failed', () => {
-                        if (window.location.protocol === 'file:') {
-                            animationInitialized = true;
-                        } else {
-                            animationInitialized = false;
-                            setTimeout(() => {
-                                if (!animationInitialized) initLottieAnimation();
-                            }, 1000);
-                        }
-                    });
-                    
-                } catch (error) {
-                    if (window.location.protocol === 'file:') {
-                        animationInitialized = true;
-                    } else {
-                        animationInitialized = false;
-                        setTimeout(() => {
-                            if (!animationInitialized) initLottieAnimation();
-                        }, 1000);
-                    }
-                }
-            }
-            
-            function waitForLottie() {
-                if (window.lottie) {
-                    initLottieAnimation();
-                } else if (lottieRetryCount < maxRetries) {
-                    lottieRetryCount++;
-                    setTimeout(waitForLottie, 50);
-                }
-            }
-            
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', waitForLottie);
-            } else {
-                waitForLottie();
-            }
-            
-            window.addEventListener('load', function() {
-                if (!animationInitialized) waitForLottie();
-            });
-        </script>
 
         <section id="case-studies" class="case-studies container">
             <h2 class="section-title">What I've been working on 👇</h2>
@@ -251,7 +156,7 @@
                 </div>
             </div>
             
-            <h3 class="section-subtitle" style="margin-top: 60px; margin-bottom: 24px; text-align: center;">Applications I can't live without 🤞</h3>
+            <h3 class="section-subtitle">Applications I can't live without 🤞</h3>
             <div class="skills-carousel-wrapper">
                 <div class="skills-carousel">
                     <div class="skill-item">
@@ -386,7 +291,7 @@
         </div>
     </footer>
 
-    <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+    <svg class="svg-defs" aria-hidden="true">
         <defs>
             <filter id="liquid-glass-filter" x="-5%" y="-5%" width="110%" height="110%">
                 <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blurred" />
@@ -395,26 +300,5 @@
         </defs>
     </svg>
 
-    <!-- Immediate loading completion for hero animations -->
-    <script>
-        // Set loading as immediately complete and dispatch event
-        window.loadingComplete = true;
-        
-        // Helper: Cross-browser CustomEvent dispatch
-        function dispatchLoadingComplete() {
-            var event;
-            if (typeof CustomEvent === 'function') {
-                event = new CustomEvent('loadingComplete');
-            } else {
-                // IE11 fallback
-                event = document.createEvent('CustomEvent');
-                event.initCustomEvent('loadingComplete', false, false, null);
-            }
-            window.dispatchEvent(event);
-        }
-        
-        // Dispatch the loading complete event immediately
-        document.addEventListener('DOMContentLoaded', dispatchLoadingComplete);
-    </script>
 </body>
 </html>

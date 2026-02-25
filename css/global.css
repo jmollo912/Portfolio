@@ -5,6 +5,12 @@
   padding: 0;
 }
 
+.svg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
 html,
 body {
   height: 100%;
@@ -45,7 +51,7 @@ body:has(.case-layout) .custom-cursor {
 .custom-cursor.expanded {
   width: 80px;
   height: 80px;
-  background: rgba(25, 30, 40, 0.42);
+  background: rgba(15, 20, 30, 0.65);
   backdrop-filter: blur(24px) saturate(150%);
   -webkit-backdrop-filter: blur(24px) saturate(150%);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
@@ -312,7 +318,7 @@ body:has(.nav-resume:hover) .custom-cursor {
 /* Home Button Container - Liquid glass SVG filter */
 .nav-home-container {
   position: relative;
-  background: rgba(25, 30, 40, 0.7);
+  background: rgba(15, 20, 30, 0.65);
   backdrop-filter: blur(24px) saturate(150%);
   -webkit-backdrop-filter: blur(24px) saturate(150%);
   padding: 8px 20px;
@@ -374,7 +380,7 @@ body:has(.nav-resume:hover) .custom-cursor {
 /* Floating nav - Liquid glass SVG filter */
 .floating-nav {
   position: relative;
-  background: rgba(25, 30, 40, 0.7);
+  background: rgba(15, 20, 30, 0.65);
   backdrop-filter: blur(24px) saturate(150%);
   -webkit-backdrop-filter: blur(24px) saturate(150%);
   padding: 8px 12px;
@@ -957,6 +963,9 @@ body:has(.nav-resume:hover) .custom-cursor {
   color: #2C261E;
   letter-spacing: -0.02em;
   line-height: 1.2;
+  margin-top: 60px;
+  margin-bottom: 24px;
+  text-align: center;
 }
 
 .case-studies {
@@ -1035,14 +1044,15 @@ body:has(.nav-resume:hover) .custom-cursor {
 }
 
 .case-body {
-  padding: 14px 16px;
+  padding: 14px 16px 14px 0;
   background: #fff;
   flex-shrink: 0;
   margin: 0;
+  text-align: left;
 }
 
 .case-body h3 {
-  margin: 0 0 6px 0;
+  margin: 0 0 2px 0;
   font-size: 18px;
 }
 

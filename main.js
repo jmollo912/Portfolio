@@ -1,6 +1,14 @@
 // ==========================================
 // 1. CUSTOM CURSOR WITH DELAY
 // ==========================================
+
+// Clean up URL - remove hash fragments when on index page
+if (window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname.endsWith('/index.html')) {
+  if (window.location.hash) {
+    history.replaceState(null, '', window.location.pathname.replace('index.html', '') || '/');
+  }
+}
+
 const cursor = document.querySelector('.custom-cursor');
 // Build the circle cursor via JS (no external SVG file)
 let baseCircle = null;
@@ -805,3 +813,114 @@ function initCaseStudyNavSlideDown() {
 
 // Initialize on case study pages
 document.addEventListener('DOMContentLoaded', initCaseStudyNavSlideDown);
+
+// ==========================================
+// LOTTIE ANIMATION (Hero Screen)
+// ==========================================
+let lottieAnimation = null;
+let animationInitialized = false;
+let lottieRetryCount = 0;
+let containerRetryCount = 0;
+const maxRetries = 40;
+
+function initLottieAnimation() {
+    if (animationInitialized) return;
+
+    const container = document.getElementById('lottie-container');
+    if (!container) {
+        if (containerRetryCount < maxRetries) {
+            containerRetryCount++;
+            setTimeout(initLottieAnimation, 100);
+        }
+        return;
+    }
+
+    if (!window.lottie) {
+        if (lottieRetryCount < maxRetries) {
+            lottieRetryCount++;
+            setTimeout(initLottieAnimation, 100);
+        }
+        return;
+    }
+
+    lottieRetryCount = 0;
+    containerRetryCount = 0;
+
+    try {
+        animationInitialized = true;
+        lottieAnimation = lottie.loadAnimation({
+            container: container,
+            renderer: 'svg',
+            loop: false,
+            autoplay: false,
+            path: '../media/HeroPage/gmdesign06.json'
+        });
+
+        lottieAnimation.addEventListener('data_ready', () => {
+            if (lottieAnimation && typeof lottieAnimation.setSpeed === 'function') {
+                lottieAnimation.setSpeed(2);
+            }
+            setTimeout(() => {
+                if (lottieAnimation) lottieAnimation.play();
+            }, 500);
+        });
+
+        lottieAnimation.addEventListener('data_failed', () => {
+            if (window.location.protocol === 'file:') {
+                animationInitialized = true;
+            } else {
+                animationInitialized = false;
+                setTimeout(() => {
+                    if (!animationInitialized) initLottieAnimation();
+                }, 1000);
+            }
+        });
+
+    } catch (error) {
+        if (window.location.protocol === 'file:') {
+            animationInitialized = true;
+        } else {
+            animationInitialized = false;
+            setTimeout(() => {
+                if (!animationInitialized) initLottieAnimation();
+            }, 1000);
+        }
+    }
+}
+
+function waitForLottie() {
+    if (window.lottie) {
+        initLottieAnimation();
+    } else if (lottieRetryCount < maxRetries) {
+        lottieRetryCount++;
+        setTimeout(waitForLottie, 50);
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForLottie);
+} else {
+    waitForLottie();
+}
+
+window.addEventListener('load', function() {
+    if (!animationInitialized) waitForLottie();
+});
+
+// ==========================================
+// LOADING COMPLETION EVENT
+// ==========================================
+window.loadingComplete = true;
+
+function dispatchLoadingComplete() {
+    var event;
+    if (typeof CustomEvent === 'function') {
+        event = new CustomEvent('loadingComplete');
+    } else {
+        event = document.createEvent('CustomEvent');
+        event.initCustomEvent('loadingComplete', false, false, null);
+    }
+    window.dispatchEvent(event);
+}
+
+document.addEventListener('DOMContentLoaded', dispatchLoadingComplete);
