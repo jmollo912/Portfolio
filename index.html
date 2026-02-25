@@ -10,17 +10,9 @@
     <link rel="stylesheet" href="../css/FlockSports.css">
     <link rel="stylesheet" href="../css/Convoy.css">
         <script defer src="../main.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js" onload="console.log('Lottie script loaded')" onerror="console.error('Failed to load Lottie script')"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loading-screen">
-        <div class="loading-content">
-            <span class="loading-text"><span class="loading-bold">gm</span><span class="loading-light">design</span></span>
-            <div class="loading-spinner"></div>
-        </div>
-    </div>
-
     <div class="custom-cursor" aria-hidden="true"></div>
     <!-- Mobile Hamburger Button (visible on tablet/mobile) -->
     <button class="case-hamburger" aria-label="Toggle navigation menu">
@@ -93,44 +85,32 @@
             let animationInitialized = false;
             let lottieRetryCount = 0;
             let containerRetryCount = 0;
-            const maxRetries = 40; // Try for up to 4 seconds
+            const maxRetries = 40;
             
             function initLottieAnimation() {
-                // Prevent multiple initializations
-                if (animationInitialized) {
-                    console.log('Lottie animation already initialized');
-                    return;
-                }
+                if (animationInitialized) return;
                 
                 const container = document.getElementById('lottie-container');
                 if (!container) {
-                    // Container not found, retry
                     if (containerRetryCount < maxRetries) {
                         containerRetryCount++;
                         setTimeout(initLottieAnimation, 100);
-                    } else {
-                        console.error('Lottie container not found after multiple attempts');
                     }
                     return;
                 }
                 
                 if (!window.lottie) {
-                    // If Lottie isn't loaded yet, wait and retry
                     if (lottieRetryCount < maxRetries) {
                         lottieRetryCount++;
                         setTimeout(initLottieAnimation, 100);
-                    } else {
-                        console.error('Lottie library failed to load after multiple attempts');
                     }
                     return;
                 }
                 
-                // Reset retry counts since we found both
                 lottieRetryCount = 0;
                 containerRetryCount = 0;
                 
                 try {
-                    console.log('Initializing Lottie animation...');
                     animationInitialized = true;
                     lottieAnimation = lottie.loadAnimation({
                         container: container,
@@ -140,96 +120,55 @@
                         path: '../media/HeroPage/gmdesign06.json'
                     });
                     
-                    console.log('Lottie animation object created');
-                    
                     lottieAnimation.addEventListener('data_ready', () => {
-                        console.log('Lottie animation data ready');
                         if (lottieAnimation && typeof lottieAnimation.setSpeed === 'function') {
                             lottieAnimation.setSpeed(2);
                         }
-                        // Delay animation start by 0.5 seconds
                         setTimeout(() => {
-                            if (lottieAnimation) {
-                                console.log('Playing Lottie animation');
-                                lottieAnimation.play();
-                            }
+                            if (lottieAnimation) lottieAnimation.play();
                         }, 500);
                     });
                     
-                    lottieAnimation.addEventListener('data_failed', (error) => {
-                        console.error('Lottie animation failed to load:', error);
-                        // Check if it's a CORS error
+                    lottieAnimation.addEventListener('data_failed', () => {
                         if (window.location.protocol === 'file:') {
-                            console.error('CORS Error: Please access the site via http://localhost:8000 instead of opening the file directly');
-                            animationInitialized = true; // Stop retrying
+                            animationInitialized = true;
                         } else {
-                            animationInitialized = false; // Allow retry only if not CORS
+                            animationInitialized = false;
                             setTimeout(() => {
-                                if (!animationInitialized) {
-                                    initLottieAnimation();
-                                }
+                                if (!animationInitialized) initLottieAnimation();
                             }, 1000);
                         }
                     });
                     
-                    lottieAnimation.addEventListener('DOMLoaded', () => {
-                        console.log('Lottie animation DOM loaded');
-                    });
-                    
-                    lottieAnimation.addEventListener('complete', () => {
-                        console.log('Lottie animation completed');
-                    });
-                    
                 } catch (error) {
-                    console.error('Error initializing Lottie animation:', error);
-                    // Check if it's a CORS error
                     if (window.location.protocol === 'file:') {
-                        console.error('CORS Error: Please access the site via http://localhost:8000 instead of opening the file directly');
-                        animationInitialized = true; // Stop retrying
+                        animationInitialized = true;
                     } else {
-                        animationInitialized = false; // Allow retry only if not CORS
+                        animationInitialized = false;
                         setTimeout(() => {
-                            if (!animationInitialized) {
-                                initLottieAnimation();
-                            }
+                            if (!animationInitialized) initLottieAnimation();
                         }, 1000);
                     }
                 }
             }
             
-            // Wait for Lottie script to load, then initialize
             function waitForLottie() {
                 if (window.lottie) {
-                    console.log('Lottie library loaded, initializing animation');
                     initLottieAnimation();
-                } else {
-                    if (lottieRetryCount < maxRetries) {
-                        lottieRetryCount++;
-                        setTimeout(waitForLottie, 50);
-                    } else {
-                        console.error('Lottie library not available after waiting');
-                    }
+                } else if (lottieRetryCount < maxRetries) {
+                    lottieRetryCount++;
+                    setTimeout(waitForLottie, 50);
                 }
             }
             
-            // Start initialization when DOM is ready
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => {
-                    console.log('DOMContentLoaded fired');
-                    waitForLottie();
-                });
+                document.addEventListener('DOMContentLoaded', waitForLottie);
             } else {
-                // DOM is already ready
-                console.log('DOM already ready');
                 waitForLottie();
             }
             
-            // Also try when window loads (fallback)
             window.addEventListener('load', function() {
-                console.log('Window load event fired');
-                if (!animationInitialized) {
-                    waitForLottie();
-                }
+                if (!animationInitialized) waitForLottie();
             });
         </script>
 
@@ -456,73 +395,26 @@
         </defs>
     </svg>
 
-    <!-- Loading Screen Script -->
+    <!-- Immediate loading completion for hero animations -->
     <script>
-        window.loadingComplete = false;
-        (function() {
-            var loadingScreen = document.getElementById('loading-screen');
-            if (!loadingScreen) return;
-            
-            // Helper: Check if sessionStorage is available
-            function hasSessionStorage() {
-                try {
-                    var test = '__test__';
-                    sessionStorage.setItem(test, test);
-                    sessionStorage.removeItem(test);
-                    return true;
-                } catch (e) {
-                    return false;
-                }
+        // Set loading as immediately complete and dispatch event
+        window.loadingComplete = true;
+        
+        // Helper: Cross-browser CustomEvent dispatch
+        function dispatchLoadingComplete() {
+            var event;
+            if (typeof CustomEvent === 'function') {
+                event = new CustomEvent('loadingComplete');
+            } else {
+                // IE11 fallback
+                event = document.createEvent('CustomEvent');
+                event.initCustomEvent('loadingComplete', false, false, null);
             }
-            
-            // Helper: Cross-browser CustomEvent
-            function dispatchLoadingComplete() {
-                var event;
-                if (typeof CustomEvent === 'function') {
-                    event = new CustomEvent('loadingComplete');
-                } else {
-                    // IE11 fallback
-                    event = document.createEvent('CustomEvent');
-                    event.initCustomEvent('loadingComplete', false, false, null);
-                }
-                window.dispatchEvent(event);
-            }
-            
-            // Check if user has already seen loading screen this session
-            var hasStorage = hasSessionStorage();
-            if (hasStorage && sessionStorage.getItem('loadingShown')) {
-                // Hide immediately without animation
-                loadingScreen.style.display = 'none';
-                // Set flag immediately so animations can start
-                window.loadingComplete = true;
-                return;
-            }
-            
-            // First visit - show loading screen
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    loadingScreen.classList.add('hidden');
-                    if (hasStorage) {
-                        sessionStorage.setItem('loadingShown', 'true');
-                    }
-                    // Set flag and dispatch event after loading screen hides
-                    window.loadingComplete = true;
-                    dispatchLoadingComplete();
-                }, 800);
-            });
-            
-            // Fallback: If load event already fired (cached page)
-            if (document.readyState === 'complete') {
-                setTimeout(function() {
-                    loadingScreen.classList.add('hidden');
-                    if (hasStorage) {
-                        sessionStorage.setItem('loadingShown', 'true');
-                    }
-                    window.loadingComplete = true;
-                    dispatchLoadingComplete();
-                }, 800);
-            }
-        })();
+            window.dispatchEvent(event);
+        }
+        
+        // Dispatch the loading complete event immediately
+        document.addEventListener('DOMContentLoaded', dispatchLoadingComplete);
     </script>
 </body>
 </html>

@@ -803,54 +803,5 @@ function initCaseStudyNavSlideDown() {
   }
 }
 
-// ==========================================
-// HERO CAPTION TYPING ANIMATION
-// ==========================================
-function startTypingAnimation() {
-  const textEl = document.querySelector('.hero-caption-text');
-  const cursorEl = document.querySelector('.hero-caption-cursor');
-  if (!textEl) return;
-
-  const fullText = 'Hey, welcome to my desk';
-  const typingSpeed = 55;
-  const pauseDuration = 2500;
-  const deletingSpeed = 30;
-  const loop = false;
-
-  let charIndex = 0;
-  let isDeleting = false;
-
-  function type() {
-    if (!isDeleting) {
-      // Typing forward
-      if (charIndex <= fullText.length) {
-        const currentText = fullText.slice(0, charIndex);
-        // Wrap "desk" in styled span if it appears
-        const deskIndex = currentText.indexOf('desk');
-        if (deskIndex !== -1) {
-          const before = currentText.slice(0, deskIndex);
-          const deskPart = currentText.slice(deskIndex);
-          textEl.innerHTML = before + '<span class="caption-desk">' + deskPart + '</span>';
-        } else {
-          textEl.textContent = currentText;
-        }
-        charIndex++;
-        setTimeout(type, typingSpeed);
-      } else {
-        // Done typing — stop (no looping)
-        if (cursorEl) {
-          // Keep cursor blinking for a moment, then hide
-          setTimeout(() => {
-            cursorEl.style.transition = 'opacity 0.5s ease';
-            cursorEl.style.opacity = '0';
-          }, 2000);
-        }
-      }
-    }
-  }
-
-  type();
-}
-
 // Initialize on case study pages
 document.addEventListener('DOMContentLoaded', initCaseStudyNavSlideDown);

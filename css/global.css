@@ -21,80 +21,6 @@ body {
   background: #fff;
 }
 
-/* ==================== LOADING SCREEN ==================== */
-.loading-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #ffffff;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  z-index: 99999;
-  -webkit-transition: opacity 0.5s ease, visibility 0.5s ease;
-  -o-transition: opacity 0.5s ease, visibility 0.5s ease;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
-}
-
-.loading-screen.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.loading-content {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 24px;
-}
-
-.loading-text {
-  font-size: 32px;
-  color: #333;
-}
-
-.loading-bold {
-  font-weight: 900;
-}
-
-.loading-light {
-  font-weight: 200;
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid #e0e0e0;
-  border-top-color: #333;
-  border-radius: 50%;
-  -webkit-animation: loading-spin 0.8s linear infinite;
-  animation: loading-spin 0.8s linear infinite;
-}
-
-@-webkit-keyframes loading-spin {
-  to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
-}
-
-@keyframes loading-spin {
-  to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
-}
-
 /* Custom cursor with delay */
 .custom-cursor {
   position: fixed;
@@ -859,18 +785,6 @@ body:has(.nav-resume:hover) .custom-cursor {
   50%  { transform: rotate(10deg); }
   60%  { transform: rotate(0deg); }
   100% { transform: rotate(0deg); }
-}
-
-.hero-caption-cursor {
-  display: inline-block;
-  margin-left: 2px;
-  font-weight: 200;
-  animation: cursorBlink 0.6s ease-in-out infinite;
-}
-
-@keyframes cursorBlink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
 }
 
 @media (max-width: 620px) {
