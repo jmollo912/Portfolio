@@ -33,7 +33,7 @@ body {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: rgb(255, 255, 255);
+  background: rgba(255, 255, 255, 0.452);
   pointer-events: none;
   z-index: 10000;
   transform: translate(-50%, -50%) scale(0.3);
@@ -47,16 +47,16 @@ body:has(.case-layout) .custom-cursor {
   display: none !important;
 }
 
-/* Expanded state - same dark glassmorphism as nav bar */
+/* Expanded state - white glassmorphism to match nav bar */
 .custom-cursor.expanded {
   width: 80px;
   height: 80px;
-  background: rgba(15, 20, 30, 0.65);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(32px) saturate(150%);
+  -webkit-backdrop-filter: blur(32px) saturate(150%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
 }
@@ -86,7 +86,7 @@ body:has(.case-layout) .custom-cursor {
 .custom-cursor.expanded .cursor-arrow {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
-  filter: brightness(0) invert(1);
+  filter: brightness(0) invert(0);
 }
 
 /* Hide center dot when expanded – only glass + arrow show */
@@ -99,12 +99,12 @@ body:has(.case-layout) .custom-cursor {
   width: 140px;
   height: 50px;
   border-radius: 25px;
-  background: rgba(25, 30, 40, 0.42);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(32px) saturate(150%);
+  -webkit-backdrop-filter: blur(32px) saturate(150%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
 }
@@ -114,7 +114,7 @@ body:has(.case-layout) .custom-cursor {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  color: #fff;
+  color: #333333;
   font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
@@ -315,35 +315,29 @@ body:has(.nav-resume:hover) .custom-cursor {
   transition: top 0.4s cubic-bezier(0.4, 0, 1, 1);
 }
 
-/* Home Button Container - Liquid glass SVG filter */
+/* Home Button Container - White background */
 .nav-home-container {
   position: relative;
-  background: rgba(15, 20, 30, 0.65);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(32px) saturate(150%);
+  -webkit-backdrop-filter: blur(32px) saturate(150%);
   padding: 8px 20px;
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   overflow: hidden;
 }
-@supports (backdrop-filter: url(#liquid-glass-filter)) {
-  .nav-home-container {
-    backdrop-filter: url(#liquid-glass-filter);
-    -webkit-backdrop-filter: url(#liquid-glass-filter);
-  }
-}
 
-/* Home Link (matches nav link style) - Dark nav colors */
+/* Home Link (matches nav link style) - Dark text */
 .nav-home-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 10px 10px;
-  color: #b8b8b8;
+  color: #6F6F6F;
   text-decoration: none;
   font-size: 15px;
   font-weight: 400;
@@ -355,7 +349,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   width: 25px;
   height: 23px;
   display: block;
-  filter: brightness(0) saturate(100%) invert(70%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(90%);
+  filter: brightness(0) saturate(100%) invert(45%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(90%);
   transition: filter 200ms ease;
 }
 
@@ -364,7 +358,7 @@ body:has(.nav-resume:hover) .custom-cursor {
 }
 
 .nav-home-link:hover .nav-home-icon {
-  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+  filter: brightness(0) saturate(100%) invert(20%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(90%);
 }
 
 .nav-home-link.active,
@@ -377,27 +371,21 @@ body:has(.nav-resume:hover) .custom-cursor {
   filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
 }
 
-/* Floating nav - Liquid glass SVG filter */
+/* Floating nav - White background */
 .floating-nav {
   position: relative;
-  background: rgba(15, 20, 30, 0.65);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px) saturate(150%);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
   padding: 8px 12px;
-  border-radius: 16px;
+  border-radius: 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.09),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
   overflow: hidden;
-}
-@supports (backdrop-filter: url(#liquid-glass-filter)) {
-  .floating-nav {
-    backdrop-filter: url(#liquid-glass-filter);
-    -webkit-backdrop-filter: url(#liquid-glass-filter);
-  }
 }
 
 .nav-resume {
@@ -507,9 +495,9 @@ body:has(.nav-resume:hover) .custom-cursor {
 .floating-nav a {
   display: inline-block;
   padding: 20px 14px;
-  color: #b8b8b8;
+  color: #6F6F6F;
   text-decoration: none;
-  border-radius: 10px;
+  border-radius: 5px;
   font-weight: 400;
   font-size: 15px;
   transition: color 200ms ease, background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
@@ -517,25 +505,25 @@ body:has(.nav-resume:hover) .custom-cursor {
 }
 
 .floating-nav a:hover {
-  color: #ffffff;
+  color: #333333;
   transform: translateY(-2px);
 }
 
 .floating-nav a:active,
 .floating-nav a.active,
 .floating-nav a[aria-current="page"] {
-  color: #ffffff;
+  color: #333333;
   transform: translateY(-2px);
   font-weight: 400;
 }
 
 .floating-nav a:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid #333;
   border-radius: 4px;
 }
 
 .floating-nav a.active {
-  color: #ffffff;
+  color: #333333;
   font-weight: 600;
 }
 
@@ -545,7 +533,7 @@ body:has(.nav-resume:hover) .custom-cursor {
     flex-direction: row;
     padding: 8px 50px;
     gap: 20px;
-    border-radius: 16px;
+    border-radius: 10px;
   }
 
   .floating-nav ul {
@@ -950,7 +938,7 @@ body:has(.nav-resume:hover) .custom-cursor {
 /* CASE STUDIES */
 .section-title {
   font-size: clamp(28px, 4vw, 42px);
-  font-weight: 700;
+  font-weight: 600;
   color: #2C261E;
   margin: 36px 0;
   letter-spacing: -0.02em;
@@ -1006,9 +994,8 @@ body:has(.nav-resume:hover) .custom-cursor {
 
 .card p,
 .card.case-card p {
-  font-size: 14px;
+  font-size: 16px;
   color: #6F6F6F;
-  line-height: 1.7;
 }
 
 /* Enhanced case-study card styles */
@@ -1053,11 +1040,12 @@ body:has(.nav-resume:hover) .custom-cursor {
 
 .case-body h3 {
   margin: 0 0 2px 0;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 650;
 }
 
 .case-meta {
-  font-size: 13px;
+  font-size: 16px;
   color: #777;
 }
 
@@ -1239,7 +1227,8 @@ body:has(.nav-resume:hover) .custom-cursor {
 
 /* ABOUT */
 .about {
-  padding: 60px 0;
+  padding: 80px 0;
+  background: #fff;
   transition: opacity 0.15s ease-out, transform 0.15s ease-out;
   will-change: opacity, transform;
 }
@@ -1248,6 +1237,9 @@ body:has(.nav-resume:hover) .custom-cursor {
   display: flex;
   gap: 24px;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .about-photo {
@@ -1946,35 +1938,29 @@ body:has(.nav-resume:hover) .custom-cursor {
   top: 12px;
 }
 
-/* Case Study Back Container (positioned to left of centered nav) - Dark glassmorphism */
+/* Case Study Back Container (positioned to left of centered nav) - White background */
 .case-back-container {
   position: relative;
-  background: rgba(25, 30, 40, 0.7);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(32px) saturate(150%);
+  -webkit-backdrop-filter: blur(32px) saturate(150%);
   padding: 8px 20px;
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   overflow: hidden;
 }
-@supports (backdrop-filter: url(#liquid-glass-filter)) {
-  .case-back-container {
-    backdrop-filter: url(#liquid-glass-filter);
-    -webkit-backdrop-filter: url(#liquid-glass-filter);
-  }
-}
 
-/* Case Study Back Link (matches nav link style) - Dark nav colors */
+/* Case Study Back Link (matches nav link style) - Dark text */
 .case-back-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 10px 10px;
-  color: #b8b8b8;
+  color: #6F6F6F;
   text-decoration: none;
   font-size: 20px;
   font-weight: 400;
@@ -1984,27 +1970,21 @@ body:has(.nav-resume:hover) .custom-cursor {
 }
 
 .case-back-link:hover {
-  color: #ffffff;
+  color: #333333;
   transform: translateY(-2px);
 }
 
-/* Case Study Floating Nav - Dark glassmorphism */
+/* Case Study Floating Nav - White background */
 .case-floating-nav {
-  background: rgba(25, 30, 40, 0.7);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(32px) saturate(150%);
+  -webkit-backdrop-filter: blur(32px) saturate(150%);
   padding: 8px 20px;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
   overflow: hidden;
-}
-@supports (backdrop-filter: url(#liquid-glass-filter)) {
-  .case-floating-nav {
-    backdrop-filter: url(#liquid-glass-filter);
-    -webkit-backdrop-filter: url(#liquid-glass-filter);
-  }
 }
 
 .case-floating-nav ul {
@@ -2020,7 +2000,7 @@ body:has(.nav-resume:hover) .custom-cursor {
 .case-floating-nav .case-nav-link {
   display: inline-block;
   padding: 10px 10px;
-  color: #b8b8b8;
+  color: #6F6F6F;
   text-decoration: none;
   font-size: 15px;
   font-weight: 400;
@@ -2029,12 +2009,12 @@ body:has(.nav-resume:hover) .custom-cursor {
 }
 
 .case-floating-nav .case-nav-link:hover {
-  color: #ffffff;
+  color: #333333;
   transform: translateY(-2px);
 }
 
 .case-floating-nav .case-nav-link.active {
-  color: #ffffff;
+  color: #333333;
   font-weight: 600;
   transform: translateY(-2px);
 }

@@ -299,19 +299,14 @@ function setupCursorHover(element, isVigil = false) {
       cursor.classList.remove('expanded-pill');
       isVigilHovered = false;
       
-      // Delay arrow/text removal to allow for quick movement between elements
+      // Delay removal to allow for quick movement between elements
       if (removeArrowTimeout) {
         clearTimeout(removeArrowTimeout);
       }
       removeArrowTimeout = setTimeout(() => {
-        // Double-check no elements are hovered before removing elements
         if (hoveredElements.size === 0) {
-          if (arrowEl && arrowEl.isConnected) {
-            arrowEl.remove();
-          }
-          if (comingSoonEl && comingSoonEl.isConnected) {
-            comingSoonEl.remove();
-          }
+          if (arrowEl?.isConnected) arrowEl.remove();
+          if (comingSoonEl?.isConnected) comingSoonEl.remove();
         }
         removeArrowTimeout = null;
       }, 150);
@@ -594,8 +589,6 @@ function initCaseStudyScrollSpy() {
 
 document.addEventListener('DOMContentLoaded', initCaseStudyScrollSpy);
 
-// Nav hide on scroll removed
-
 // ==========================================
 // PARALLAX FLOATING IMAGES (Case Study Hero)
 // ==========================================
@@ -820,7 +813,6 @@ document.addEventListener('DOMContentLoaded', initCaseStudyNavSlideDown);
 let lottieAnimation = null;
 let animationInitialized = false;
 let lottieRetryCount = 0;
-let containerRetryCount = 0;
 const maxRetries = 40;
 
 function initLottieAnimation() {
@@ -828,8 +820,8 @@ function initLottieAnimation() {
 
     const container = document.getElementById('lottie-container');
     if (!container) {
-        if (containerRetryCount < maxRetries) {
-            containerRetryCount++;
+        if (lottieRetryCount < maxRetries) {
+            lottieRetryCount++;
             setTimeout(initLottieAnimation, 100);
         }
         return;
@@ -844,7 +836,6 @@ function initLottieAnimation() {
     }
 
     lottieRetryCount = 0;
-    containerRetryCount = 0;
 
     try {
         animationInitialized = true;
