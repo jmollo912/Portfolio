@@ -377,7 +377,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(10px) saturate(150%);
   -webkit-backdrop-filter: blur(10px) saturate(150%);
-  padding: 8px 12px;
+  padding: 15px 20px;
   border-radius: 10px;
   display: flex;
   flex-direction: row;
@@ -504,16 +504,13 @@ body:has(.nav-resume:hover) .custom-cursor {
   text-align: left;
 }
 
-.floating-nav a:hover {
+.floating-nav a:hover:not(.active):not([aria-current="page"]) {
   color: #333333;
   transform: translateY(-2px);
 }
 
-.floating-nav a:active,
-.floating-nav a.active,
-.floating-nav a[aria-current="page"] {
+.floating-nav a:active {
   color: #333333;
-  transform: translateY(-2px);
   font-weight: 400;
 }
 
@@ -522,16 +519,17 @@ body:has(.nav-resume:hover) .custom-cursor {
   border-radius: 4px;
 }
 
+.floating-nav ul a.active,
 .floating-nav a.active {
-  color: #333333;
-  font-weight: 600;
+  color: #333333 !important;
+  font-weight: 600 !important;
 }
 
 /* Move floating nav to top-center on larger screens */
 @media (min-width: 621px) {
   .floating-nav {
     flex-direction: row;
-    padding: 8px 50px;
+    padding: 13px 50px;
     gap: 20px;
     border-radius: 10px;
   }
@@ -597,91 +595,96 @@ body:has(.nav-resume:hover) .custom-cursor {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 0;
+  z-index: 5;
   pointer-events: none;
 }
 
 .wall-pic {
+  pointer-events: auto;
   position: absolute;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   object-fit: cover;
   border: 7px solid #ffffff;
-  pointer-events: none;
+  cursor: pointer;
+  z-index: 5;
   /* Use percentage-based sizing to scale with container */
   width: 14%;
   height: auto;
-  /* Entrance animation - starts at center of viewport */
-  opacity: 0;
-  --final-top: 0%;
-  --final-left: auto;
-  --final-right: auto;
   --base-transform: rotate(0deg);
-  /* Start position: center of container */
-  top: 50% !important;
-  left: 50% !important;
-  right: auto !important;
-  transform: translate(-50%, -50%) scale(0.3) var(--base-transform);
-  transition: opacity 0.3s ease-out, transform 0.3s ease-out, top 0.3s ease-out, left 0.3s ease-out, right 0.3s ease-out;
+  --hover-rotate: rotate(3deg);
+  /* Entrance animation - subtle fade in */
+  opacity: 0;
+  transform: translateY(30px) var(--base-transform);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
 .wall-pic.animate-in {
   opacity: 1;
-  top: var(--final-top) !important;
-  left: var(--final-left) !important;
-  right: var(--final-right) !important;
-  transform: translate(0, 0) scale(1) var(--base-transform);
+  transform: translateY(0) var(--base-transform);
+}
+
+.wall-pic.animate-in:hover {
+  transform: translate(0, -4px) scale(1.03) var(--hover-rotate);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
 }
 
 .wall-pic-1 {
   width: 11%;
-  --final-top: -18%;
-  --final-left: 15%;
+  top: -18%;
+  left: 15%;
   --base-transform: rotate(-5deg);
-  transition-delay: 0s;
+  --hover-rotate: rotate(-8deg);
+  transition-delay: 0.1s;
 }
 
 .wall-pic-2 {
   width: 12%;
-  --final-top: -15%;
-  --final-left: auto;
-  --final-right: 14%;
+  top: -15%;
+  left: auto;
+  right: 14%;
   --base-transform: rotate(-7deg);
-  transition-delay: 0.08s;
+  --hover-rotate: rotate(-10deg);
+  transition-delay: 0.15s;
 }
 
 .wall-pic-3 {
   width: 15%;
-  --final-top: 12%;
-  --final-left: 4%;
+  top: 12%;
+  left: 4%;
   --base-transform: rotate(-6deg);
-  transition-delay: 0.16s;
+  --hover-rotate: rotate(-9deg);
+  transition-delay: 0.2s;
 }
 
 .wall-pic-4 {
   width: 13%;
-  --final-top: -12%;
-  --final-left: auto;
-  --final-right: 2%;
+  top: -12%;
+  left: auto;
+  right: 2%;
   --base-transform: rotate(2deg);
-  transition-delay: 0.24s;
+  --hover-rotate: rotate(5deg);
+  transition-delay: 0.25s;
 }
 
 .wall-pic-5 {
   width: 11%;
-  --final-top: -6%;
-  --final-left: 6%;
+  top: -6%;
+  left: 6%;
   --base-transform: rotate(9deg);
-  transition-delay: 0.32s;
+  --hover-rotate: rotate(12deg);
+  transition-delay: 0.3s;
 }
 
 .wall-pic-6 {
   width: 10%;
-  --final-top: 8%;
-  --final-left: auto;
-  --final-right: 3%;
+  top: 8%;
+  left: auto;
+  right: 3%;
   --base-transform: rotate(1deg);
-  transition-delay: 0.4s;
+  --hover-rotate: rotate(4deg);
+  transition-delay: 0.35s;
 }
 
 @media (max-width: 900px) {
@@ -714,6 +717,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   border-radius: 12px;
   overflow: visible;
   z-index: 1;
+  pointer-events: none;
 }
 
 .hero-image {
@@ -724,6 +728,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   margin: 0 auto;
   object-fit: contain;
   border-radius: 12px;
+  pointer-events: none;
   /* Entrance animation - starts from bottom of screen */
   opacity: 0;
   transform: translateY(100vh) scale(0.7);
@@ -745,7 +750,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   padding: 8px 14px;
   font-weight: 400;
   font-size: 70px;
-  z-index: 40;
+  z-index: 2;
   pointer-events: none;
   text-align: center;
 }
@@ -1265,7 +1270,7 @@ body:has(.nav-resume:hover) .custom-cursor {
 }
 
 .profile-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-4px) rotate(2deg);
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
@@ -1478,6 +1483,284 @@ body:has(.nav-resume:hover) .custom-cursor {
 .contact-section {
   padding: 80px 0;
   background: #fff;
+}
+
+/* ==========================================
+   ABOUT PAGE STYLES
+   ========================================== */
+
+.about-page {
+  padding-top: 120px;
+}
+
+/* About Hero Section */
+.about-hero {
+  padding: 60px 0 80px;
+  background: #fff;
+}
+
+.about-hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.about-hero-title {
+  font-size: 56px;
+  font-weight: 700;
+  color: #2C261E;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.about-hero-subtitle {
+  font-size: 20px;
+  color: #6F6F6F;
+  line-height: 1.6;
+}
+
+.about-hero-image {
+  display: flex;
+  justify-content: center;
+}
+
+.about-hero-img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+}
+
+/* About Section Titles */
+.about-section-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: #2C261E;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+
+/* About Introduction */
+.about-intro {
+  padding: 80px 0;
+  background: #f9f9f9;
+}
+
+.about-intro-content {
+  max-width: 800px;
+}
+
+.about-intro-text {
+  font-size: 18px;
+  color: #6F6F6F;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+/* About Early Life */
+.about-early-life {
+  padding: 80px 0;
+  background: #fff;
+}
+
+.about-early-life-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.about-body-text {
+  font-size: 16px;
+  color: #6F6F6F;
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.about-early-life-image {
+  display: flex;
+  justify-content: center;
+}
+
+.about-life-img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+}
+
+/* About Skills */
+.about-skills {
+  padding: 80px 0;
+  background: #f9f9f9;
+}
+
+/* About Resume Section */
+.about-resume {
+  padding: 80px 0;
+  background: #fff;
+}
+
+.resume-section {
+  margin-bottom: 48px;
+}
+
+.resume-section-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2C261E;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #eee;
+}
+
+.resume-item {
+  margin-bottom: 32px;
+  padding-left: 20px;
+  border-left: 3px solid #ddd;
+}
+
+.resume-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.resume-item-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2C261E;
+}
+
+.resume-item-date {
+  font-size: 14px;
+  color: #999;
+  font-weight: 500;
+}
+
+.resume-item-company {
+  font-size: 16px;
+  color: #6F6F6F;
+  margin-bottom: 12px;
+}
+
+.resume-item-details {
+  list-style: disc;
+  padding-left: 20px;
+  color: #6F6F6F;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.resume-item-details li {
+  margin-bottom: 6px;
+}
+
+/* Resume Skills Grid */
+.resume-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.resume-skill-category-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2C261E;
+  margin-bottom: 12px;
+}
+
+.resume-skill-list {
+  list-style: none;
+  padding: 0;
+}
+
+.resume-skill-list li {
+  font-size: 15px;
+  color: #6F6F6F;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* Resume Download Button */
+.resume-download {
+  margin-top: 48px;
+  text-align: center;
+}
+
+.resume-download-btn {
+  display: inline-block;
+  padding: 16px 32px;
+  background: #2C261E;
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 50px;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.resume-download-btn:hover {
+  background: #3d3630;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* About Page Responsive */
+@media (max-width: 900px) {
+  .about-hero-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+  
+  .about-hero-title {
+    font-size: 42px;
+  }
+  
+  .about-early-life-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .about-early-life-text {
+    order: 1;
+  }
+  
+  .about-early-life-image {
+    order: 2;
+  }
+  
+  .resume-skills-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-hero-title {
+    font-size: 32px;
+  }
+  
+  .about-section-title {
+    font-size: 26px;
+  }
+  
+  .resume-item-header {
+    flex-direction: column;
+    gap: 4px;
+  }
 }
 
 /* New Footer Layout */
@@ -2161,6 +2444,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   transition: background 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   animation: bounce 2s ease-in-out infinite;
+  pointer-events: auto;
 }
 
 .case-hero-see-btn:hover {

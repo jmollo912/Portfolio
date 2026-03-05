@@ -2,10 +2,25 @@
 // 1. CUSTOM CURSOR WITH DELAY
 // ==========================================
 
-// Clean up URL - remove hash fragments when on index page
+// Handle hash navigation on page load (for cross-page links like Work from About page)
 if (window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname.endsWith('/index.html')) {
   if (window.location.hash) {
-    history.replaceState(null, '', window.location.pathname.replace('index.html', '') || '/');
+    const targetId = window.location.hash;
+    // Wait for DOM to be ready, then scroll to the target
+    document.addEventListener('DOMContentLoaded', function() {
+      const target = document.querySelector(targetId);
+      if (target) {
+        // Small delay to ensure page is fully rendered
+        setTimeout(() => {
+          const header = document.querySelector('.site-header');
+          const headerOffset = header ? header.offsetHeight : 0;
+          const targetTop = target.getBoundingClientRect().top + window.pageYOffset - Math.round(headerOffset * 0.9);
+          window.scrollTo({ top: targetTop, behavior: 'smooth' });
+          // Clean up URL after scrolling
+          history.replaceState(null, '', window.location.pathname.replace('index.html', '') || '/');
+        }, 100);
+      }
+    });
   }
 }
 
@@ -365,7 +380,13 @@ const homeLink = document.querySelector('.nav-home-link');
 const marker = document.querySelector('.nav-marker');
 const navList = document.querySelector('.floating-nav ul');
 
+// Check if we're on the about page
+const isAboutPage = window.location.pathname.includes('about.html');
+
 function updateActiveSection() {
+    // Skip scroll spy on about page - keep the active class set in HTML
+    if (isAboutPage) return;
+    
     let current = "";
     
     sections.forEach((section) => {
