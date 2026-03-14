@@ -2189,8 +2189,8 @@ body:has(.nav-resume:hover) .custom-cursor {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(32px) saturate(150%);
   -webkit-backdrop-filter: blur(32px) saturate(150%);
-  padding: 8px 20px;
-  border-radius: 16px;
+  padding: 13px 20px;
+  border-radius: 10px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
               inset 0 1px 0 rgba(255, 255, 255, 0.8);
   border: 0.5px solid rgba(0, 0, 0, 0.08);
@@ -2224,7 +2224,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(32px) saturate(150%);
   -webkit-backdrop-filter: blur(32px) saturate(150%);
-  padding: 8px 20px;
+  padding: 13px 50px;
   border-radius: 10px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
               inset 0 1px 0 rgba(255, 255, 255, 0.8);
@@ -2395,12 +2395,23 @@ body:has(.nav-resume:hover) .custom-cursor {
   z-index: 2;
   display: inline-flex;
   align-items: center;
-  
-  font-size: 15px;
-  font-weight: 500;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 50px;
+  color: #333;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 300;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   animation: bounce 2s ease-in-out infinite;
   pointer-events: none;
   cursor: default;
+}
+
+.case-hero-see-btn .see-arrow {
+  display: inline-block;
 }
 
 @media (max-width: 900px) {
