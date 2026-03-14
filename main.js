@@ -232,12 +232,10 @@ document.addEventListener('DOMContentLoaded', initScrollFadeAnimations);
 
 // Handle cursor expansion on case figure hover and case study sections (debounced so fast hops don't glitch)
 let arrowEl = null;
-let comingSoonEl = null;
 let removeArrowTimeout = null;
 let hoveredElements = new Set();
-let isVigilHovered = false;
 
-function setupCursorHover(element, isVigil = false) {
+function setupCursorHover(element) {
   element.addEventListener('mouseenter', () => {
     if (!cursor) return;
 
@@ -250,56 +248,22 @@ function setupCursorHover(element, isVigil = false) {
     // Add this element to the set of hovered elements
     hoveredElements.add(element);
 
-    if (isVigil) {
-      // Handle Vigil card - show "Coming Soon!" pill
-      isVigilHovered = true;
-      
-      // Create coming soon text if it doesn't exist
-      if (!comingSoonEl) {
-        comingSoonEl = document.createElement('span');
-        comingSoonEl.classList.add('coming-soon-text');
-        comingSoonEl.textContent = 'Coming Soon!';
-      }
-      
-      // Add text to cursor if not already there
-      if (!comingSoonEl.isConnected) {
-        cursor.appendChild(comingSoonEl);
-      }
-      
-      // Remove arrow if it exists
-      if (arrowEl && arrowEl.isConnected) {
-        arrowEl.remove();
-      }
-
-      // Expand cursor as pill
-      cursor.classList.remove('expanded');
-      cursor.classList.add('expanded-pill');
-    } else {
-      // Handle regular case cards - show arrow
-      isVigilHovered = false;
-      
-      // Create arrow if it doesn't exist
-      if (!arrowEl) {
-        arrowEl = document.createElement('img');
-        arrowEl.src = '../media/HeroPage/arrowAngleUp.svg';
-        arrowEl.alt = '';
-        arrowEl.classList.add('cursor-arrow');
-      }
-      
-      // Add arrow to cursor if not already there
-      if (!arrowEl.isConnected) {
-        cursor.appendChild(arrowEl);
-      }
-      
-      // Remove coming soon text if it exists
-      if (comingSoonEl && comingSoonEl.isConnected) {
-        comingSoonEl.remove();
-      }
-
-      // Expand cursor as circle
-      cursor.classList.remove('expanded-pill');
-      cursor.classList.add('expanded');
+    // Handle all case cards - show arrow
+    // Create arrow if it doesn't exist
+    if (!arrowEl) {
+      arrowEl = document.createElement('img');
+      arrowEl.src = '../media/HeroPage/arrowAngleUp.svg';
+      arrowEl.alt = '';
+      arrowEl.classList.add('cursor-arrow');
     }
+    
+    // Add arrow to cursor if not already there
+    if (!arrowEl.isConnected) {
+      cursor.appendChild(arrowEl);
+    }
+
+    // Expand cursor as circle
+    cursor.classList.add('expanded');
   });
   
   element.addEventListener('mouseleave', () => {
@@ -311,8 +275,6 @@ function setupCursorHover(element, isVigil = false) {
     // Only collapse if no other elements are being hovered
     if (hoveredElements.size === 0) {
       cursor.classList.remove('expanded');
-      cursor.classList.remove('expanded-pill');
-      isVigilHovered = false;
       
       // Delay removal to allow for quick movement between elements
       if (removeArrowTimeout) {
@@ -321,7 +283,6 @@ function setupCursorHover(element, isVigil = false) {
       removeArrowTimeout = setTimeout(() => {
         if (hoveredElements.size === 0) {
           if (arrowEl?.isConnected) arrowEl.remove();
-          if (comingSoonEl?.isConnected) comingSoonEl.remove();
         }
         removeArrowTimeout = null;
       }, 150);
@@ -349,21 +310,18 @@ function initCaseStudyCursorHover() {
   // Apply to case cards (entire card including image and text) - only on index page
   const caseCards = document.querySelectorAll('.case-card');
   caseCards.forEach(card => {
-    const isVigil = card.classList.contains('vigil-card');
-    setupCursorHover(card, isVigil);
+    setupCursorHover(card);
   });
 
   // Also apply to case figures and case body separately for better coverage
   const caseFigures = document.querySelectorAll('.case-figure');
   caseFigures.forEach(fig => {
-    const isVigil = fig.closest('.vigil-card') !== null;
-    setupCursorHover(fig, isVigil);
+    setupCursorHover(fig);
   });
 
   const caseBodies = document.querySelectorAll('.case-body');
   caseBodies.forEach(body => {
-    const isVigil = body.closest('.vigil-card') !== null;
-    setupCursorHover(body, isVigil);
+    setupCursorHover(body);
   });
 }
 
