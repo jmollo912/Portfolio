@@ -96,6 +96,14 @@ function startHeroAnimations() {
       wallPics.forEach(pic => {
         pic.classList.add('animate-in');
       });
+
+      // After the last wall-pic entrance finishes (max delay 350ms + duration 400ms
+      // + a small buffer), switch to the fast hover micro-transition.
+      setTimeout(() => {
+        wallPics.forEach(pic => {
+          pic.classList.add('entrance-done');
+        });
+      }, 850);
     }, 300); // Wait for hero animation to mostly complete
   }, 100); // Small initial delay for page to settle
 }
@@ -168,8 +176,8 @@ function initScrollFadeAnimations() {
     '.skill-item, ' +
     '.case-section, ' +
     '.case-image, ' +
-    '.case-hero-main-image--convoy img, .case-hero-main-image--mose img, .case-hero-main-image--flock img, ' +
-    '.floating-img-convoy-1, .floating-img-convoy-2, .floating-img-convoy-3, .floating-img-convoy-4, .floating-img-convoy-5, .floating-img-convoy-6, .floating-img-mose-1, .floating-img-mose-2, .floating-img-mose-3, .floating-img-mose-4, .floating-img-mose-5, .floating-img-flock-1, .floating-img-flock-2, .floating-img-flock-3, .floating-img-flock-4, .floating-img-flock-5, ' +
+    '.case-hero-main-image--convoy img, .case-hero-main-image--vigil img, .case-hero-main-image--flock img, ' +
+    '.floating-img-convoy-1, .floating-img-convoy-2, .floating-img-convoy-3, .floating-img-convoy-4, .floating-img-convoy-5, .floating-img-convoy-6, .floating-img-vigil-1, .floating-img-vigil-2, .floating-img-vigil-3, .floating-img-vigil-4, .floating-img-vigil-5, .floating-img-flock-1, .floating-img-flock-2, .floating-img-flock-3, .floating-img-flock-4, .floating-img-flock-5, ' +
     '.case-hero-title, ' +
     '.case-hero-subtitle, ' +
     '.case-hero-description'
@@ -572,7 +580,7 @@ document.addEventListener('DOMContentLoaded', initCaseStudyScrollSpy);
 // PARALLAX FLOATING IMAGES (Case Study Hero)
 // ==========================================
 function initParallaxFloatingImages() {
-  const floatingImages = document.querySelectorAll('.floating-img-convoy-1, .floating-img-convoy-2, .floating-img-convoy-3, .floating-img-convoy-4, .floating-img-convoy-5, .floating-img-convoy-6, .floating-img-mose-1, .floating-img-mose-2, .floating-img-mose-3, .floating-img-mose-4, .floating-img-mose-5, .floating-img-flock-1, .floating-img-flock-2, .floating-img-flock-3, .floating-img-flock-4, .floating-img-flock-5');
+  const floatingImages = document.querySelectorAll('.floating-img-convoy-1, .floating-img-convoy-2, .floating-img-convoy-3, .floating-img-convoy-4, .floating-img-convoy-5, .floating-img-convoy-6, .floating-img-vigil-1, .floating-img-vigil-2, .floating-img-vigil-3, .floating-img-vigil-4, .floating-img-vigil-5, .floating-img-flock-1, .floating-img-flock-2, .floating-img-flock-3, .floating-img-flock-4, .floating-img-flock-5');
   
   if (floatingImages.length === 0) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;

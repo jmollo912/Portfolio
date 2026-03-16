@@ -572,19 +572,25 @@ body:has(.nav-resume:hover) .custom-cursor {
   height: auto;
   --base-transform: rotate(0deg);
   --hover-rotate: rotate(3deg);
-  /* Entrance animation - subtle fade in */
+  /* Entrance animation - slides up from below like the hero image */
   opacity: 0;
-  transform: translateY(30px) var(--base-transform);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transform: translateY(60px) scale(0.85) var(--base-transform);
+  transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .wall-pic.animate-in {
   opacity: 1;
-  transform: translateY(0) var(--base-transform);
-  transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+  transform: translateY(0) scale(1) var(--base-transform);
+  /* Entrance transition comes from .wall-pic above; hover transition
+     is switched in via .entrance-done once the entrance finishes. */
 }
 
-.wall-pic.animate-in:hover {
+/* Fast hover micro-animation — applied after entrance completes */
+.wall-pic.entrance-done {
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+}
+
+.wall-pic.entrance-done:hover {
   transform: translate(0, -4px) scale(1.03) var(--hover-rotate);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
@@ -682,12 +688,20 @@ body:has(.nav-resume:hover) .custom-cursor {
   align-items: center;
 }
 
-.hero-image {
+/* Wrapper scopes screen-animation percentage offsets to just the image area,
+   keeping the Lottie overlay aligned to the computer screen regardless of
+   any siblings (e.g. the scroll arrow) inside .hero-figure. */
+.hero-image-wrapper {
+  position: relative;
   width: 80%;
   max-width: 1100px;
+  margin: 0 auto;
+}
+
+.hero-image {
+  width: 100%;
   height: auto;
   display: block;
-  margin: 0 auto;
   object-fit: contain;
   border-radius: 12px;
   pointer-events: none;
@@ -790,13 +804,13 @@ body:has(.nav-resume:hover) .custom-cursor {
 
 /* Make the hero image larger on small screens again */
 @media (max-width: 900px) {
-  .hero-image {
+  .hero-image-wrapper {
     width: 92%;
   }
 }
 
 @media (max-width: 620px) {
-  .hero-image {
+  .hero-image-wrapper {
     width: 100%;
   }
 }
@@ -2855,12 +2869,12 @@ body:has(.nav-resume:hover) .custom-cursor {
 /* iPhone breakpoint - hide background images */
 @media (max-width: 480px) {
   .case-hero-floating-images--convoy,
-  .case-hero-floating-images--mose,
+  .case-hero-floating-images--vigil,
   .case-hero-floating-images--flock {
     display: none;
   }
   .floating-img-convoy-1, .floating-img-convoy-2, .floating-img-convoy-3, .floating-img-convoy-4, .floating-img-convoy-5, .floating-img-convoy-6,
-  .floating-img-mose-1, .floating-img-mose-2, .floating-img-mose-3, .floating-img-mose-4, .floating-img-mose-5,
+  .floating-img-vigil-1, .floating-img-vigil-2, .floating-img-vigil-3, .floating-img-vigil-4, .floating-img-vigil-5,
   .floating-img-flock-1, .floating-img-flock-2, .floating-img-flock-3, .floating-img-flock-4, .floating-img-flock-5 {
     display: none;
   }
