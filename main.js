@@ -173,6 +173,7 @@ function initScrollFadeAnimations() {
     '.case-list li, ' +
     '.about-text p, ' +
     '.about-photo, ' +
+    '.about-cta-text, ' +
     '.skill-item, ' +
     '.case-section, ' +
     '.case-image, ' +
