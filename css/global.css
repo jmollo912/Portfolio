@@ -1320,6 +1320,7 @@ color: #010101
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
   overflow: hidden;
   flex-shrink: 0;
+  margin-left: 50px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -1559,7 +1560,7 @@ color: #010101
   padding: 0 20px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  gap: 20px;
   align-items: center;
 }
 
