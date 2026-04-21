@@ -25,11 +25,9 @@ if (window.location.pathname === '/' || window.location.pathname === '/index.htm
 }
 
 const cursor = document.querySelector('.custom-cursor');
-// Build the circle cursor via JS (no external SVG file)
-let baseCircle = null;
 if (cursor) {
   const svgNS = 'http://www.w3.org/2000/svg';
-  baseCircle = document.createElementNS(svgNS, 'svg');
+  const baseCircle = document.createElementNS(svgNS, 'svg');
   baseCircle.setAttribute('width', '30');
   baseCircle.setAttribute('height', '30');
   baseCircle.setAttribute('viewBox', '0 0 30 30');
@@ -155,11 +153,11 @@ function initScrollFadeAnimations() {
   // Exclude hero section elements that should animate on page load
   const fadeElements = document.querySelectorAll(
     'section:not(#hero) h2, ' +
-    'section:not(#hero) h3, ' +
+    'section:not(#hero) h3:not(.case-body h3), ' +
     'section:not(#hero) h4, ' +
     'section:not(#hero) h5, ' +
     'section:not(#hero) h6, ' +
-    'section:not(#hero) p, ' +
+    'section:not(#hero) p:not(.case-meta), ' +
     '.section-title, ' +
     '.card:not(.case-card), ' +
     '.case-card, ' +
@@ -345,7 +343,6 @@ const navLinks = document.querySelectorAll('.floating-nav ul li a');
 const homeLink = document.querySelector('.nav-home-link');
 
 const marker = document.querySelector('.nav-marker');
-const navList = document.querySelector('.floating-nav ul');
 
 // Check if we're on the about page
 const isAboutPage = window.location.pathname.includes('about.html');
@@ -745,7 +742,7 @@ document.addEventListener('DOMContentLoaded', initCaseStudyMobileNav);
 // ==========================================
 function initCaseStudyNavTransition() {
   // Only run on index page
-  const caseStudyLinks = document.querySelectorAll('a[href^="case-study-"]');
+  const caseStudyLinks = document.querySelectorAll('a.case-card[href*="case-study"]');
   if (caseStudyLinks.length === 0) return;
 
   const navGroup = document.querySelector('.nav-group');

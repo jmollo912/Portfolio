@@ -951,7 +951,7 @@ body:has(.nav-resume:hover) .custom-cursor {
 .case-studies .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 30px;
 }
 
 .card {
@@ -1016,7 +1016,7 @@ body:has(.nav-resume:hover) .custom-cursor {
 }
 
 .case-body {
-  padding: 16px 8px 8px 8px;
+  padding-top: 8px;
   background: transparent;
   flex-shrink: 0;
   margin: 0;
@@ -1039,6 +1039,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   letter-spacing: -0.02em;
   line-height: 1.2;
 }
+
 
 @media (max-width: 900px) {
   .case-image {
@@ -1234,10 +1235,11 @@ body:has(.nav-resume:hover) .custom-cursor {
   transform: translateX(0);
 }
 .about-cta-section {
-  padding: 80px 0;
+  padding: 200px 0;
   display: flex;
   justify-content: center;
-color: #010101
+  position: relative;
+  overflow: hidden;
 }
 
 
@@ -1252,6 +1254,8 @@ color: #010101
               inset 0 1px 0 rgba(255, 255, 255, 0.8);
   border: 0.5px solid rgba(0, 0, 0, 0.08);
   text-decoration: none;
+  position: relative;
+  z-index: 1;
   transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 
