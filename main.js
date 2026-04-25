@@ -583,20 +583,29 @@ function initParallaxFloatingImages() {
   if (floatingImages.length === 0) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   
-  // Different parallax speeds for each image (larger = more movement)
-  const speeds = [0.45, 0.38, 0.19, 0.35, 0.28, 0.10]; // index 5 = convoy-6 (less dramatic)
-  
+  // Different parallax speeds for each image (larger = more movement).
+  // Vigil gets stronger motion than Convoy without changing Convoy's feel.
+  const defaultSpeeds = [0.45, 0.38, 0.19, 0.35, 0.28, 0.10]; // index 5 = convoy-6 (less dramatic)
+  const vigilSpeeds = [0.6, 0.5, 0.32, 0.45, 0.28];
+
+  floatingImages.forEach(img => {
+    img.style.willChange = 'transform';
+  });
+
   let ticking = false;
-  
+
   function updateParallax() {
     const scrollY = window.scrollY;
-    
+
     floatingImages.forEach((img, index) => {
-      const speed = speeds[index] || 0.1;
+      const vigilMatch = img.className.match(/floating-img-vigil-(\d+)/);
+      const speed = vigilMatch
+        ? vigilSpeeds[Number(vigilMatch[1]) - 1] || 0.4
+        : defaultSpeeds[index] || 0.1;
       const yOffset = scrollY * speed;
-      img.style.transform = `translateY(${yOffset}px)`;
+      img.style.transform = `translate3d(0, ${yOffset}px, 0)`;
     });
-    
+
     ticking = false;
   }
   
