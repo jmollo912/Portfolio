@@ -347,9 +347,41 @@ const marker = document.querySelector('.nav-marker');
 // Check if we're on the about page
 const isAboutPage = window.location.pathname.includes('about.html');
 
+function positionMarker(link) {
+    if (!marker || !link) return;
+    const markerSidePadding = 8;
+    marker.style.left = `${link.offsetLeft - markerSidePadding}px`;
+    marker.style.top = `${link.offsetTop}px`;
+    marker.style.width = `${link.offsetWidth + markerSidePadding * 2}px`;
+    marker.style.height = `${link.offsetHeight}px`;
+    marker.style.opacity = '1';
+}
+
+function syncMarkerToActive() {
+    const activeLink = document.querySelector('.floating-nav a.active');
+    if (activeLink) positionMarker(activeLink);
+}
+
+// Suppress scroll spy while a programmatic smooth scroll is in flight, so
+// intermediate sections don't briefly flash as active.
+let isAutoScrolling = false;
+let autoScrollTimer = null;
+
+function setActiveNavLink(link) {
+    if (!link) return;
+    navLinks.forEach(a => {
+        a.classList.remove('active');
+        a.removeAttribute('aria-current');
+    });
+    link.classList.add('active');
+    link.setAttribute('aria-current', 'page');
+    positionMarker(link);
+}
+
 function updateActiveSection() {
     // Skip scroll spy on about page - keep the active class set in HTML
     if (isAboutPage) return;
+    if (isAutoScrolling) return;
     
     let current = "";
     
@@ -385,28 +417,30 @@ function updateActiveSection() {
         if (a.getAttribute("href") === `#${current}`) {
             a.classList.add("active");
             a.setAttribute("aria-current", "page");
-
-            // --- ANIMATION LOGIC START ---
-            if (marker && a.parentElement) {
-                // Calculate position relative to the UL
-                // We use offsetTop of the LI (parentElement) to catch the full area
-                const parentLi = a.parentElement; 
-                
-                // Set the marker size and position to match the active link
-                marker.style.height = `${a.offsetHeight}px`;
-                marker.style.top = `${a.offsetTop}px`;
-                marker.style.opacity = '1';
-            }
-            // --- ANIMATION LOGIC END ---
+            positionMarker(a);
         }
     });
 }
 
-// Run immediately when page loads so "Home" is active
-document.addEventListener('DOMContentLoaded', updateActiveSection);
+// Run immediately when page loads so the marker snaps to the right link, then
+// enable transitions on the next frame so the initial placement doesn't slide
+// in from (0,0).
+document.addEventListener('DOMContentLoaded', () => {
+    if (isAboutPage) {
+        syncMarkerToActive();
+    } else {
+        updateActiveSection();
+    }
+    requestAnimationFrame(() => {
+        if (marker) marker.classList.add('ready');
+    });
+});
 
 // Run whenever the user scrolls
 window.addEventListener('scroll', updateActiveSection);
+
+// Keep the marker aligned if the layout changes (resize / orientation)
+window.addEventListener('resize', syncMarkerToActive);
 
 
 // ==========================================
@@ -428,6 +462,22 @@ document.addEventListener('click', function(e) {
   const headerOffset = header ? header.offsetHeight : 0;
 
   const targetTop = target.getBoundingClientRect().top + window.pageYOffset - Math.round(headerOffset * 0.9);
+
+  // Pre-activate the matching floating-nav link (if any) and lock scroll spy
+  // for the duration of the smooth scroll. This makes the pill slide directly
+  // to the destination instead of stepping through intermediate sections.
+  const matchingNavLink = document.querySelector(`.floating-nav a[href="${href}"]`);
+  if (matchingNavLink) {
+    isAutoScrolling = true;
+    setActiveNavLink(matchingNavLink);
+
+    if (autoScrollTimer) clearTimeout(autoScrollTimer);
+    autoScrollTimer = setTimeout(() => {
+      isAutoScrolling = false;
+      autoScrollTimer = null;
+      updateActiveSection();
+    }, 750);
+  }
 
   window.scrollTo({ top: targetTop, behavior: 'smooth' });
 });
