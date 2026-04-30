@@ -172,6 +172,11 @@ function initScrollFadeAnimations() {
     '.about-text p, ' +
     '.about-photo, ' +
     '.about-cta-text, ' +
+    '.about-cta-section .profile-card, ' +
+    '.about-cta-section .about-hero-text, ' +
+    '.about-cta-section .about-cta-btn, ' +
+    '.about-page .about-hero-title, ' +
+    '.about-page .about-hero-image, ' +
     '.skill-item, ' +
     '.case-section, ' +
     '.case-image, ' +
@@ -236,6 +241,79 @@ function initScrollFadeAnimations() {
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', initScrollFadeAnimations);
+
+// ==========================================
+// ABOUT HERO TITLE — HOVER ROTATE
+// "Who am I really?" → cycles through colorful role labels on hover.
+// ==========================================
+function initAboutTitleRotate() {
+  const title = document.querySelector('.hero-title-rotate');
+  if (!title) return;
+
+  const stage = title.querySelector('.hero-rotate-stage');
+  if (!stage) return;
+
+  const items = Array.from(stage.querySelectorAll('.hero-rotate-text'));
+  if (items.length < 2) return;
+
+  // Respect users who've asked for reduced motion.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const defaultItem = items[0];
+  const cycleItems = items.slice(1);
+
+  const CYCLE_DELAY = 1400;
+  let activeIndex = -1; // -1 = default
+  let cycleTimer = null;
+  let isHovered = false;
+
+  function transitionTo(newItem) {
+    const current = stage.querySelector('.hero-rotate-text.is-active');
+    if (current === newItem) return;
+
+    // Slide the currently active text up out of view.
+    if (current) {
+      current.classList.remove('is-active');
+      current.classList.add('is-above');
+    }
+
+    // Snap the incoming text to its base position (translateY 100%) without
+    // animating, then run the transition into the active position.
+    newItem.classList.add('no-transition');
+    newItem.classList.remove('is-above');
+    void newItem.offsetWidth; // force reflow
+    newItem.classList.remove('no-transition');
+    void newItem.offsetWidth; // force reflow
+    newItem.classList.add('is-active');
+  }
+
+  function nextCycle() {
+    if (!isHovered) return;
+    activeIndex = (activeIndex + 1) % cycleItems.length;
+    transitionTo(cycleItems[activeIndex]);
+    cycleTimer = setTimeout(nextCycle, CYCLE_DELAY);
+  }
+
+  title.addEventListener('mouseenter', () => {
+    if (isHovered) return;
+    isHovered = true;
+    activeIndex = 0;
+    transitionTo(cycleItems[0]);
+    cycleTimer = setTimeout(nextCycle, CYCLE_DELAY);
+  });
+
+  title.addEventListener('mouseleave', () => {
+    isHovered = false;
+    if (cycleTimer) {
+      clearTimeout(cycleTimer);
+      cycleTimer = null;
+    }
+    activeIndex = -1;
+    transitionTo(defaultItem);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initAboutTitleRotate);
 
 // Handle cursor expansion on case figure hover and case study sections (debounced so fast hops don't glitch)
 let arrowEl = null;
@@ -426,8 +504,26 @@ function updateActiveSection() {
 // enable transitions on the next frame so the initial placement doesn't slide
 // in from (0,0).
 document.addEventListener('DOMContentLoaded', () => {
+    // If the page loaded with a hash that points at one of our nav sections
+    // (e.g. coming from About → Work which lands at index.html#case-studies),
+    // pre-activate that link BEFORE the marker becomes "ready". This places
+    // the pill directly on the destination instead of letting scroll-spy first
+    // place it on Home and then animate over.
+    const hashLink = (!isAboutPage && window.location.hash)
+        ? document.querySelector(`.floating-nav a[href="${window.location.hash}"]`)
+        : null;
+
     if (isAboutPage) {
         syncMarkerToActive();
+    } else if (hashLink) {
+        isAutoScrolling = true;
+        setActiveNavLink(hashLink);
+        if (autoScrollTimer) clearTimeout(autoScrollTimer);
+        autoScrollTimer = setTimeout(() => {
+            isAutoScrolling = false;
+            autoScrollTimer = null;
+            updateActiveSection();
+        }, 1500);
     } else {
         updateActiveSection();
     }
@@ -446,6 +542,64 @@ window.addEventListener('resize', syncMarkerToActive);
 // ==========================================
 // 2. ANCHOR LINK NAVIGATION
 // ==========================================
+
+// Unified floating-nav click handler (capture phase). Ensures the active-pill
+// always animates between Home / Work / About / Resume, regardless of whether
+// the destination is a same-page anchor (e.g. #case-studies) or a different
+// page (e.g. ../index.html or html/about.html).
+document.addEventListener('click', function(e) {
+  const a = e.target.closest('.floating-nav a');
+  if (!a) return;
+  // Resume opens in a new tab — let the browser handle it natively.
+  if (a.target === '_blank') return;
+  // Modifier-click → let browser open in a new tab/window normally.
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+  const href = a.getAttribute('href');
+  if (!href || href === '#') return;
+
+  // Always pre-activate the clicked link so the marker animates immediately.
+  setActiveNavLink(a);
+
+  // Stop the generic anchor handler below from also firing for this click.
+  e.preventDefault();
+  e.stopPropagation();
+
+  // Same-page anchor: smooth-scroll and lock scroll-spy for the duration.
+  if (href.startsWith('#')) {
+    const target = document.querySelector(href);
+    if (!target) return;
+
+    const header = document.querySelector('.site-header');
+    const headerOffset = header ? header.offsetHeight : 0;
+    const targetTop = target.getBoundingClientRect().top + window.pageYOffset - Math.round(headerOffset * 0.9);
+
+    isAutoScrolling = true;
+    if (autoScrollTimer) clearTimeout(autoScrollTimer);
+    autoScrollTimer = setTimeout(() => {
+      isAutoScrolling = false;
+      autoScrollTimer = null;
+      updateActiveSection();
+    }, 750);
+
+    // Defer the smooth scroll one frame so the marker transition kicks off
+    // before the browser starts repainting scroll updates.
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: targetTop, behavior: 'smooth' });
+    });
+    return;
+  }
+
+  // Cross-page navigation: wait for the pill animation (~0.45s) to play,
+  // then navigate.
+  setTimeout(() => {
+    window.location.href = a.href;
+  }, 450);
+}, true);
+
+// Generic anchor smooth-scroll handler for links OUTSIDE the floating nav
+// (e.g. the case study hero "see more" arrow). Floating-nav anchors are
+// already handled above and stop propagation so they don't reach here.
 document.addEventListener('click', function(e) {
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
@@ -457,27 +611,9 @@ document.addEventListener('click', function(e) {
 
   e.preventDefault();
 
-  // compute header offset (account for fixed header/navbar)
   const header = document.querySelector('.site-header');
   const headerOffset = header ? header.offsetHeight : 0;
-
   const targetTop = target.getBoundingClientRect().top + window.pageYOffset - Math.round(headerOffset * 0.9);
-
-  // Pre-activate the matching floating-nav link (if any) and lock scroll spy
-  // for the duration of the smooth scroll. This makes the pill slide directly
-  // to the destination instead of stepping through intermediate sections.
-  const matchingNavLink = document.querySelector(`.floating-nav a[href="${href}"]`);
-  if (matchingNavLink) {
-    isAutoScrolling = true;
-    setActiveNavLink(matchingNavLink);
-
-    if (autoScrollTimer) clearTimeout(autoScrollTimer);
-    autoScrollTimer = setTimeout(() => {
-      isAutoScrolling = false;
-      autoScrollTimer = null;
-      updateActiveSection();
-    }, 750);
-  }
 
   window.scrollTo({ top: targetTop, behavior: 'smooth' });
 });
