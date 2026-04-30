@@ -319,6 +319,55 @@ function initAboutTitleRotate() {
 
 document.addEventListener('DOMContentLoaded', initAboutTitleRotate);
 
+// ==========================================
+// NAV RESUME LABEL — HOVER ROTATE
+// "Resume" -> "Download" using the same vertical swap pattern.
+// ==========================================
+function initNavResumeRotate() {
+  const resumeLinks = document.querySelectorAll('.nav-resume-rotate');
+  if (resumeLinks.length === 0) return;
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  resumeLinks.forEach((link) => {
+    const stage = link.querySelector('.nav-resume-stage');
+    if (!stage) return;
+
+    const items = Array.from(stage.querySelectorAll('.nav-resume-text'));
+    if (items.length < 2) return;
+
+    const defaultItem = items[0];
+    const hoverItem = items[1];
+
+    function transitionTo(newItem) {
+      const current = stage.querySelector('.nav-resume-text.is-active');
+      if (current === newItem) return;
+
+      if (current) {
+        current.classList.remove('is-active');
+        current.classList.add('is-above');
+      }
+
+      newItem.classList.add('no-transition');
+      newItem.classList.remove('is-above');
+      void newItem.offsetWidth;
+      newItem.classList.remove('no-transition');
+      void newItem.offsetWidth;
+      newItem.classList.add('is-active');
+    }
+
+    link.addEventListener('mouseenter', () => {
+      transitionTo(hoverItem);
+    });
+
+    link.addEventListener('mouseleave', () => {
+      transitionTo(defaultItem);
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initNavResumeRotate);
+
 // Handle cursor pill-expand on case card hover
 let hoveredElements = new Set();
 

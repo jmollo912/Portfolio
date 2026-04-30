@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio — Giuseppe Mollo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Borel&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/global.css">
         <script defer src="../main.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
@@ -34,7 +37,14 @@
                         <li><a href="#hero">Home</a></li>
                         <li><a href="#case-studies">Work</a></li>
                         <li><a href="html/about.html">About</a></li>
-                        <li><a href="../resume.pdf" target="_blank" rel="noopener">Resume <span class="nav-resume-icon" aria-hidden="true"></span></a></li>
+                        <li><a href="../resume.pdf" target="_blank" rel="noopener" class="nav-resume-rotate">
+                            <span class="nav-resume-stage" aria-hidden="true">
+                                <span class="nav-resume-text is-active">Resume</span>
+                                <span class="nav-resume-text">Download</span>
+                            </span>
+                            <span class="sr-only">Resume</span>
+                            <span class="nav-resume-icon" aria-hidden="true"></span>
+                        </a></li>
                     </ul>
                 </nav>
             </div>

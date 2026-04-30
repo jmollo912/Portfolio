@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Borel&display=swap');
+
 /* BASIC RESET */
 * {
   box-sizing: border-box;
@@ -33,6 +35,18 @@ body {
   background: #fff;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Custom cursor — small black dot by default, expands to pill on hover */
 .custom-cursor {
   position: fixed;
@@ -44,7 +58,9 @@ body {
   width: 12px;
   height: 12px;
   border-radius: 999px;
-  background: #1a1a1a;
+  background: #1a1a1a9e;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   pointer-events: none;
   z-index: 10000;
   transform: translate(-50%, -50%);
@@ -549,6 +565,44 @@ body {
   background-color: currentColor;
   -webkit-mask: url("../media/HeroPage/download.svg") center / contain no-repeat;
   mask: url("../media/HeroPage/download.svg") center / contain no-repeat;
+  transition: transform 0.35s cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+.nav-resume-rotate:hover .nav-resume-icon {
+  transform: translateX(3px);
+}
+
+.nav-resume-stage {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr;
+  overflow: hidden;
+  line-height: 1;
+  padding-block: 0.05em;
+}
+
+.nav-resume-text {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(100%);
+  transition:
+    transform 0.5s cubic-bezier(0.65, 0.05, 0.36, 1),
+    opacity 0.4s ease;
+}
+
+.nav-resume-text.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nav-resume-text.is-above {
+  opacity: 0;
+  transform: translateY(-100%);
+}
+
+.nav-resume-text.no-transition {
+  transition: none !important;
 }
 
 /* Move floating nav to top-center on larger screens */
@@ -796,9 +850,9 @@ body {
 
 /* Different font for the word 'desk' inside the caption */
 .hero-caption .caption-desk {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-weight: 900;
-  font-style: italic;
+  font-family: 'Borel', cursive !important;
+  font-weight: 600;
+  font-style: normal;
   color: #232323;
 }
 
@@ -1515,7 +1569,7 @@ body {
   background: #000000;
   color: #ffffff;
   padding: 10px 20px;
-  border-radius: 50px;
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
@@ -1713,6 +1767,10 @@ body {
   .hero-rotate-text {
     transition: none;
   }
+
+  .nav-resume-text {
+    transition: none;
+  }
 }
 
 .about-hero-subtitle {
@@ -1727,17 +1785,21 @@ body {
   gap: 10px;
   margin-top: 28px;
   padding: 14px 28px;
-  background: #2C261E;
-  color: #fff;
+  background: #fff;
+  color: #2C261E;
   font-size: 16px;
   font-weight: 500;
   text-decoration: none;
-  border-radius: 50px;
-  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 10px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .about-cta-btn:hover {
-  background: #3d3630;
+  background: #2C261E;
+  color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
