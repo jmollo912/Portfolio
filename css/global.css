@@ -105,6 +105,14 @@ body {
   transform: scale(1);
 }
 
+.custom-cursor.no-arrow {
+  gap: 0;
+}
+
+.custom-cursor.no-arrow .cursor-arrow {
+  display: none;
+}
+
 /* Hide any legacy SVG injected by old JS */
 .custom-cursor > svg {
   display: none;

@@ -25,12 +25,14 @@ if (window.location.pathname === '/' || window.location.pathname === '/index.htm
 }
 
 const cursor = document.querySelector('.custom-cursor');
+let cursorLabelEl = null;
 
 // Build the pill interior (hidden until expanded)
 if (cursor) {
   const labelEl = document.createElement('span');
   labelEl.className = 'cursor-label';
   labelEl.textContent = 'View Project';
+  cursorLabelEl = labelEl;
 
   const arrowEl2 = document.createElement('img');
   arrowEl2.src = '../media/HeroPage/arrowAngleUp.svg';
@@ -323,6 +325,13 @@ let hoveredElements = new Set();
 function setupCursorHover(element) {
   element.addEventListener('mouseenter', () => {
     if (!cursor) return;
+    const card = element.closest('.case-card');
+    const label = card?.dataset.cursorLabel || 'View Project';
+    const showArrow = card?.dataset.cursorArrow !== 'false';
+    if (cursorLabelEl) {
+      cursorLabelEl.textContent = label;
+    }
+    cursor.classList.toggle('no-arrow', !showArrow);
     hoveredElements.add(element);
     cursor.classList.add('expanded');
   });
@@ -332,6 +341,7 @@ function setupCursorHover(element) {
     hoveredElements.delete(element);
     if (hoveredElements.size === 0) {
       cursor.classList.remove('expanded');
+      cursor.classList.remove('no-arrow');
     }
   });
 }
@@ -345,11 +355,8 @@ function initCaseStudyCursorHover() {
                           window.location.pathname.includes('case-study');
   
   if (isCaseStudyPage) {
-    // On case study pages, don't set up cursor hover at all
-    // Also hide the custom cursor completely
-    if (cursor) {
-      cursor.style.display = 'none';
-    }
+    // On case study pages, keep the black cursor dot visible,
+    // but skip project-card hover pill behavior.
     return;
   }
 
