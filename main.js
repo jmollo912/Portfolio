@@ -52,7 +52,7 @@ document.addEventListener('mousemove', (e) => {
 });
 
 function animateCursor() {
-  const speed = 0.35;
+  const speed = 0.18;
   cursorX += (mouseX - cursorX) * speed;
   cursorY += (mouseY - cursorY) * speed;
   
@@ -380,6 +380,29 @@ function initCaseStudyCursorHover() {
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', initCaseStudyCursorHover);
+
+// ==========================================
+// WALL PHOTO CURSOR HOVER
+// ==========================================
+function initWallPicCursorHover() {
+  const wallPics = document.querySelectorAll('.wall-pic[data-cursor-label]');
+  if (!cursor || wallPics.length === 0) return;
+
+  wallPics.forEach(pic => {
+    pic.addEventListener('mouseenter', () => {
+      if (cursorLabelEl) cursorLabelEl.textContent = pic.dataset.cursorLabel;
+      // No arrow for photo labels
+      cursor.classList.add('expanded', 'no-arrow');
+    });
+
+    pic.addEventListener('mouseleave', () => {
+      cursor.classList.remove('expanded', 'no-arrow');
+      if (cursorLabelEl) cursorLabelEl.textContent = 'View Project';
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initWallPicCursorHover);
 
 // ==========================================
 // 2. VARIABLES & SCROLL SPY (Active Link)
