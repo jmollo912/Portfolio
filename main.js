@@ -381,6 +381,13 @@ function initCaseStudyCursorHover() {
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', initCaseStudyCursorHover);
 
+// Prevent navigation for coming-soon cards while preserving hover states.
+document.addEventListener('click', (e) => {
+  const disabledCard = e.target.closest('.case-card[data-disabled="true"]');
+  if (!disabledCard) return;
+  e.preventDefault();
+}, true);
+
 // ==========================================
 // WALL PHOTO CURSOR HOVER
 // ==========================================
