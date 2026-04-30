@@ -570,8 +570,13 @@ document.addEventListener('DOMContentLoaded', initCaseStudyHeaderBehavior);
 // CASE STUDY SCROLL SPY (Active Nav Link)
 // ==========================================
 function initCaseStudyScrollSpy() {
-  const caseNavLinks = document.querySelectorAll('.case-floating-nav .case-nav-link');
+  const caseNav = document.querySelector('.case-floating-nav');
+  if (!caseNav) return;
+
+  const caseNavLinks = caseNav.querySelectorAll('.case-nav-link');
   if (caseNavLinks.length === 0) return;
+
+  const caseMarker = caseNav.querySelector('.case-nav-marker');
 
   // Get all section IDs from the nav links
   const sectionIds = Array.from(caseNavLinks).map(link => {
@@ -579,23 +584,91 @@ function initCaseStudyScrollSpy() {
     return href ? href.substring(1) : null;
   }).filter(Boolean);
 
-  // Get the first section to check if user has scrolled to it
   const firstSection = document.getElementById(sectionIds[0]);
 
-  function updateActiveCaseSection() {
-    let current = null; // No default - nothing highlighted initially
+  // Suppress scroll spy while a programmatic smooth scroll is in flight, so
+  // intermediate sections don't briefly flash as active.
+  let isAutoScrolling = false;
+  let autoScrollFallbackTimer = null;
+  let scrollEndProbeTimer = null;
+  let scrollEndProbeListener = null;
 
-    // Only start highlighting when user reaches the first section
+  function releaseAutoScrollLock() {
+    if (scrollEndProbeListener) {
+      window.removeEventListener('scroll', scrollEndProbeListener);
+      scrollEndProbeListener = null;
+    }
+    if (scrollEndProbeTimer) {
+      clearTimeout(scrollEndProbeTimer);
+      scrollEndProbeTimer = null;
+    }
+    if (autoScrollFallbackTimer) {
+      clearTimeout(autoScrollFallbackTimer);
+      autoScrollFallbackTimer = null;
+    }
+    isAutoScrolling = false;
+  }
+
+  // Lock scroll-spy until the smooth scroll truly settles. We listen for scroll
+  // events and only release once 140ms pass with no further movement (i.e. the
+  // smooth scroll has stopped), with a hard 3s fallback in case no scroll fires
+  // (e.g. when the target is already in view).
+  function lockUntilScrollSettles() {
+    releaseAutoScrollLock();
+    isAutoScrolling = true;
+
+    scrollEndProbeListener = () => {
+      if (scrollEndProbeTimer) clearTimeout(scrollEndProbeTimer);
+      scrollEndProbeTimer = setTimeout(() => {
+        releaseAutoScrollLock();
+        updateActiveCaseSection();
+      }, 140);
+    };
+    window.addEventListener('scroll', scrollEndProbeListener, { passive: true });
+
+    autoScrollFallbackTimer = setTimeout(() => {
+      releaseAutoScrollLock();
+      updateActiveCaseSection();
+    }, 3000);
+  }
+
+  function positionCaseMarker(link) {
+    if (!caseMarker || !link) return;
+    const sidePadding = 8;
+    caseMarker.style.left = `${link.offsetLeft - sidePadding}px`;
+    caseMarker.style.top = `${link.offsetTop}px`;
+    caseMarker.style.width = `${link.offsetWidth + sidePadding * 2}px`;
+    caseMarker.style.height = `${link.offsetHeight}px`;
+    caseMarker.style.opacity = '1';
+  }
+
+  function hideCaseMarker() {
+    if (!caseMarker) return;
+    caseMarker.style.opacity = '0';
+  }
+
+  function setActiveCaseLink(link) {
+    caseNavLinks.forEach(a => a.classList.remove('active'));
+    if (link) {
+      link.classList.add('active');
+      positionCaseMarker(link);
+    } else {
+      hideCaseMarker();
+    }
+  }
+
+  function updateActiveCaseSection() {
+    if (isAutoScrolling) return;
+
+    let current = null;
+
     if (firstSection) {
       const firstSectionTop = firstSection.offsetTop;
-      
-      // Check if user has scrolled to at least the first section
       if (window.scrollY >= (firstSectionTop - window.innerHeight * 0.4)) {
         sectionIds.forEach((id) => {
           const section = document.getElementById(id);
           if (section) {
             const sectionTop = section.offsetTop;
-            // Trigger when section is 40% from the top of viewport
             if (window.scrollY >= (sectionTop - window.innerHeight * 0.4)) {
               current = id;
             }
@@ -604,22 +677,34 @@ function initCaseStudyScrollSpy() {
       }
     }
 
-    // Update active class on nav links
-    caseNavLinks.forEach((link) => {
-      link.classList.remove('active');
-      if (current) {
-        const href = link.getAttribute('href');
-        if (href === `#${current}`) {
-          link.classList.add('active');
-        }
-      }
-    });
+    const matching = current
+      ? Array.from(caseNavLinks).find(l => l.getAttribute('href') === `#${current}`)
+      : null;
+    setActiveCaseLink(matching || null);
   }
 
-  // Run on scroll
+  // Pre-activate the matching case-nav link on click and lock scroll spy
+  // for the duration of the smooth scroll.
+  caseNav.addEventListener('click', (e) => {
+    const a = e.target.closest('.case-nav-link');
+    if (!a) return;
+    const href = a.getAttribute('href');
+    if (!href || !href.startsWith('#')) return;
+
+    setActiveCaseLink(a);
+    lockUntilScrollSettles();
+  });
+
   window.addEventListener('scroll', updateActiveCaseSection, { passive: true });
-  // Run on load
+  window.addEventListener('resize', () => {
+    const active = caseNav.querySelector('.case-nav-link.active');
+    if (active) positionCaseMarker(active);
+  });
+
   updateActiveCaseSection();
+  requestAnimationFrame(() => {
+    if (caseMarker) caseMarker.classList.add('ready');
+  });
 }
 
 document.addEventListener('DOMContentLoaded', initCaseStudyScrollSpy);
