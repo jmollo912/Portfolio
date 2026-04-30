@@ -5,6 +5,12 @@
   padding: 0;
 }
 
+/* Suppress the browser's native pointer/hand cursor everywhere —
+   the custom black circle handles all cursor feedback. */
+*, *::before, *::after {
+  cursor: none !important;
+}
+
 .svg-defs {
   position: absolute;
   width: 0;
@@ -14,7 +20,7 @@
 html,
 body {
   height: 100%;
-  cursor: auto;
+  cursor: none;
   scroll-padding-top: 120px;
   scroll-behavior: smooth;
   /* ensure anchored content isn't hidden behind fixed header */
@@ -27,76 +33,81 @@ body {
   background: #fff;
 }
 
-/* Custom cursor with delay */
+/* Custom cursor — small black dot by default, expands to pill on card hover */
 .custom-cursor {
   position: fixed;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.452);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #1a1a1a;
   pointer-events: none;
   z-index: 10000;
-  transform: translate(-50%, -50%) scale(0.3);
-  transition: transform 0.3s ease-out, opacity 0.3s ease, width 0.3s ease, height 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border 0.3s ease, backdrop-filter 0.3s ease;
-  will-change: transform;
-  opacity: 0;
-}
-
-/* Hide custom cursor on case study pages */
-body:has(.case-layout) .custom-cursor {
-  display: none !important;
-}
-
-/* Expanded state - white glassmorphism to match nav bar */
-.custom-cursor.expanded {
-  width: 60px;
-  height: 60px;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(32px) saturate(150%);
-  -webkit-backdrop-filter: blur(32px) saturate(150%);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
-              inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  border: 0.5px solid rgba(0, 0, 0, 0.08);
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-
-.custom-cursor svg {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 20px;
-  height: 20px;
   transform: translate(-50%, -50%);
-  transition: opacity 0.3s ease;
+  transition:
+    width  0.4s cubic-bezier(0.34, 1.3, 0.64, 1),
+    height 0.4s cubic-bezier(0.34, 1.3, 0.64, 1),
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+  will-change: width, height;
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
 }
 
-.custom-cursor .cursor-arrow {
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
+/* Pill expanded state */
+.custom-cursor.expanded {
+  width: 160px;
+  height: 46px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
+}
+
+/* "View Project" label inside the pill */
+.cursor-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.01em;
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.5);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: scale(0.8);
+  transition:
+    opacity 0.18s ease 0.15s,
+    transform 0.18s ease 0.15s;
+  pointer-events: none;
+  white-space: nowrap;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+.custom-cursor.expanded .cursor-label {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Arrow icon inside the pill */
+.cursor-arrow {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 0.18s ease 0.15s,
+    transform 0.18s ease 0.15s;
+  pointer-events: none;
+  filter: invert(1);
 }
 
 .custom-cursor.expanded .cursor-arrow {
   opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-  filter: brightness(0) invert(0);
+  transform: scale(1);
 }
 
-/* Hide center dot when expanded – only glass + arrow show */
-.custom-cursor.expanded svg {
-  opacity: 0;
-}
-
-body:has(.floating-nav:hover) .custom-cursor,
-body:has(.nav-resume:hover) .custom-cursor {
-  opacity: 0;
+/* Hide any legacy SVG injected by old JS */
+.custom-cursor > svg {
+  display: none;
 }
 
 /* Cursor hover only on index page case cards */
@@ -106,7 +117,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   cursor: none;
 }
 
-/* On case study pages, use normal cursor (cursor hover only on index page) */
+/* Keep custom cursor everywhere — no native arrow fallback */
 .case-layout .case-section,
 .case-layout .case-content,
 .case-layout .case-info-card,
@@ -114,7 +125,7 @@ body:has(.nav-resume:hover) .custom-cursor {
 .case-layout .case-template-grid,
 .case-layout .results-grid,
 .case-layout .logo-breakdown {
-  cursor: auto;
+  cursor: none;
 }
 
 /* SCROLL FADE IN ANIMATIONS */
@@ -593,7 +604,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   object-fit: cover;
   border: 7px solid #ffffff;
-  cursor: pointer;
+  cursor: none;
   z-index: 5;
   /* Use percentage-based sizing to scale with container */
   width: 14%;
@@ -1013,19 +1024,22 @@ body:has(.nav-resume:hover) .custom-cursor {
 
 /* Enhanced case-study card styles */
 .case-card {
-  padding: 16px !important;
-  overflow: hidden !important;
-  border-radius: 20px !important;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
+  padding: 0 !important;
+  overflow: visible !important;
+  border-radius: 16px !important;
+  background: transparent;
+  display: block;
+  position: relative;
+  transform: scale(1);
+  transform-origin: center center;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
 .case-figure {
+  position: relative;
   margin: 0;
   overflow: hidden;
-  flex-shrink: 0;
-  border-radius: 12px;
+  border-radius: 16px;
 }
 
 .case-image {
@@ -1033,39 +1047,66 @@ body:has(.nav-resume:hover) .custom-cursor {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  object-position: top;
-  transition: transform 0.4s ease-out;
-  transform: scale(1);
+  object-position: center;
 }
 
-/* Scale image on card hover */
-.case-card:hover .case-image {
-  transform: scale(1.05);
+.case-card:hover {
+  transform: scale(1.04);
+  z-index: 5;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
 }
 
-.case-body {
-  padding-top: 8px;
-  background: transparent;
-  flex-shrink: 0;
-  margin: 0;
-  text-align: left;
+.case-pill {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 8px 24px rgba(0, 0, 0, 0.10);
+  font-size: 15px;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
-.case-body h3 {
-  margin: 0 0 6px 0;
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #666;
-}
-
-.case-meta {
-  font-size: clamp(18px, 1.8vw, 26px);
+.case-pill-title {
   font-weight: 700;
   color: #2C261E;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.case-pill-tag {
+  position: relative;
+  padding-left: 16px;
+  color: #9A9A9A;
+  font-weight: 500;
+}
+
+.case-pill-tag::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #C7C7C7;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 600px) {
+  .case-pill {
+    bottom: 16px;
+    left: 16px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
 }
 
 
@@ -1605,7 +1646,7 @@ body:has(.nav-resume:hover) .custom-cursor {
 }
 
 .hero-title-rotate {
-  cursor: pointer;
+  cursor: none;
 }
 
 .hero-rotate-stage {
@@ -2662,7 +2703,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   animation: bounce 2s ease-in-out infinite;
   pointer-events: auto;
-  cursor: pointer;
+  cursor: none;
 }
 
 .case-hero-see-btn .see-arrow {
@@ -2873,7 +2914,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   overflow: hidden;
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  cursor: ew-resize;
+  cursor: none;
   user-select: none;
 }
 
@@ -2935,7 +2976,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   width: 4px;
   background: #fff;
   transform: translateX(-50%);
-  cursor: ew-resize;
+  cursor: none;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   z-index: 10;
 }
@@ -3017,7 +3058,7 @@ body:has(.nav-resume:hover) .custom-cursor {
   -webkit-backdrop-filter: blur(24px) saturate(150%);
   border: 0.5px solid rgba(255, 255, 255, 0.18);
   border-radius: 12px;
-  cursor: pointer;
+  cursor: none;
   z-index: 1001;
   flex-direction: column;
   align-items: center;

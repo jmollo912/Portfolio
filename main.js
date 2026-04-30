@@ -25,19 +25,21 @@ if (window.location.pathname === '/' || window.location.pathname === '/index.htm
 }
 
 const cursor = document.querySelector('.custom-cursor');
+
+// Build the pill interior (hidden until expanded)
 if (cursor) {
-  const svgNS = 'http://www.w3.org/2000/svg';
-  const baseCircle = document.createElementNS(svgNS, 'svg');
-  baseCircle.setAttribute('width', '30');
-  baseCircle.setAttribute('height', '30');
-  baseCircle.setAttribute('viewBox', '0 0 30 30');
-  const circle = document.createElementNS(svgNS, 'circle');
-  circle.setAttribute('cx', '15');
-  circle.setAttribute('cy', '15');
-  circle.setAttribute('r', '15');
-  circle.setAttribute('fill', '#ffffff');
-  baseCircle.appendChild(circle);
-  cursor.appendChild(baseCircle);
+  const labelEl = document.createElement('span');
+  labelEl.className = 'cursor-label';
+  labelEl.textContent = 'View Project';
+
+  const arrowEl2 = document.createElement('img');
+  arrowEl2.src = '../media/HeroPage/arrowAngleUp.svg';
+  arrowEl2.alt = '';
+  arrowEl2.className = 'cursor-arrow';
+
+  // Arrow first, then label (matches screenshot: arrow → text)
+  cursor.appendChild(arrowEl2);
+  cursor.appendChild(labelEl);
 }
 let mouseX = 0, mouseY = 0;
 let cursorX = 0, cursorY = 0;
@@ -48,7 +50,7 @@ document.addEventListener('mousemove', (e) => {
 });
 
 function animateCursor() {
-  const speed = 0.09;
+  const speed = 0.35;
   cursorX += (mouseX - cursorX) * speed;
   cursorY += (mouseY - cursorY) * speed;
   
@@ -315,62 +317,21 @@ function initAboutTitleRotate() {
 
 document.addEventListener('DOMContentLoaded', initAboutTitleRotate);
 
-// Handle cursor expansion on case figure hover and case study sections (debounced so fast hops don't glitch)
-let arrowEl = null;
-let removeArrowTimeout = null;
+// Handle cursor pill-expand on case card hover
 let hoveredElements = new Set();
 
 function setupCursorHover(element) {
   element.addEventListener('mouseenter', () => {
     if (!cursor) return;
-
-    // Clear any pending removal timeout
-    if (removeArrowTimeout) {
-      clearTimeout(removeArrowTimeout);
-      removeArrowTimeout = null;
-    }
-
-    // Add this element to the set of hovered elements
     hoveredElements.add(element);
-
-    // Handle all case cards - show arrow
-    // Create arrow if it doesn't exist
-    if (!arrowEl) {
-      arrowEl = document.createElement('img');
-      arrowEl.src = '../media/HeroPage/arrowAngleUp.svg';
-      arrowEl.alt = '';
-      arrowEl.classList.add('cursor-arrow');
-    }
-    
-    // Add arrow to cursor if not already there
-    if (!arrowEl.isConnected) {
-      cursor.appendChild(arrowEl);
-    }
-
-    // Expand cursor as circle
     cursor.classList.add('expanded');
   });
-  
+
   element.addEventListener('mouseleave', () => {
     if (!cursor) return;
-    
-    // Remove this element from the set
     hoveredElements.delete(element);
-    
-    // Only collapse if no other elements are being hovered
     if (hoveredElements.size === 0) {
       cursor.classList.remove('expanded');
-      
-      // Delay removal to allow for quick movement between elements
-      if (removeArrowTimeout) {
-        clearTimeout(removeArrowTimeout);
-      }
-      removeArrowTimeout = setTimeout(() => {
-        if (hoveredElements.size === 0) {
-          if (arrowEl?.isConnected) arrowEl.remove();
-        }
-        removeArrowTimeout = null;
-      }, 150);
     }
   });
 }
