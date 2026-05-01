@@ -2074,7 +2074,7 @@ body {
   /* 5k Run */
   width: 18%;
   top: 8%;
-  left: 5%;
+  left: 6%;
   transform: rotate(12deg);
 }
 
@@ -2082,14 +2082,14 @@ body {
   /* Whale Shark */
   width: 17%;
   bottom: 2%;
-  right: 20%;
-  transform: rotate(-14deg);
+  right: 23%;
+  transform: rotate(1deg);
 }
 
 .mac-photo-card:nth-child(3) {
   /* Blender */
-  width: 40%;
-  top: -1%;
+  width: 37%;
+  top: 0%;
   right: 10%;
   transform: rotate(8deg);
 }
@@ -2097,8 +2097,8 @@ body {
 .mac-photo-card:nth-child(4) {
   /* Dune */
   width: 18%;
-  bottom: 3%;
-  left: 27%;
+  bottom: 6%;
+  left: 28%;
   transform: rotate(-7deg);
 }
 
@@ -2107,19 +2107,19 @@ body {
 }
 
 .mac-photo-card:nth-child(1):hover {
-  transform: translateY(-6px) scale(1.08) rotate(-14deg);
+  transform: translateY(-6px) scale(1.08) rotate(17deg);
 }
 
 .mac-photo-card:nth-child(2):hover {
-  transform: translateY(-6px) scale(1.08) rotate(16deg);
+  transform: translateY(-6px) scale(1.08) rotate(-18deg);
 }
 
 .mac-photo-card:nth-child(3):hover {
-  transform: translateY(-6px) scale(1.08) rotate(-10deg);
+  transform: translateY(-6px) scale(1.08) rotate(13deg);
 }
 
 .mac-photo-card:nth-child(4):hover {
-  transform: translateY(-6px) scale(1.08) rotate(12deg);
+  transform: translateY(-6px) scale(1.08) rotate(-11deg);
 }
 
 .mac-photo-img {
