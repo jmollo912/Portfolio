@@ -448,18 +448,22 @@ document.addEventListener('click', (e) => {
 // WALL PHOTO CURSOR HOVER
 // ==========================================
 function initWallPicCursorHover() {
-  const wallPics = document.querySelectorAll('.wall-pic[data-cursor-label]');
+  const wallPics = document.querySelectorAll('.wall-pic[data-cursor-label], .mac-photo-card[data-cursor-label]');
   if (!cursor || wallPics.length === 0) return;
 
   wallPics.forEach(pic => {
     pic.addEventListener('mouseenter', () => {
-      if (cursorLabelEl) cursorLabelEl.textContent = pic.dataset.cursorLabel;
+      const label = pic.dataset.cursorLabel || '';
+      if (cursorLabelEl) cursorLabelEl.textContent = label;
+      const labelWidth = Math.min(Math.max(label.length * 7.5 + 36, 96), 320);
+      cursor.style.setProperty('--cursor-expanded-width', `${labelWidth}px`);
       // No arrow for photo labels
       cursor.classList.add('expanded', 'no-arrow');
     });
 
     pic.addEventListener('mouseleave', () => {
       cursor.classList.remove('expanded', 'no-arrow');
+      cursor.style.removeProperty('--cursor-expanded-width');
       if (cursorLabelEl) cursorLabelEl.textContent = 'View Project';
     });
   });

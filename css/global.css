@@ -78,7 +78,7 @@ body {
 
 /* Pill expanded state — fixed width so CSS can interpolate cleanly */
 .custom-cursor.expanded {
-  width: 170px;
+  width: var(--cursor-expanded-width, 170px);
   height: 46px;
   gap: 8px;
   border-radius: 12px;
@@ -143,6 +143,10 @@ body {
 
 .custom-cursor.no-arrow .cursor-arrow {
   display: none;
+}
+
+.custom-cursor.expanded.no-arrow {
+  padding: 0 16px;
 }
 
 /* Hide any legacy SVG injected by old JS */
@@ -1959,15 +1963,97 @@ body {
 }
 
 .mac-canvas-area {
-  height: 500px;
+  min-height: 500px;
+  padding: 32px;
   background-color: #f5f5f5;
   background-image: radial-gradient(circle, #c8c8c8 1px, transparent 1px);
   background-size: 22px 22px;
 }
 
+.mac-photo-grid {
+  position: relative;
+  min-height: 500px;
+}
+
+.mac-photo-card {
+  position: absolute;
+  margin: 0;
+  border-radius: 8px;
+  background: #fff;
+  border: 7px solid #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: visible;
+  cursor: none;
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+}
+
+.mac-photo-card:nth-child(1) {
+  /* 5k Run */
+  width: 18%;
+  top: 8%;
+  left: 5%;
+  transform: rotate(8deg);
+}
+
+.mac-photo-card:nth-child(2) {
+  /* Whale Shark */
+  width: 17%;
+  bottom: 2%;
+  right: 20%;
+  transform: rotate(-9deg);
+}
+
+.mac-photo-card:nth-child(3) {
+  /* Blender */
+  width: 40%;
+  top: -1%;
+  right: 10%;
+  transform: rotate(5deg);
+}
+
+.mac-photo-card:nth-child(4) {
+  /* Dune */
+  width: 18%;
+  bottom: 3%;
+  left: 27%;
+  transform: rotate(-3deg);
+}
+
+.mac-photo-card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+.mac-photo-card:nth-child(1):hover {
+  transform: translateY(-4px) scale(1.03) rotate(-9deg);
+}
+
+.mac-photo-card:nth-child(2):hover {
+  transform: translateY(-4px) scale(1.03) rotate(10deg);
+}
+
+.mac-photo-card:nth-child(3):hover {
+  transform: translateY(-4px) scale(1.03) rotate(-6deg);
+}
+
+.mac-photo-card:nth-child(4):hover {
+  transform: translateY(-4px) scale(1.03) rotate(8deg);
+}
+
+.mac-photo-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
+
 @media (max-width: 768px) {
   .mac-canvas-area {
-    height: 380px;
+    min-height: 380px;
+    padding: 20px;
+  }
+
+  .mac-photo-grid {
+    min-height: 380px;
   }
 }
 
@@ -1984,8 +2070,17 @@ body {
   }
 
   .mac-canvas-area {
-    height: 280px;
+    min-height: 280px;
+    padding: 16px;
     background-size: 18px 18px;
+  }
+
+  .mac-photo-grid {
+    min-height: 280px;
+  }
+
+  .mac-photo-card {
+    border-width: 5px;
   }
 }
 
