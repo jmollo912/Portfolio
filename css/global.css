@@ -1583,8 +1583,8 @@ body {
 }
 
 .profile-card-connect {
-  background: #fff;
-  color: #2C261E;
+  background: #2563eb;
+  color: #fff;
   padding: 10px 20px;
   border-radius: 10px;
   font-size: 14px;
@@ -1594,18 +1594,20 @@ body {
   align-items: center;
   gap: 6px;
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.05),
-    0 4px 12px rgba(0, 0, 0, 0.06);
+    0 1px 2px rgba(37, 99, 235, 0.25),
+    0 4px 12px rgba(37, 99, 235, 0.2);
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .profile-card-connect:hover {
-  background: #2C261E;
+  background: rgba(37, 99, 235, 0.75);
   color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 1px 2px rgba(37, 99, 235, 0.2),
+    0 8px 24px rgba(37, 99, 235, 0.18);
 }
 
 .connect-plus {
@@ -1727,6 +1729,24 @@ body {
   background: #fff;
 }
 
+.about-contact-cta {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+/* About page: align Contact to the right edge of the hero text column */
+.about-hero .about-contact-cta {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  margin-top: 28px;
+}
+
+.about-hero .about-contact-cta .about-cta-btn {
+  margin-top: 0;
+}
+
 .about-hero-content {
   max-width: 1100px;
   margin: 0 auto;
@@ -1819,31 +1839,80 @@ body {
   gap: 10px;
   margin-top: 28px;
   padding: 14px 28px;
-  background: #fff;
-  color: #2C261E;
+  background: #2563eb;
+  color: #fff;
   font-size: 16px;
   font-weight: 500;
   text-decoration: none;
   border-radius: 10px;
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.05),
-    0 4px 12px rgba(0, 0, 0, 0.06);
+    0 1px 2px rgba(37, 99, 235, 0.25),
+    0 4px 12px rgba(37, 99, 235, 0.2);
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.about-cta-btn--secondary {
+  background: #fff;
+  color: #2C261E;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.about-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.about-cta-actions .about-cta-btn {
+  margin-top: 0;
+}
+
 .about-cta-btn:hover {
-  background: #2C261E;
+  background: rgba(37, 99, 235, 0.75);
   color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 1px 2px rgba(37, 99, 235, 0.2),
+    0 8px 24px rgba(37, 99, 235, 0.18);
+}
+
+.about-cta-btn--secondary:hover {
+  background: #fff;
+  color: #2C261E;
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.about-cta-btn--secondary:hover .about-cta-btn-mail {
+  transform: none;
 }
 
 .about-cta-btn:hover .about-cta-btn-arrow {
   transform: translateX(4px);
 }
 
+.about-cta-btn:hover .about-cta-btn-mail {
+  transform: translateX(4px);
+}
+
 .about-cta-btn-arrow {
   display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.about-cta-btn-mail {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  background-color: currentColor;
+  -webkit-mask: url("../media/Icons/mail.svg") center / contain no-repeat;
+  mask: url("../media/Icons/mail.svg") center / contain no-repeat;
   transition: transform 0.2s ease;
 }
 
@@ -2324,6 +2393,10 @@ body {
     gap: 40px;
     text-align: center;
   }
+
+  .about-hero .about-contact-cta {
+    justify-content: flex-start;
+  }
   
   .about-hero-title {
     font-size: 42px;
@@ -2416,12 +2489,14 @@ body {
   margin: 0;
   padding: 0;
   display: inline-flex;
-  align-items: stretch;
-  background: #fff;
-  border: 0.5px solid rgba(0, 0, 0, 0.06);
-  border-radius: 999px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-  overflow: hidden;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
 }
 
 .footer-pill > li {
@@ -2430,26 +2505,41 @@ body {
 }
 
 .footer-pill > li + li {
-  border-left: 1px solid rgba(0, 0, 0, 0.06);
+  border-left: none;
 }
 
 .footer-pill-link {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 14px 20px;
+  gap: 10px;
+  padding: 14px 28px;
+  background: #fff;
   color: #2C261E;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
   line-height: 1;
   text-decoration: none;
-  border-radius: 0;
-  transition: background 0.15s ease, color 0.15s ease;
+  border-radius: 10px;
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.06);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .footer-pill-link:hover {
-  background: #000;
+  background: rgb(37, 100, 235);
   color: #fff;
+  border-color: rgba(37, 99, 235, 0.35);
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 2px rgba(37, 99, 235, 0.2),
+    0 8px 24px rgba(37, 99, 235, 0.18);
 }
 
 .footer-pill-link:hover .footer-pill-icon {
@@ -2479,8 +2569,8 @@ body {
   }
 
   .footer-pill-link {
-    padding: 8px 14px;
-    font-size: 14px;
+    padding: 12px 22px;
+    font-size: 15px;
   }
 }
 
