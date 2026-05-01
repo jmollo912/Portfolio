@@ -266,7 +266,7 @@ function initAboutTitleRotate() {
   const defaultItem = items[0];
   const cycleItems = items.slice(1);
 
-  const CYCLE_DELAY = 1400;
+  const ROTATE_DELAY = 780;
   let activeIndex = -1; // -1 = default
   let cycleTimer = null;
   let isHovered = false;
@@ -293,21 +293,28 @@ function initAboutTitleRotate() {
 
   function nextCycle() {
     if (!isHovered) return;
+    if (!stage.classList.contains('is-looping')) {
+      stage.classList.add('is-looping');
+      void stage.offsetWidth; // ensure the faster loop transition applies before swapping
+    }
     activeIndex = (activeIndex + 1) % cycleItems.length;
     transitionTo(cycleItems[activeIndex]);
-    cycleTimer = setTimeout(nextCycle, CYCLE_DELAY);
+    cycleTimer = setTimeout(nextCycle, ROTATE_DELAY);
   }
 
   title.addEventListener('mouseenter', () => {
     if (isHovered) return;
     isHovered = true;
+    stage.classList.add('is-looping');
+    void stage.offsetWidth; // ensure the fast transition applies to the first hover state too
     activeIndex = 0;
     transitionTo(cycleItems[0]);
-    cycleTimer = setTimeout(nextCycle, CYCLE_DELAY);
+    cycleTimer = setTimeout(nextCycle, ROTATE_DELAY);
   });
 
   title.addEventListener('mouseleave', () => {
     isHovered = false;
+    stage.classList.remove('is-looping');
     if (cycleTimer) {
       clearTimeout(cycleTimer);
       cycleTimer = null;
