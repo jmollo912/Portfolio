@@ -246,6 +246,44 @@
   background: white;
 }
 
+/* Robot comparison layout */
+.robot-comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 32px 0 16px;
+}
+
+.robot-comparison-item {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.robot-comparison-image {
+  width: 100%;
+  height: 320px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  object-fit: cover;
+  object-position: center;
+}
+
+.robot-comparison-caption {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2C261E;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .robot-comparison {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .carousel-track-container {

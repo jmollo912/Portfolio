@@ -1494,14 +1494,14 @@ body {
   overflow: hidden;
   flex-shrink: 0;
   margin-left: 50px;
-  transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.12s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  transition: transform 0.40s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
 .profile-card.scroll-fade,
 .profile-card.scroll-fade-in {
-  transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.12s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
 .profile-card:hover {
@@ -3350,7 +3350,7 @@ body {
   margin-top: 0;
   margin-bottom: 16px;
   letter-spacing: -0.02em;
-  max-width: 720px;
+  max-width: 620px;
 }
 
 .section-intro {
@@ -3403,7 +3403,9 @@ body {
 
 .case-template-image {
   width: 100%;
-  height: auto;
+  height: 220px;
+  object-fit: cover;
+  object-position: center;
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
