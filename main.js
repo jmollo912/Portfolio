@@ -181,7 +181,13 @@ function initScrollFadeAnimations() {
     '.about-cta-section .about-cta-btn, ' +
     '.about-page .about-hero-title, ' +
     '.about-page .about-hero-image, ' +
+    '.about-page .about-body-text, ' +
+    '.about-page .about-contact-cta, ' +
+    '.mac-window, ' +
+    '.mac-photo-card, ' +
     '.skill-item, ' +
+    '.resume-section, ' +
+    '.resume-download, ' +
     '.case-section, ' +
     '.case-image, ' +
     '.case-hero-main-image--convoy img, .case-hero-main-image--vigil img, .case-hero-main-image--flock img, ' +
@@ -659,6 +665,21 @@ document.addEventListener('click', function(e) {
 // (e.g. the case study hero "see more" arrow). Floating-nav anchors are
 // already handled above and stop propagation so they don't reach here.
 document.addEventListener('click', function(e) {
+  // Special handling for "Get to know me" button to animate nav before navigating
+  const aboutCtaBtn = e.target.closest('.about-cta-btn');
+  if (aboutCtaBtn && aboutCtaBtn.getAttribute('href') === 'html/about.html') {
+    const aboutNavLink = document.querySelector('.floating-nav a[href="html/about.html"]');
+    if (aboutNavLink) {
+      e.preventDefault();
+      e.stopPropagation();
+      setActiveNavLink(aboutNavLink);
+      setTimeout(() => {
+        window.location.href = aboutCtaBtn.href;
+      }, 450);
+      return;
+    }
+  }
+
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
   const href = a.getAttribute('href');
@@ -984,6 +1005,79 @@ function initLogoBreakdownAnimation() {
 }
 
 document.addEventListener('DOMContentLoaded', initLogoBreakdownAnimation);
+
+// ==========================================
+// INCOMING CALL POPUP
+// ==========================================
+function initIncomingCallPopup() {
+    // Check if the popup has already been shown in this session
+    if (sessionStorage.getItem('popupShown')) {
+        return;
+    }
+
+    // Determine the correct path to popup.html based on the current page
+    const isIndexPage = window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/index.html');
+    const popupPath = isIndexPage ? 'html/popup.html' : 'popup.html';
+
+    // Load the popup HTML into any page that calls this function
+    fetch(popupPath)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            const popupContainer = document.createElement('div');
+            popupContainer.innerHTML = data;
+            document.body.appendChild(popupContainer);
+
+            // Now that the HTML is loaded, initialize the popup's functionality
+            const popupOverlay = document.getElementById('call-popup-overlay');
+            const incomingCallContainer = document.querySelector('.incoming-call-container');
+            const answeredCallPopup = document.getElementById('answered-call-popup');
+            const acceptBtn = document.getElementById('accept-call-btn');
+            const declineBtn = document.getElementById('decline-call-btn');
+            const closeAnsweredBtn = document.getElementById('close-answered-popup-btn');
+
+            if (!popupOverlay) return;
+
+            // Show popup after 8 seconds
+            setTimeout(() => {
+                popupOverlay.classList.add('visible');
+                document.body.classList.add('popup-active');
+                // Mark that the popup has been shown
+                sessionStorage.setItem('popupShown', 'true');
+            }, 8000);
+
+            // Handle accept call
+            if (acceptBtn) {
+                acceptBtn.addEventListener('click', () => {
+                    if (incomingCallContainer) incomingCallContainer.style.display = 'none';
+                    if (answeredCallPopup) answeredCallPopup.style.display = 'block';
+                });
+            }
+
+            // Handle decline call
+            if (declineBtn) {
+                declineBtn.addEventListener('click', () => {
+                    popupOverlay.classList.remove('visible');
+                    document.body.classList.remove('popup-active');
+                });
+            }
+
+            // Handle closing the answered popup
+            if (closeAnsweredBtn) {
+                closeAnsweredBtn.addEventListener('click', () => {
+                    popupOverlay.classList.remove('visible');
+                    document.body.classList.remove('popup-active');
+                });
+            }
+        })
+        .catch(error => console.error('Error loading popup:', error));
+}
+
+document.addEventListener('DOMContentLoaded', initIncomingCallPopup);
 
 // ==========================================
 // BEFORE/AFTER IMAGE COMPARISON SLIDER
