@@ -108,6 +108,21 @@
   .floating-img-flock-5 { width: 80px; }
 }
 
+/* Center results grid inside Flock Sports */
+.results-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 60px;
+}
+@media (max-width: 800px) {
+  .results-grid {
+    gap: 32px;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 /* Flock Sports case card (index + case study) */
 .case-card-flock .case-figure {
   display: flex;
@@ -148,4 +163,11 @@
     grid-template-columns: 1fr;
     gap: 20px;
   }
+}
+
+/* Flock Sports taller template images */
+.flock-template-image {
+  height: auto;
+  object-fit: contain;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }

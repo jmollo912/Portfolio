@@ -3831,8 +3831,13 @@ body {
   color: #9e9e9e;
 }
 
+h2,
 .case-content h2,
-.container > h2 {
+.container > h2,
+.section-heading,
+.overview-project-title {
+  font-size: 50px;
+  font-weight: 700;
   margin-bottom: 32px;
 }
 

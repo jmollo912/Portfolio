@@ -1067,6 +1067,89 @@ function initImageComparison() {
 document.addEventListener('DOMContentLoaded', initImageComparison);
 
 // ==========================================
+// RESULT NUMBERS COUNTER ANIMATION
+// ==========================================
+function initNumberCounters() {
+  const numberElements = document.querySelectorAll('.result-number');
+  if (numberElements.length === 0) return;
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -50px 0px',
+    threshold: 0.1
+  };
+
+  const animateNumber = (element) => {
+    const originalText = element.textContent;
+
+    // Fade in effect for number container
+    element.style.opacity = '1';
+    
+    // Fade in effect for text label underneath
+    const label = element.nextElementSibling;
+    if (label && label.classList.contains('result-label')) {
+      label.style.opacity = '1';
+    }
+
+    // Clear the text content to prepare for individual characters
+    element.textContent = '';
+    const chars = originalText.split('');
+    
+    chars.forEach((char, charIndex) => {
+      const charSpan = document.createElement('span');
+      // Handle spaces to ensure they render correctly
+      if (char === ' ') {
+        charSpan.innerHTML = '&nbsp;';
+      } else {
+        charSpan.textContent = char;
+      }
+      
+      // Start hidden
+      charSpan.style.opacity = '0';
+      charSpan.style.transition = 'opacity 0.2s ease-in';
+      element.appendChild(charSpan);
+
+      // Stagger the fade in for each character
+      setTimeout(() => {
+        charSpan.style.opacity = '1';
+      }, charIndex * 100); // 100ms stagger between characters
+    });
+  };
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateNumber(entry.target);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  numberElements.forEach(element => {
+    // Preserve initial exact width to avoid grid layout jumping during animation
+    element.style.minWidth = `${element.offsetWidth}px`;
+    element.style.display = 'inline-block';
+    
+    // Hide initially and set up transition for fade in
+    element.style.opacity = '0';
+    element.style.transition = 'opacity 0.4s ease-in';
+    
+    // Also hide the label under it initially
+    const label = element.nextElementSibling;
+    if (label && label.classList.contains('result-label')) {
+      label.style.opacity = '0';
+      label.style.transition = 'opacity 0.4s ease-in';
+    }
+    
+    // pre-set to start num optionally, we do it inline here:
+    // element.textContent = ...
+    observer.observe(element);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initNumberCounters);
+
+// ==========================================
 // CASE STUDY MOBILE HAMBURGER MENU (and index.html)
 // ==========================================
 function initCaseStudyMobileNav() {
