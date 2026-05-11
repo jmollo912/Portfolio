@@ -258,6 +258,65 @@ function initScrollFadeAnimations() {
 document.addEventListener('DOMContentLoaded', initScrollFadeAnimations);
 
 // ==========================================
+// CASE STUDIES — TYPOGRAPHIC WIDOWS
+// Tie last two words with NBSP on plain-text blocks so the last line
+// cannot end with a single word (CSS text-wrap: pretty assists where supported).
+// ==========================================
+function normalizeSpacesForWidowFix(text) {
+  return text.replace(/\u00A0/g, ' ').trim().replace(/\s+/g, ' ');
+}
+
+function tieLastTwoWords(text) {
+  const trimmed = normalizeSpacesForWidowFix(text);
+  if (!trimmed) return text;
+  const words = trimmed.split(' ');
+  if (words.length < 2) return text;
+  const tail = words.slice(-2).join('\u00A0');
+  const head = words.slice(0, -2).join(' ');
+  return head ? `${head} ${tail}` : tail;
+}
+
+function initCaseStudyWidowPrevention() {
+  const layout = document.querySelector('.case-layout');
+  if (!layout) return;
+
+  const selector = [
+    'p',
+    'li',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'figcaption',
+    '.section-heading',
+    '.section-intro',
+    '.overview-project-title',
+    '.overview-subtitle',
+    '.overview-column-heading',
+    '.overview-role-description',
+    '.robot-comparison-caption',
+    '.info-card-value',
+    '.info-card-label',
+    '.result-label'
+  ].join(',');
+
+  layout.querySelectorAll(selector).forEach((el) => {
+    if (el.closest('footer')) return;
+    if (el.dataset.widowTied === 'true') return;
+    if (el.childElementCount > 0) return;
+
+    const raw = el.textContent;
+    if (!raw || !normalizeSpacesForWidowFix(raw)) return;
+
+    el.textContent = tieLastTwoWords(raw);
+    el.dataset.widowTied = 'true';
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initCaseStudyWidowPrevention);
+
+// ==========================================
 // ABOUT HERO TITLE — HOVER ROTATE
 // "Who am I really?" → cycles through colorful role labels on hover.
 // ==========================================
