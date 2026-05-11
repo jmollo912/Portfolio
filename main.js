@@ -2,6 +2,11 @@
 // 1. CUSTOM CURSOR WITH DELAY
 // ==========================================
 
+/** Root-relative asset prefix: pages in /html/ use ../ ; site root (index) uses '' */
+function siteAssetPrefix() {
+  return window.location.pathname.includes('/html/') ? '../' : '';
+}
+
 // Handle hash navigation on page load (for cross-page links like Work from About page)
 if (window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname.endsWith('/index.html')) {
   if (window.location.hash) {
@@ -35,7 +40,7 @@ if (cursor) {
   cursorLabelEl = labelEl;
 
   const arrowEl2 = document.createElement('img');
-  arrowEl2.src = '../media/HeroPage/arrowAngleUp.svg';
+  arrowEl2.src = siteAssetPrefix() + 'media/HeroPage/arrowAngleUp.svg';
   arrowEl2.alt = '';
   arrowEl2.className = 'cursor-arrow';
 
@@ -1007,79 +1012,6 @@ function initLogoBreakdownAnimation() {
 document.addEventListener('DOMContentLoaded', initLogoBreakdownAnimation);
 
 // ==========================================
-// INCOMING CALL POPUP
-// ==========================================
-function initIncomingCallPopup() {
-    // Check if the popup has already been shown in this session
-    if (sessionStorage.getItem('popupShown')) {
-        return;
-    }
-
-    // Determine the correct path to popup.html based on the current page
-    const isIndexPage = window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/index.html');
-    const popupPath = isIndexPage ? 'html/popup.html' : 'popup.html';
-
-    // Load the popup HTML into any page that calls this function
-    fetch(popupPath)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text();
-        })
-        .then(data => {
-            const popupContainer = document.createElement('div');
-            popupContainer.innerHTML = data;
-            document.body.appendChild(popupContainer);
-
-            // Now that the HTML is loaded, initialize the popup's functionality
-            const popupOverlay = document.getElementById('call-popup-overlay');
-            const incomingCallContainer = document.querySelector('.incoming-call-container');
-            const answeredCallPopup = document.getElementById('answered-call-popup');
-            const acceptBtn = document.getElementById('accept-call-btn');
-            const declineBtn = document.getElementById('decline-call-btn');
-            const closeAnsweredBtn = document.getElementById('close-answered-popup-btn');
-
-            if (!popupOverlay) return;
-
-            // Show popup after 8 seconds
-            setTimeout(() => {
-                popupOverlay.classList.add('visible');
-                document.body.classList.add('popup-active');
-                // Mark that the popup has been shown
-                sessionStorage.setItem('popupShown', 'true');
-            }, 8000);
-
-            // Handle accept call
-            if (acceptBtn) {
-                acceptBtn.addEventListener('click', () => {
-                    if (incomingCallContainer) incomingCallContainer.style.display = 'none';
-                    if (answeredCallPopup) answeredCallPopup.style.display = 'block';
-                });
-            }
-
-            // Handle decline call
-            if (declineBtn) {
-                declineBtn.addEventListener('click', () => {
-                    popupOverlay.classList.remove('visible');
-                    document.body.classList.remove('popup-active');
-                });
-            }
-
-            // Handle closing the answered popup
-            if (closeAnsweredBtn) {
-                closeAnsweredBtn.addEventListener('click', () => {
-                    popupOverlay.classList.remove('visible');
-                    document.body.classList.remove('popup-active');
-                });
-            }
-        })
-        .catch(error => console.error('Error loading popup:', error));
-}
-
-document.addEventListener('DOMContentLoaded', initIncomingCallPopup);
-
-// ==========================================
 // BEFORE/AFTER IMAGE COMPARISON SLIDER
 // ==========================================
 function initImageComparison() {
@@ -1261,7 +1193,7 @@ function initLottieAnimation() {
             renderer: 'svg',
             loop: false,
             autoplay: false,
-            path: '../media/HeroPage/gmdesign06.json'
+            path: siteAssetPrefix() + 'media/HeroPage/gmdesign06.json'
         });
 
         lottieAnimation.addEventListener('data_ready', () => {
