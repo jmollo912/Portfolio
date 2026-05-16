@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio — Giuseppe Mollo</title>
+    <meta name="description" content="Portfolio of Giuseppe Mollo, showcasing UX/UI and graphic design case studies.">
     <link rel="icon" href="media/Icons/gmWebLogo.jpg" type="image/jpeg">
+    <link rel="canonical" href="/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Borel&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/global.css">
         <script defer src="main.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
+        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
 </head>
 <body>
     <div class="custom-cursor" aria-hidden="true"></div>
@@ -94,7 +96,7 @@
 
                 <a href="html/case-study-Convoy.html" class="card case-card">
                     <figure class="case-figure">
-                        <img src="media/HeroPage/CaseStudyCovers/ConvoyCover.jpg" alt="Convoy app screens" class="case-image">
+                        <img src="media/HeroPage/CaseStudyCovers/ConvoyCover.jpg" alt="Convoy app screens" class="case-image" loading="lazy" decoding="async">
                         <div class="case-pill">
                             <span class="case-pill-title">Convoy</span>
                             <span class="case-pill-tag">UX/UI</span>
@@ -104,7 +106,7 @@
 
                 <a href="html/case-study-FlockSports.html" class="card case-card case-card-flock">
                     <figure class="case-figure">
-                        <img src="media/HeroPage/DeskRender02.webp" alt="Flock Sports" class="case-image">
+                        <img src="media/HeroPage/DeskRender02.webp" alt="Flock Sports" class="case-image" loading="lazy" decoding="async">
                         <div class="case-pill">
                             <span class="case-pill-title">Flock Sports</span>
                             <span class="case-pill-tag">Graphic Design</span>
@@ -112,19 +114,19 @@
                     </figure>
                 </a>
 
-                <a  class="card case-card" data-cursor-label="Coming Soon..." data-cursor-arrow="false" data-disabled="true" aria-disabled="true">
+                <button type="button" class="card case-card" data-cursor-label="Coming Soon..." data-cursor-arrow="false" data-disabled="true" aria-disabled="true" tabindex="0">
                     <figure class="case-figure">
-                        <img src="media/HeroPage/CaseStudyCovers/CoralKeepersCover.jpg" alt="Coral Keepers" class="case-image">
+                        <img src="media/HeroPage/CaseStudyCovers/CoralKeepersCover.jpg" alt="Coral Keepers" class="case-image" loading="lazy" decoding="async">
                         <div class="case-pill">
                             <span class="case-pill-title">Coral Keepers</span>
                             <span class="case-pill-tag">UX/UI</span>
                         </div>
                     </figure>
-                </a>
+                </button>
 
                 <a href="html/case-study-CBSSports.html" class="card case-card cbs-card">
                     <figure class="case-figure">
-                        <img src="media/HeroPage/CaseStudyCovers/CBSCover.jpg" alt="CBS Sports" class="case-image">
+                        <img src="media/HeroPage/CaseStudyCovers/CBSCover.jpg" alt="CBS Sports" class="case-image" loading="lazy" decoding="async">
                         <div class="case-pill">
                             <span class="case-pill-title">CBS Sports</span>
                             <span class="case-pill-tag">UX/Graphic Design</span>
@@ -140,7 +142,7 @@
                     <div class="profile-card-main">
                         <h3 class="profile-card-name">Giuseppe Mollo</h3>
                         <div class="profile-card-image">
-                            <img src="media/HeroPage/AboutMe/Headshot.jpg" alt="Profile photo" class="profile-card-img">
+                            <img src="media/HeroPage/AboutMe/Headshot.jpg" alt="Profile photo" class="profile-card-img" loading="lazy" decoding="async">
                         </div>
                     </div>
                     <div class="profile-card-footer">
@@ -233,67 +235,5 @@
         </defs>
     </svg>
 
-    <script>
-        window.addEventListener('load', () => {
-            const mediaRoot = window.location.pathname.includes('/html/') ? '../media/' : 'media/';
-            const imagePaths = [
-                'CBS Sports/Main Logo.webp',
-                'CBS Sports/GroupImage.jpeg',
-                'CBS Sports/PresentaitonImage.jpeg',
-                'CBS Sports/BackgroundImage.jpeg',
-                'CBS Sports/Typography.jpeg',
-                'Convoy/Hero Page/BackgroundImages/SmartRecommendation.webp',
-                'Convoy/Hero Page/BackgroundImages/PercyLocation.webp',
-                'Convoy/Hero Page/BackgroundImages/TapToUnlock.webp',
-                'Convoy/Hero Page/BackgroundImages/LockerPickup.webp',
-                'Convoy/Hero Page/BackgroundImages/DeliveryProgress.webp',
-                'Convoy/Hero Page/BackgroundImages/AdidasSambas.webp',
-                'Convoy/Hero Page/MainHeroImage.webp',
-                'Convoy/Problem Statement/ProblemFlow.jpg',
-                'Convoy/Discovery/1in4Updated.jpg',
-                'Convoy/Discovery/53Effected.jpg',
-                'Convoy/Problem Statement/Stakeholders.jpg',
-                'Convoy/Discovery/MowMightWe.jpg',
-                'Convoy/Solution/MainImage.jpg',
-                'Convoy/Solution/App Features/Select.jpg',
-                'Convoy/Solution/App Features/Compare.jpg',
-                'Convoy/Solution/App Features/Track.jpg',
-                'Convoy/Solution/Features/intro.jpg',
-                'Convoy/Solution/Features/retrieve-package-options.jpg',
-                'Convoy/Solution/Features/number.jpg',
-                'Convoy/Solution/Features/confirm-selection.jpg',
-                'Convoy/Solution/Features/ArrowLeft.svg',
-                'Convoy/Solution/Features/ArrowRight.svg',
-                'Convoy/Solution/Features/ConvoyCombinedSketch.jpg',
-                'Convoy/Highlights/ConvoyRobotMock.webp',
-                'FlockSports/case-hero/Barkley.webp',
-                'FlockSports/case-hero/Dejean.webp',
-                'FlockSports/case-hero/JCampbell.webp',
-                'FlockSports/case-hero/JRamsey.webp',
-                'FlockSports/case-hero/MaddenCover.webp',
-                'FlockSports/case-hero/TopMock.webp',
-                'FlockSports/BleacherReport.webp',
-                'FlockSports/ESPN.webp',
-                'FlockSports/FoxSports.webp',
-                'FlockSports/Logo_sketches.webp',
-                'FlockSports/LogoWithText.png',
-                'FlockSports/Brand-guidlines.jpg',
-                'FlockSports/BreakingTemp.jpg',
-                'FlockSports/QuoteTemp.jpg',
-                'FlockSports/Gameday1.jpg',
-                'FlockSports/gameday2.jpg',
-                'FlockSports/SpecialGraphic1.jpg',
-                'FlockSports/SpecialGraphic2.jpg',
-                'FlockSports/SwapAfter.jpg',
-                'FlockSports/SwapBefore.jpg',
-                'FlockSports/FlockLogo.svg'
-            ];
-
-            imagePaths.forEach(path => {
-                const img = new Image();
-                img.src = mediaRoot + path;
-            });
-        });
-    </script>
 </body>
 </html>

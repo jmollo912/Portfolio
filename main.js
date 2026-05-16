@@ -162,7 +162,7 @@ function initScrollFadeAnimations() {
   // Exclude hero section elements that should animate on page load
   const fadeElements = document.querySelectorAll(
     'section:not(#hero) h2, ' +
-    'section:not(#hero) h3:not(.case-body h3), ' +
+    'section:not(#hero) h3, ' +
     'section:not(#hero) h4, ' +
     'section:not(#hero) h5, ' +
     'section:not(#hero) h6, ' +
@@ -223,6 +223,7 @@ function initScrollFadeAnimations() {
 
   // Add fade class to all elements immediately to set initial state
   fadeElements.forEach(element => {
+    if (element.tagName === 'H3' && element.closest('.case-body')) return;
     element.classList.add('scroll-fade');
   });
 

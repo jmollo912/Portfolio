@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Borel&display=swap');
-
 /* BASIC RESET */
 * {
   box-sizing: border-box;
@@ -215,6 +213,16 @@ body {
   .scroll-fade-in {
     opacity: 1;
     transform: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  html,
+  body,
+  html * {
+    cursor: auto !important;
   }
 }
 
@@ -574,6 +582,18 @@ body {
 .floating-nav a:focus-visible {
   outline: 2px solid #333;
   border-radius: 10px;
+}
+
+.case-card:focus-visible,
+.about-cta-btn:focus-visible,
+.case-back-link:focus-visible,
+.case-back-link-mobile:focus-visible,
+.case-hamburger:focus-visible,
+.profile-card-connect:focus-visible,
+.case-hero-see-btn:focus-visible,
+.case-nav-link:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 4px;
 }
 
 .floating-nav ul a.active,
