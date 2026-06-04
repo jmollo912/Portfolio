@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', initCaseStudyWidowPrevention);
 
 // ==========================================
 // ABOUT HERO TITLE — HOVER ROTATE
-// "Who am I really?" → cycles through colorful role labels on hover.
+// "Who am I?" → cycles through role labels on hover.
 // ==========================================
 function initAboutTitleRotate() {
   const title = document.querySelector('.hero-title-rotate');

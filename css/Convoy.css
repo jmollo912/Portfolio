@@ -179,7 +179,7 @@
   top: 50%;
   transform: translateY(-50%);
   background: rgba(0, 0, 0, 0.3);
-  color: white;
+  color: #000000;
   border: none;
   width: 50px;
   height: 50px;
@@ -274,7 +274,7 @@
 .robot-comparison-caption {
   font-size: 16px;
   font-weight: 600;
-  color: #2C261E;
+  color: #000000;
   text-align: center;
 }
 

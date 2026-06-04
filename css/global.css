@@ -32,10 +32,18 @@ body {
   /* ensure anchored content isn't hidden behind fixed header */
 }
 
+:root {
+  --site-text: #000000;
+}
+
+html {
+  color: #000000;
+}
+
 body {
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.5;
-  color: #6F6F6F;
+  color: #000000;
   background: #fff;
 }
 
@@ -51,8 +59,9 @@ body {
   border: 0;
 }
 
-/* Custom cursor — small black dot by default, expands to pill on hover */
+/* Custom cursor — 75% black + blur (dot matches case-study pill) */
 .custom-cursor {
+  --cursor-black: rgba(0, 0, 0, 0.75);
   position: fixed;
   display: flex;
   align-items: center;
@@ -62,9 +71,9 @@ body {
   width: 12px;
   height: 12px;
   border-radius: 999px;
-  background: #1a1a1abb;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  background: var(--cursor-black);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   pointer-events: none;
   z-index: 10000;
   transform: translate(-50%, -50%);
@@ -73,11 +82,12 @@ body {
     width  0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
     height 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
     gap    0.25s ease 0.1s,
+    background 0.3s ease,
     box-shadow 0.3s ease;
   will-change: width, height;
   overflow: hidden;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Pill expanded state — fixed width so CSS can interpolate cleanly */
@@ -86,6 +96,9 @@ body {
   height: 46px;
   gap: 8px;
   border-radius: 12px;
+  background: var(--cursor-black);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
   /* Expand: no delay on the shape opening */
   transition:
@@ -99,7 +112,7 @@ body {
 .cursor-label {
   font-size: 14px;
   font-weight: 600;
-  color: #fff;
+  color: #FFFFFF;
   letter-spacing: -0.01em;
   opacity: 0;
   transform: translateY(6px);
@@ -114,6 +127,7 @@ body {
 
 /* Expand: fade in only after the pill is mostly open */
 .custom-cursor.expanded .cursor-label {
+  color: #FFFFFF;
   opacity: 1;
   transform: translateY(0);
   transition:
@@ -304,7 +318,7 @@ body {
 .nav-profile-name {
   font-size: 16px;
   font-weight: 500;
-  color: #5a5a5a;
+  color: #000000;
   line-height: 1.1;
   letter-spacing: -0.01em;
   margin: 0;
@@ -332,7 +346,7 @@ body {
 .nav-status-text {
   font-size: 12px;
   font-weight: 400;
-  color: #b8b8b8;
+  color: #000000;
   line-height: 1.1;
 }
 
@@ -383,7 +397,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 10px 10px;
-  color: #6F6F6F;
+  color: #000000;
   text-decoration: none;
   font-size: 15px;
   font-weight: 400;
@@ -457,17 +471,17 @@ body {
 }
 
 .nav-resume:hover {
-  color: #c1c1c1;
+  color: #000000;
 }
 
 .nav-resume:hover .resume-icon,
 .nav-resume:hover .resume-icon path {
-  color: #c1c1c1;
-  fill: #c1c1c1;
+  color: #000000;
+  fill: #000000;
 }
 .resume-icon:hover {
-  color: #c1c1c1;
-  fill: #c1c1c1;
+  color: #000000;
+  fill: #000000;
 }
 
 .resume-icon {
@@ -558,7 +572,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 10px 20px;
-  color: #6F6F6F;
+  color: #B8B8B8;
   text-decoration: none;
   border-radius: 10px;
   font-weight: 500;
@@ -571,11 +585,11 @@ body {
 }
 
 .floating-nav a:hover:not(.active):not([aria-current="page"]):not(.nav-resume-btn) {
-  color: #333333;
+  color: #B8B8B8;
 }
 
-.floating-nav a:active {
-  color: #333333;
+.floating-nav a:active:not(.active):not([aria-current="page"]) {
+  color: #B8B8B8;
   font-weight: 400;
 }
 
@@ -599,7 +613,7 @@ body {
 .floating-nav ul a.active,
 .floating-nav a.active,
 .floating-nav a[aria-current="page"] {
-  color: #2C261E;
+  color: #000000;
   font-weight: 600;
 }
 
@@ -887,7 +901,7 @@ body {
   top: 80px;
   left: 50%;
   transform: translateX(-50%);
-  color: #232323;
+  color: #000000;
   padding: 8px 14px;
   font-weight: 400;
   font-size: 70px;
@@ -901,7 +915,7 @@ body {
   font-family: 'Borel', cursive !important;
   font-weight: 600;
   font-style: normal;
-  color: #232323;
+  color: #000000;
 }
 
 /* Typing animation cursor */
@@ -945,7 +959,7 @@ body {
   padding: 6px 10px;
   font-size: 40px;
   font-weight: 250;
-  color: #2f2f2f;
+  color: #000000;
   background: transparent;
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.5);
   pointer-events: auto;
@@ -1027,7 +1041,7 @@ body {
   pointer-events: none;
   /* Font size scales with the .screen-animation container width */
   font-size: 12cqi;
-  color: #ffffff;
+  color: #FFFFFF;
   padding: 6px 12px;
 }
 
@@ -1085,7 +1099,7 @@ body {
 .section-title {
   font-size: clamp(28px, 4vw, 42px);
   font-weight: 600;
-  color: #2C261E;
+  color: #000000;
   margin: 36px 0;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -1094,7 +1108,7 @@ body {
 .section-subtitle {
   font-size: 24px;
   font-weight: 700;
-  color: #2C261E;
+  color: #000000;
   letter-spacing: -0.02em;
   line-height: 1.2;
   margin-top: 60px;
@@ -1133,19 +1147,19 @@ body {
 
 .card h3 {
   margin: 12px 0 6px;
-  color: #2C261E;
+  color: #000000;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
 
 .card p {
   font-size: 16px;
-  color: #6F6F6F;
+  color: #000000;
 }
 
 .card.case-card p {
   font-size: 16px;
-  color: #2C261E;
+  color: #000000;
 }
 
 /* Enhanced case-study card styles */
@@ -1216,14 +1230,14 @@ button.case-card {
 
 .case-pill-title {
   font-weight: 700;
-  color: #2C261E;
+  color: #000000;
   letter-spacing: -0.01em;
 }
 
 .case-pill-tag {
   position: relative;
   padding-left: 16px;
-  color: #9A9A9A;
+  color: rgba(0, 0, 0, 0.4);
   font-weight: 500;
 }
 
@@ -1346,7 +1360,7 @@ button.case-card {
   justify-content: center;
   font-size: 20px;
   font-weight: 600;
-  color: #fff;
+  color: #000000;
   
   overflow: hidden;
 }
@@ -1360,7 +1374,7 @@ button.case-card {
 
 .skill-name {
   font-size: 14px;
-  color: #666;
+  color: #000000;
   font-weight: 400;
   text-align: center;
 }
@@ -1500,7 +1514,7 @@ button.case-card {
   display: inline-block;
   font-size: clamp(18px, 2.5vw, 26px);
   font-weight: 300;
-  color: #2C261E;
+  color: #000000;
   letter-spacing: -0.01em;
 }
 
@@ -1562,7 +1576,7 @@ button.case-card {
 .profile-card-name {
   font-size: 28px;
   font-weight: 600;
-  color: #ffffff;
+  color: #000000;
   margin: 0 0 auto 0;
   letter-spacing: -0.02em;
   display: none;
@@ -1623,7 +1637,7 @@ button.case-card {
 .profile-card-username {
   font-size: 15px;
   font-weight: 600;
-  color: #2d3748;
+  color: #000000;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1632,12 +1646,12 @@ button.case-card {
 .profile-card-platform {
   font-size: 13px;
   font-weight: 400;
-  color: #718096;
+  color: #000000;
 }
 
 .profile-card-connect {
   background: #2563eb;
-  color: #fff;
+  color: #FFFFFF;
   padding: 10px 20px;
   border-radius: 10px;
   font-size: 14px;
@@ -1656,7 +1670,7 @@ button.case-card {
 
 .profile-card-connect:hover {
   background: rgba(37, 99, 235, 0.75);
-  color: #fff;
+  color: #FFFFFF;
   transform: translateY(-2px);
   box-shadow:
     0 1px 2px rgba(37, 99, 235, 0.2),
@@ -1697,7 +1711,7 @@ button.case-card {
   font-size: 32px;
   font-weight: 400;
   line-height: 1.7;
-  color: #6F6F6F;
+  color: #000000;
   letter-spacing: -0.01em;
 }
 
@@ -1711,7 +1725,7 @@ button.case-card {
   padding: 14px 40px;
   border-radius: 8px;
   background: #e8e8e8;
-  color: #2d3748;
+  color: #000000;
   font-size: 16px;
   font-weight: 500;
   text-decoration: none;
@@ -1752,13 +1766,13 @@ button.case-card {
 .site-footer {
   padding: 30px 0;
   text-align: center;
-  color: #666;
+  color: #000000;
   transition: opacity 0.15s ease-out, transform 0.15s ease-out;
   will-change: opacity, transform;
 }
 
 .site-footer a {
-  color: #1e90ff;
+  color: #000000;
   text-decoration: none;
 }
 
@@ -1819,7 +1833,7 @@ button.case-card {
 .about-hero-title {
   font-size: 56px;
   font-weight: 700;
-  color: #2C261E;
+  color: #000000;
   margin-bottom: 16px;
   letter-spacing: -0.02em;
 }
@@ -1882,7 +1896,7 @@ button.case-card {
 
 .about-hero-subtitle {
   font-size: 20px;
-  color: #6F6F6F;
+  color: #000000;
   line-height: 1.6;
 }
 
@@ -1893,7 +1907,7 @@ button.case-card {
   margin-top: 28px;
   padding: 14px 28px;
   background: #2563eb;
-  color: #fff;
+  color: #FFFFFF;
   font-size: 16px;
   font-weight: 500;
   text-decoration: none;
@@ -1906,7 +1920,7 @@ button.case-card {
 
 .about-cta-btn--secondary {
   background: #fff;
-  color: #2C261E;
+  color: #000000;
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.05),
     0 4px 12px rgba(0, 0, 0, 0.06);
@@ -1923,9 +1937,9 @@ button.case-card {
   margin-top: 0;
 }
 
-.about-cta-btn:hover {
+.about-cta-btn:not(.about-cta-btn--secondary):hover {
   background: rgba(37, 99, 235, 0.75);
-  color: #fff;
+  color: #FFFFFF;
   transform: translateY(-2px);
   box-shadow:
     0 1px 2px rgba(37, 99, 235, 0.2),
@@ -1934,7 +1948,7 @@ button.case-card {
 
 .about-cta-btn--secondary:hover {
   background: #fff;
-  color: #2C261E;
+  color: #000000;
   transform: translateY(-2px);
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.05),
@@ -1945,11 +1959,7 @@ button.case-card {
   transform: none;
 }
 
-.about-cta-btn:hover .about-cta-btn-arrow {
-  transform: translateX(4px);
-}
-
-.about-cta-btn:hover .about-cta-btn-mail {
+.about-cta-btn:not(.about-cta-btn--secondary):hover .about-cta-btn-arrow {
   transform: translateX(4px);
 }
 
@@ -2041,7 +2051,7 @@ button.case-card {
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  color: #888;
+  color: #000000;
   margin-left: 2px;
   flex-shrink: 0;
   transition: background 0.15s ease, color 0.15s ease;
@@ -2049,7 +2059,7 @@ button.case-card {
 
 .mac-home-btn:hover {
   background: rgba(0, 0, 0, 0.08);
-  color: #555;
+  color: #000000;
 }
 
 .mac-home-btn svg {
@@ -2077,7 +2087,7 @@ button.case-card {
   border: 1px solid #d0d0d0;
   border-bottom: 1px solid #ffffff;
   font-size: 13px;
-  color: #333;
+  color: #000000;
   font-weight: 400;
   white-space: nowrap;
   position: relative;
@@ -2224,7 +2234,7 @@ button.case-card {
 .about-section-title {
   font-size: 32px;
   font-weight: 600;
-  color: #2C261E;
+  color: #000000;
   margin-bottom: 24px;
   letter-spacing: -0.01em;
 }
@@ -2241,7 +2251,7 @@ button.case-card {
 
 .about-intro-text {
   font-size: 18px;
-  color: #6F6F6F;
+  color: #000000;
   line-height: 1.8;
   margin-bottom: 20px;
 }
@@ -2275,14 +2285,14 @@ button.case-card {
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.01em;
-  color: #2C261E;
+  color: #000000;
 }
 
 .about-update-copy {
   margin: 0;
   font-size: 16px;
   line-height: 1.7;
-  color: #6F6F6F;
+  color: #000000;
 }
 
 /* About Early Life */
@@ -2300,7 +2310,7 @@ button.case-card {
 
 .about-body-text {
   font-size: 16px;
-  color: #6F6F6F;
+  color: #000000;
   line-height: 1.8;
   margin-bottom: 16px;
 }
@@ -2338,7 +2348,7 @@ button.case-card {
 .resume-section-title {
   font-size: 24px;
   font-weight: 600;
-  color: #2C261E;
+  color: #000000;
   margin-bottom: 24px;
   padding-bottom: 12px;
   border-bottom: 2px solid #eee;
@@ -2362,25 +2372,25 @@ button.case-card {
 .resume-item-title {
   font-size: 18px;
   font-weight: 600;
-  color: #2C261E;
+  color: #000000;
 }
 
 .resume-item-date {
   font-size: 14px;
-  color: #999;
+  color: #000000;
   font-weight: 500;
 }
 
 .resume-item-company {
   font-size: 16px;
-  color: #6F6F6F;
+  color: #000000;
   margin-bottom: 12px;
 }
 
 .resume-item-details {
   list-style: disc;
   padding-left: 20px;
-  color: #6F6F6F;
+  color: #000000;
   font-size: 15px;
   line-height: 1.7;
 }
@@ -2399,7 +2409,7 @@ button.case-card {
 .resume-skill-category-title {
   font-size: 16px;
   font-weight: 600;
-  color: #2C261E;
+  color: #000000;
   margin-bottom: 12px;
 }
 
@@ -2410,7 +2420,7 @@ button.case-card {
 
 .resume-skill-list li {
   font-size: 15px;
-  color: #6F6F6F;
+  color: #000000;
   padding: 6px 0;
   border-bottom: 1px solid #eee;
 }
@@ -2424,8 +2434,8 @@ button.case-card {
 .resume-download-btn {
   display: inline-block;
   padding: 16px 32px;
-  background: #2C261E;
-  color: #fff;
+  background: #e8e8e8;
+  color: #000000;
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
@@ -2434,7 +2444,8 @@ button.case-card {
 }
 
 .resume-download-btn:hover {
-  background: #3d3630;
+  background: #d4d4d4;
+  color: #000000;
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
@@ -2496,7 +2507,7 @@ button.case-card {
 /* New Footer Layout - light pill bar */
 .site-footer-new {
   background: #F5F5F5;
-  color: #2C261E;
+  color: #000000;
   padding: 80px 0 40px;
 }
 
@@ -2515,7 +2526,7 @@ button.case-card {
 .footer-brand-name {
   font-size: 28px;
   font-weight: 600;
-  color: #2C261E;
+  color: #000000;
   margin: 0 0 8px;
   letter-spacing: -0.02em;
 }
@@ -2523,7 +2534,7 @@ button.case-card {
 .footer-description {
   font-size: 16px;
   line-height: 1.6;
-  color: #6F6F6F;
+  color: #000000;
   margin: 0;
   max-width: 46ch;
   margin-inline: auto;
@@ -2567,7 +2578,7 @@ button.case-card {
   gap: 10px;
   padding: 14px 28px;
   background: #fff;
-  color: #2C261E;
+  color: #000000;
   font-size: 16px;
   font-weight: 500;
   line-height: 1;
@@ -2586,29 +2597,29 @@ button.case-card {
 }
 
 .footer-pill-link:hover {
-  background: rgb(37, 100, 235);
-  color: #fff;
-  border-color: rgba(37, 99, 235, 0.35);
+  background: #e8e8e8;
+  color: #000000;
+  border-color: rgba(0, 0, 0, 0.12);
   transform: translateY(-2px);
   box-shadow:
-    0 1px 2px rgba(37, 99, 235, 0.2),
-    0 8px 24px rgba(37, 99, 235, 0.18);
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .footer-pill-link:hover .footer-pill-icon {
-  color: #fff;
+  color: #000000;
 }
 
 .footer-pill-icon {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  color: #6F6F6F;
+  color: #000000;
 }
 
 .footer-copyright {
   font-size: 13px;
-  color: #999;
+  color: #000000;
   margin: 0;
 }
 
@@ -2889,7 +2900,7 @@ button.case-card {
 .case-header-title {
   font-size: 18px;
   font-weight: 600;
-  color: #111;
+  color: #000000;
   margin: 0;
 }
 
@@ -2901,7 +2912,7 @@ button.case-card {
   justify-content: center;
   background: #0ea44a;
   /* bright green */
-  color: #fff;
+  color: #000000;
   position: relative;
   overflow: hidden;
 }
@@ -2935,7 +2946,7 @@ button.case-card {
   bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
-  color: #fff;
+  color: #000000;
   animation: caseIntroFloat 2.2s ease-in-out infinite;
   opacity: 0.9;
   pointer-events: none;
@@ -3004,7 +3015,7 @@ button.case-card {
   align-items: center;
   justify-content: center;
   padding: 10px 10px;
-  color: #6F6F6F;
+  color: #000000;
   text-decoration: none;
   font-size: 20px;
   font-weight: 400;
@@ -3014,7 +3025,7 @@ button.case-card {
 }
 
 .case-back-link:hover {
-  color: #333333;
+  color: #000000;
   transform: translateY(-2px);
 }
 
@@ -3082,7 +3093,7 @@ button.case-card {
   align-items: center;
   justify-content: center;
   padding: 12px 10px;
-  color: #6F6F6F;
+  color: #B8B8B8;
   text-decoration: none;
   font-size: 15px;
   font-weight: 500;
@@ -3094,11 +3105,11 @@ button.case-card {
 }
 
 .case-floating-nav .case-nav-link:hover:not(.active) {
-  color: #333333;
+  color: #B8B8B8;
 }
 
 .case-floating-nav .case-nav-link.active {
-  color: #2C261E;
+  color: #000000;
   font-weight: 600;
 }
 
@@ -3156,6 +3167,68 @@ button.case-card {
   .result-label
 ) {
   text-wrap: pretty;
+}
+
+/* Case study pages — primary copy #000000 (muted only via .section-label / .case-pill-tag) */
+.case-main,
+.case-layout,
+.case-hero-centered {
+  color: #000000;
+}
+
+.case-main :is(
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  li,
+  span,
+  strong,
+  em,
+  small,
+  figcaption,
+  .section-heading,
+  .section-intro,
+  .overview-project-title,
+  .overview-subtitle,
+  .overview-meta-label,
+  .overview-meta-value,
+  .overview-role-title,
+  .overview-role-description,
+  .overview-column-heading,
+  .case-quote,
+  .case-list li,
+  .result-number,
+  .result-label,
+  .info-card-label,
+  .info-card-value,
+  .image-caption,
+  .annotation-text,
+  .robot-comparison-caption,
+  .comparison-label,
+  .handle-arrow,
+  .meta-label,
+  .meta-value,
+  .case-subtitle,
+  .case-title,
+  .text-center,
+  .disclaimer
+) {
+  color: #000000;
+}
+
+.case-main .scroll-fade,
+.case-main .scroll-fade-in {
+  color: #000000;
+}
+
+/* Case study footers (sibling of .case-layout) */
+body:has(.case-layout) .site-footer-new,
+body:has(.case-layout) .site-footer-new :is(h3, p, span, a) {
+  color: #000000;
 }
 
 /* Case study: nav only on intro screen */
@@ -3228,7 +3301,7 @@ button.case-card {
   z-index: 2;
   font-size: clamp(48px, 8vw, 72px);
   font-weight: 700;
-  color: #111;
+  color: #000000;
   margin: 0 0 16px 0;
   letter-spacing: -0.03em;
   flex-shrink: 0;
@@ -3239,7 +3312,7 @@ button.case-card {
   z-index: 2;
   font-size: clamp(16px, 2vw, 20px);
   font-weight: 400;
-  color: #444;
+  color: #000000;
   margin: 0 0 24px;
   max-width: 600px;
   line-height: 1.6;
@@ -3267,7 +3340,7 @@ button.case-card {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 50px;
-  color: #333;
+  color: #000000;
   text-decoration: none;
   font-size: 20px;
   font-weight: 300;
@@ -3327,14 +3400,14 @@ button.case-card {
 .case-title {
   font-size: 40px;
   font-weight: 700;
-  color: #111;
+  color: #000000;
   margin-bottom: 12px;
   letter-spacing: -0.02em;
 }
 
 .case-subtitle {
   font-size: 18px;
-  color: #666;
+  color: #000000;
   margin-bottom: 40px;
 }
 
@@ -3357,12 +3430,12 @@ button.case-card {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #999;
+  color: #000000;
 }
 
 .meta-value {
   font-size: 16px;
-  color: #7c7c7c;
+  color: #000000;
   font-weight: 300;
 }
 
@@ -3403,14 +3476,14 @@ button.case-card {
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #7A7061;
+  color: rgba(0, 0, 0, 0.4);
   margin-bottom: 12px;
 }
 
 .section-heading {
   font-size: clamp(28px, 4vw, 42px);
   font-weight: 700;
-  color: #2C261E;
+  color: #000000;
   line-height: 1.2;
   margin-top: 0;
   margin-bottom: 16px;
@@ -3421,14 +3494,14 @@ button.case-card {
 .section-intro {
   font-size: 17px;
   line-height: 1.65;
-  color: #6F6F6F;
+  color: #000000;
   margin: 0;
   max-width: 640px;
 }
 
 .section-intro strong {
   font-weight: 600;
-  color: #2c2c2c;
+  color: #000000;
 }
 
 .case-content {
@@ -3522,7 +3595,7 @@ button.case-card {
   position: absolute;
   padding: 8px 16px;
   background: rgba(255, 255, 255, 0.7);
-  color: #333;
+  color: #000000;
   font-size: 14px;
   font-weight: 600;
   border-radius: 6px;
@@ -3573,7 +3646,7 @@ button.case-card {
 .handle-arrow {
   font-size: 18px;
   font-weight: bold;
-  color: #333;
+  color: #000000;
   line-height: 1;
 }
 
@@ -3603,12 +3676,12 @@ button.case-card {
   left: 12px;
   width: 44px;
   height: 44px;
-  background: rgba(25, 30, 40, 0.75);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(24px) saturate(150%);
   -webkit-backdrop-filter: blur(24px) saturate(150%);
-  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
-  color: #fff;
+  color: #000000;
   text-decoration: none;
   font-size: 20px;
   align-items: center;
@@ -3618,7 +3691,7 @@ button.case-card {
               inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* Hamburger button - hidden by default, dark glassmorphism */
+/* Hamburger button - hidden by default, light glass */
 .case-hamburger {
   display: none;
   position: fixed;
@@ -3626,10 +3699,10 @@ button.case-card {
   right: 12px;
   width: 44px;
   height: 44px;
-  background: rgba(25, 30, 40, 0.75);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(24px) saturate(150%);
   -webkit-backdrop-filter: blur(24px) saturate(150%);
-  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   cursor: none;
   z-index: 1001;
@@ -3638,14 +3711,14 @@ button.case-card {
   justify-content: center;
   gap: 5px;
   padding: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .hamburger-line {
   width: 20px;
   height: 2px;
-  background: #fff;
+  background: #000000;
   border-radius: 2px;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
@@ -3663,19 +3736,19 @@ button.case-card {
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* Mobile dropdown nav - hidden by default, dark glassmorphism */
+/* Mobile dropdown nav - hidden by default, light glass (black link text) */
 .case-mobile-nav {
   display: none;
   position: fixed;
   top: 68px;
   right: 12px;
-  background: rgba(25, 30, 40, 0.75);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(24px) saturate(150%);
   -webkit-backdrop-filter: blur(24px) saturate(150%);
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
   padding: 12px 0;
   z-index: 1000;
   opacity: 0;
@@ -3701,7 +3774,7 @@ button.case-card {
 .case-mobile-nav .case-nav-link {
   display: block;
   padding: 14px 24px;
-  color: #b8b8b8;
+  color: #000000;
   text-decoration: none;
   font-size: 16px;
   font-weight: 400;
@@ -3710,8 +3783,8 @@ button.case-card {
 
 .case-mobile-nav .case-nav-link:hover,
 .case-mobile-nav .case-nav-link.active {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.1);
+  color: #000000;
+  background: rgba(0, 0, 0, 0.06);
 }
 
 /* Tablet and mobile breakpoint (iPad and smaller) */
@@ -3807,7 +3880,7 @@ button.case-card {
 }
 
 .annotation-text {
-  color: #111;
+  color: #000000;
   font-size: 14px;
   font-weight: 400;
   max-width: 200px;
@@ -3864,7 +3937,7 @@ button.case-card {
 .case-content p {
   font-size: 18px;
   line-height: 1.7;
-  color: #6F6F6F;
+  color: #000000;
   margin-bottom: 20px;
 }
 
@@ -3881,9 +3954,10 @@ button.case-card {
   font-size: 14px;
   line-height: 1.4;
   font-style: italic;
-  color: #9e9e9e;
+  color: #000000;
 }
 
+h1.overview-project-title,
 h2,
 .case-content h2,
 .container > h2,
@@ -3892,6 +3966,7 @@ h2,
   font-size: 50px;
   font-weight: 700;
   margin-bottom: 32px;
+  color: #000000;
 }
 
 .container > p {
@@ -3901,7 +3976,7 @@ h2,
 .case-content h3 {
   font-size: 22px;
   font-weight: 600;
-  color: #111;
+  color: #000000;
   margin: 60px 0 16px;
 }
 
@@ -3924,7 +3999,7 @@ h2,
 .overview-project-title {
   font-size: 48px;
   font-weight: 700;
-  color: #111;
+  color: #000000;
   margin: 0 0 8px 0;
   letter-spacing: -0.02em;
 }
@@ -3932,7 +4007,7 @@ h2,
 .overview-subtitle {
   font-size: 18px;
   font-weight: 400;
-  color: #6F6F6F;
+  color: #000000;
   margin: 0;
 }
 
@@ -3953,13 +4028,13 @@ h2,
 .overview-meta-label {
   font-size: 14px;
   font-weight: 400;
-  color: #6F6F6F;
+  color: #000000;
 }
 
 .overview-meta-value {
   font-size: 18px;
   font-weight: 400;
-  color: #111;
+  color: #000000;
 }
 
 .overview-separator {
@@ -3985,7 +4060,7 @@ h2,
 .overview-column-heading {
   font-size: 24px;
   font-weight: 700;
-  color: #111;
+  color: #000000;
   margin: 0 0 24px 0;
 }
 
@@ -3998,20 +4073,20 @@ h2,
 .overview-text p {
   font-size: 18px;
   line-height: 1.7;
-  color: #6F6F6F;
+  color: #000000;
   margin: 0;
 }
 
 .overview-text strong {
   font-weight: 500;
-  color: #2c2c2c;
+  color: #000000;
 }
 
 .overview-text p.disclaimer {
   font-size: 14px;
   line-height: 1.4;
   font-style: italic;
-  color: #9e9e9e;
+  color: #000000;
 }
 
 .overview-roles {
@@ -4029,13 +4104,13 @@ h2,
 .overview-role-title {
   font-size: 18px;
   font-weight: 700;
-  color: #111;
+  color: #000000;
 }
 
 .overview-role-description {
   font-size: 18px;
   line-height: 1.7;
-  color: #6F6F6F;
+  color: #000000;
 }
 
 @media (max-width: 900px) {
@@ -4080,13 +4155,13 @@ h2,
 .info-card-label {
   font-size: 14px;
   font-weight: 500;
-  color: #888;
+  color: #000000;
 }
 
 .info-card-value {
   font-size: 18px;
   font-weight: 500;
-  color: #111;
+  color: #000000;
   line-height: 1.5;
 }
 
@@ -4101,8 +4176,8 @@ h2,
 .case-quote {
   font-size: 24px;
   font-style: italic;
-  color: #6F6F6F;
-  border-left: 4px solid #111;
+  color: #000000;
+  border-left: 4px solid #000000;
   padding-left: 24px;
   margin: 40px 0;
 }
@@ -4116,7 +4191,7 @@ h2,
 .case-list li {
   font-size: 18px;
   line-height: 1.7;
-  color: #6F6F6F;
+  color: #000000;
   margin-bottom: 12px;
 }
 
@@ -4175,7 +4250,7 @@ h2,
 
 .image-caption {
   font-size: 14px;
-  color: #888;
+  color: #000000;
   text-align: center;
   margin-top: 16px;
 }
@@ -4196,14 +4271,14 @@ h2,
   display: block;
   font-size: 48px;
   font-weight: 700;
-  color: #111;
+  color: #000000;
   line-height: 1.1;
 }
 
 .result-label {
   display: block;
   font-size: 14px;
-  color: #666;
+  color: #000000;
   margin-top: 8px;
 }
 
@@ -4211,12 +4286,12 @@ h2,
 .case-next {
   padding: 80px 0;
   text-align: center;
-  background: #111;
+  background: #f5f5f5;
 }
 
 .next-label {
   font-size: 14px;
-  color: #888;
+  color: #000000;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 12px;
@@ -4242,12 +4317,12 @@ h2,
 .next-project-title {
   font-size: 36px;
   font-weight: 600;
-  color: #fff;
+  color: #000000;
   transition: color 0.2s ease;
 }
 
 .next-project-link:hover .next-project-title {
-  color: #ccc;
+  color: #000000;
 }
 
 /* Case Study Responsive */
@@ -4327,4 +4402,81 @@ h2,
   .next-project-title {
     font-size: 24px;
   }
+}
+
+/* Uniform typography — all readable text uses #000000 */
+body :where(
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  li,
+  span,
+  strong,
+  em,
+  small,
+  figcaption,
+  label,
+  a,
+  button,
+  blockquote
+) {
+  color: #000000;
+}
+
+/* Floating nav (home + case studies) — inactive #B8B8B8, active #000000 */
+.floating-nav a:not(.active):not([aria-current="page"]),
+.floating-nav a:hover:not(.active):not([aria-current="page"]) {
+  color: #B8B8B8;
+}
+
+.floating-nav a.active,
+.floating-nav a[aria-current="page"] {
+  color: #000000;
+}
+
+.case-floating-nav .case-nav-link:not(.active),
+.case-floating-nav .case-nav-link:hover:not(.active) {
+  color: #B8B8B8;
+}
+
+.case-floating-nav .case-nav-link.active {
+  color: #000000;
+}
+
+/* Hero screen — gm design label on monitor */
+.lottie-label,
+.lottie-label :is(span, .lottie-label-bold, .lottie-label-light) {
+  color: #FFFFFF;
+}
+
+/* Primary blue CTAs — white label text (overrides body link color) */
+.about-cta-btn:not(.about-cta-btn--secondary),
+.about-cta-btn:not(.about-cta-btn--secondary):hover,
+.about-cta-btn:not(.about-cta-btn--secondary) :is(span, .about-cta-btn-arrow),
+.profile-card-connect,
+.profile-card-connect:hover,
+.profile-card-connect :is(span, .connect-plus) {
+  color: #FFFFFF;
+}
+
+/* Custom cursor pill — white label + arrow on hover */
+.custom-cursor.expanded .cursor-label,
+.custom-cursor.expanded .cursor-arrow {
+  color: #FFFFFF;
+}
+
+/* Case card pill — tag label at 40% opacity */
+.case-pill .case-pill-tag {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+/* Section labels (case studies) — 40% opacity */
+.section-label,
+.case-main .section-label,
+.case-main h3.section-label {
+  color: rgba(0, 0, 0, 0.4);
 }

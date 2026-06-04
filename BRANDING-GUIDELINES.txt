@@ -1,0 +1,112 @@
+GIUSEPPE MOLLO — PORTFOLIO BRAND GUIDELINES
+============================================
+
+For AI assistants (Cursor, GitHub Copilot, ChatGPT, etc.):
+Read this file before changing design, copy, or styles on this project.
+
+Giuseppe maintains this file. Edit it anytime in VS Code, Cursor, or any text editor.
+When values here change, update css/global.css (and case-specific CSS) to match.
+
+Last updated: 2026-06-04
+
+
+BRAND OVERVIEW
+--------------
+Name: Giuseppe Mollo
+Site: Personal portfolio (UX/UI + graphic design case studies)
+Tone: Clear, confident, approachable. Not corporate jargon. Short sentences. Show craft and process.
+Layout: Spacious, Main White backgrounds, glass-style floating nav, subtle motion.
+
+
+TYPOGRAPHY
+----------
+Body and UI: Inter, with system-ui fallbacks. All paragraphs, nav, case study body, footer.
+Accent / display: Borel (Google Fonts). Use sparingly — e.g. hero caption word "desk".
+Hero screen label: Inter on Lottie overlay — "gm" bold + "design" light on monitor mockup.
+
+Type scale (see css/global.css):
+- Section heading: clamp(28px, 4vw, 42px), weight 700
+- Large case titles: about 50px / 48px project titles
+- Body / case content: 18px, line-height about 1.65–1.7
+- Section label: 12px, uppercase, letter-spacing 0.12em, weight 500
+- Case pill: 15px; title weight 700, tag weight 500
+
+
+COLOR PALETTE
+-------------
+Use hex values below unless opacity is noted.
+
+Primary text:
+- Text primary: #000000 — headings, body, footer, case studies, active nav links
+- Text muted (40%): rgba(0, 0, 0, 0.4) — section labels and case pill tags only
+- Nav inactive: #B8B8B8 — floating nav when link is not active
+- Nav active: #000000 — floating nav .active or aria-current="page"
+
+Backgrounds:
+- Page: #FFFFFF
+- Subtle sections: #F5F5F5 — footer, some case UI
+- Floating nav glass: rgba(245, 245, 245, 0.7) with blur
+
+Accent / interactive:
+- Primary CTA: #2563eb background — about-cta-btn (primary), profile-card-connect (button text #FFFFFF)
+- CTA secondary: white pill, #000000 text (about-cta-btn--secondary, Contact links)
+- Footer pill hover: #E8E8E8 background, text stays #000000
+- Pill separator dot: #C7C7C7 (before case pill tag)
+
+Hero only:
+- Monitor "gm design" label: #FFFFFF (lottie-label on hero screen)
+
+Custom cursor:
+- Dot and pill fill: rgba(0, 0, 0, 0.75) — CSS variable --cursor-black
+- Blur: backdrop-filter blur(12px)
+- Expanded pill label and arrow: #FFFFFF
+
+
+UI COMPONENTS
+-------------
+1. Floating navigation — centered glass bar; inactive #B8B8B8, active #000000.
+2. Case study cards (home page) — white pill bottom-left; project name black; tag at 40% opacity. Cursor pill shows white text (e.g. "View Project" or custom data-cursor-label).
+3. Case study section headers — section label at 40% opacity; heading and intro full black.
+4. Buttons — rounded about 10px; primary blue (#2563eb) with white text; secondary white pill with black text; do not add random new colors.
+5. Custom cursor — site-wide cursor:none; use main.js; do not restore native pointer.
+6. Motion — scroll fade, nav marker; honor reduced-motion in CSS.
+
+
+LOGO AND IDENTITY
+-----------------
+Hero wordmark: "gm" (heavy) + "design" (light), white on dark screen area.
+Favicon: media/Icons/gmWebLogo.jpg
+Email: gmollodesign@gmail.com
+Do not invent new logos or change hero "gm design" without explicit request.
+
+
+CONTENT AND SEO
+---------------
+Language: English (lang="en")
+Page titles: {Page} — Giuseppe Mollo
+One logical h1 per page; case studies use project title in overview.
+Alt text on meaningful images; decorative hero floats may use empty alt.
+
+
+WHERE STYLES LIVE
+-----------------
+Global: css/global.css
+Case-specific: css/Convoy.css, css/FlockSports.css, css/CBSSports.css
+JavaScript: main.js
+Pages: index.html, html/about.html, html/case-study-*.html
+
+
+RULES FOR AI
+------------
+1. Match this document. If you change colors or fonts in CSS, update this file too (or ask Giuseppe).
+2. Do not bring back gray body text (e.g. #6F6F6F) unless this file is updated. Body is #000000.
+3. Muted text is only section labels and case pill tags at 40% black, unless this file says otherwise.
+4. Nav: inactive #B8B8B8, active #000000.
+5. Keep accessibility: focus outlines, aria-current, semantic HTML, sr-only helpers.
+6. Minimize scope — static HTML/CSS/JS; no frameworks unless requested.
+
+
+CHANGELOG (edit when brand changes)
+------------------------------------
+2026-06-04 — Initial: black typography, 40% muted labels/tags, nav grays, cursor and hero rules.
+2026-06-04 — Primary blue CTAs use #FFFFFF text (not black).
