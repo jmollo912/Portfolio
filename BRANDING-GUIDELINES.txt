@@ -48,7 +48,7 @@ Backgrounds:
 - Floating nav glass: rgba(245, 245, 245, 0.7) with blur
 
 Accent / interactive:
-- Primary CTA: #2563eb background — about-cta-btn (primary), profile-card-connect (button text #FFFFFF)
+- Primary CTA: #4763FF (rgb(71, 99, 255)) — about-cta-btn (primary), profile-card-connect, hero animation lines/fill (button text #FFFFFF)
 - CTA secondary: white pill, #000000 text (about-cta-btn--secondary, Contact links)
 - Footer pill hover: #E8E8E8 background, text stays #000000
 - Pill separator dot: #C7C7C7 (before case pill tag)
@@ -67,7 +67,7 @@ UI COMPONENTS
 1. Floating navigation — centered glass bar; inactive #B8B8B8, active #000000.
 2. Case study cards (home page) — white pill bottom-left; project name black; tag at 40% opacity. Cursor pill shows white text (e.g. "View Project" or custom data-cursor-label).
 3. Case study section headers — section label at 40% opacity; heading and intro full black.
-4. Buttons — rounded about 10px; primary blue (#2563eb) with white text; secondary white pill with black text; do not add random new colors.
+4. Buttons — rounded about 10px; primary blue (#4763FF) with white text; secondary white pill with black text; do not add random new colors.
 5. Custom cursor — site-wide cursor:none; use main.js; do not restore native pointer.
 6. Motion — scroll fade, nav marker; honor reduced-motion in CSS.
 
@@ -110,3 +110,4 @@ CHANGELOG (edit when brand changes)
 ------------------------------------
 2026-06-04 — Initial: black typography, 40% muted labels/tags, nav grays, cursor and hero rules.
 2026-06-04 — Primary blue CTAs use #FFFFFF text (not black).
+2026-06-05 — Primary blue updated to #4763FF (rgb(71, 99, 255)).

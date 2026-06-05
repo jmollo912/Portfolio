@@ -34,17 +34,63 @@ body {
 
 :root {
   --site-text: #000000;
+  --brand-blue: #4763FF;
+  --brand-blue-rgb: 71, 99, 255;
+  /* Page background grid lines (4 vertical lines) */
+  --page-grid-outer: 14%;
+  --page-grid-inner: 41%;
+  --page-grid-color: rgba(0, 0, 0, 0.10);
+  --page-grid-color-dashed: rgba(0, 0, 0, 0.18);
 }
 
 html {
   color: #000000;
+  background: #fff;
 }
 
 body {
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.5;
   color: #000000;
-  background: #fff;
+  background: transparent;
+  position: relative;
+}
+
+/* ========================================
+   PAGE BACKGROUND GRID — 4 vertical lines
+   (outer solid, inner dashed) behind everything
+   ======================================== */
+.page-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.grid-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 1px solid var(--page-grid-color);
+}
+
+.grid-line--inner-left,
+.grid-line--inner-right {
+  border-left-style: dashed;
+  border-left-color: var(--page-grid-color-dashed);
+}
+
+.grid-line--outer-left  { left: var(--page-grid-outer); }
+.grid-line--inner-left  { left: var(--page-grid-inner); }
+.grid-line--inner-right { right: var(--page-grid-inner); }
+.grid-line--outer-right { right: var(--page-grid-outer); }
+
+@media (max-width: 600px) {
+  .page-grid { display: none; }
 }
 
 .sr-only {
@@ -442,8 +488,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.09),
-              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: none;
   border: 0.5px solid rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
@@ -550,9 +595,7 @@ body {
   height: 0;
   border-radius: 10px;
   background-color: #fff;
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.05),
-    0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: none;
   z-index: -1;
   opacity: 0;
   pointer-events: none;
@@ -697,28 +740,15 @@ body {
 
 /* HERO SECTION */
 .hero {
-  background: #fff;
-  padding: 150px 0 0px;
+  background: transparent;
+  padding: 145px 0 80px;
   min-height: 100vh;
   display: flex;
   align-items: center;
   transition: opacity 0.15s ease-out, transform 0.15s ease-out;
   will-change: opacity, transform;
   position: relative;
-  overflow: hidden;
-}
-
-.hero-bg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 120vw;
-  height: 120vh;
-  transform: translate(-50%, -50%);
-  z-index: 0;
-  background: url('../media/HeroPage/BG@2x.png') center center/cover no-repeat;
-  opacity: 0.7;
-  pointer-events: none;
+  overflow: visible;
 }
 
 .hero-container {
@@ -726,35 +756,23 @@ body {
   z-index: 1;
 }
 
-/* Wall pictures behind hero - positioned relative to hero-container */
-.wall-pictures {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 5;
-  pointer-events: none;
-}
-
+/* Wall pictures — now live inside the figma canvas */
 .wall-pic {
   pointer-events: auto;
   position: absolute;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
   object-fit: cover;
   border: 7px solid #ffffff;
   cursor: none;
   z-index: 5;
-  /* Use percentage-based sizing to scale with container */
   width: 14%;
   height: auto;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
   --base-transform: rotate(0deg);
   --hover-rotate: rotate(3deg);
-  /* Entrance animation - slides up from below like the hero image */
   opacity: 0;
   transform: translateY(60px) scale(0.85) var(--base-transform);
-  transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease-out;
 }
 
 .wall-pic.animate-in {
@@ -773,72 +791,75 @@ body {
   transform: translate(0, -4px) scale(1.03) var(--hover-rotate);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
-
+/* Eagles Game */
 .wall-pic-1 {
-  width: 11%;
-  top: -18%;
-  left: 15%;
-  --base-transform: rotate(-5deg);
-  --hover-rotate: rotate(-8deg);
+  width: 12%;
+  top: 7%;
+  left: 12%;
+  --base-transform: rotate(10deg);
+  --hover-rotate: rotate(8deg);
   transition-delay: 0.1s;
 }
 
+/* Fishing */
 .wall-pic-2 {
-  width: 12%;
-  top: -15%;
-  left: auto;
-  right: 14%;
+  width: 16%;
+  top: 30%;
+  right: 2%;
   --base-transform: rotate(-7deg);
-  --hover-rotate: rotate(-10deg);
+  --hover-rotate: rotate(-9deg);
   transition-delay: 0.15s;
 }
 
+/* Flying */
 .wall-pic-3 {
-  width: 15%;
-  top: 12%;
-  left: 4%;
-  --base-transform: rotate(-6deg);
-  --hover-rotate: rotate(-9deg);
+  width: 20%;
+  bottom: 7%;
+  left: 10%;
+  --base-transform: rotate(5deg);
+  --hover-rotate: rotate(7deg);
   transition-delay: 0.2s;
 }
 
+/* HDFC */
 .wall-pic-4 {
-  width: 13%;
-  top: -12%;
+  width: 19%;
+  top: 5%;
   left: auto;
-  right: 2%;
-  --base-transform: rotate(2deg);
-  --hover-rotate: rotate(5deg);
+  right: 12%;
+  --base-transform: rotate(-2deg);
+  --hover-rotate: rotate(-4deg);
   transition-delay: 0.25s;
 }
 
+/* Hiking */
 .wall-pic-5 {
-  width: 11%;
-  top: -6%;
-  left: 6%;
-  --base-transform: rotate(9deg);
-  --hover-rotate: rotate(12deg);
+  width: 18%;
+  bottom: 38%;
+  left: -1%;
+  --base-transform: rotate(-9deg);
+  --hover-rotate: rotate(-11deg);
   transition-delay: 0.3s;
 }
 
+/* Savannah */
 .wall-pic-6 {
-  width: 10%;
-  top: 8%;
-  left: auto;
-  right: 3%;
-  --base-transform: rotate(1deg);
-  --hover-rotate: rotate(4deg);
+  width: 14%;
+  top: 70%;
+  right: 10%;
+  --base-transform: rotate(10deg);
+  --hover-rotate: rotate(12deg);
   transition-delay: 0.35s;
 }
 
 @media (max-width: 900px) {
   .wall-pic.animate-in {
-    opacity: 0.6;
+    opacity: 0.8;
   }
 }
 
 @media (max-width: 620px) {
-  .wall-pictures {
+  .figma-canvas-inner .wall-pic {
     display: none;
   }
 }
@@ -852,6 +873,294 @@ body {
   will-change: opacity, transform;
   position: relative;
   z-index: 1;
+}
+
+/* Full-bleed container for the figma window so it aligns to the viewport grid */
+.hero-container--figma {
+  max-width: none;
+  width: 100%;
+  padding: 0;
+  transform: translateY(-20px);
+}
+
+/* ========================================
+   HERO FIGMA WINDOW — replaces desk render
+   ======================================== */
+.hero-figma-window {
+  position: relative;
+  width: min(68vw, 1280px);
+  margin: 0 auto;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #efefef;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, sans-serif;
+  z-index: 1;
+  /* Entrance animation */
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-figma-window.animate-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.figma-title-bar {
+  display: flex;
+  align-items: stretch;
+  height: 44px;
+  background: #ececec;
+  border-bottom: 1px solid #d0d0d0;
+  padding: 0 12px;
+  gap: 10px;
+  user-select: none;
+}
+
+.figma-traffic-lights {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  align-self: center;
+  flex-shrink: 0;
+}
+
+.figma-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  display: block;
+}
+
+.figma-dot-close    { background: #ff5f57; border: 0.5px solid #e0443e; }
+.figma-dot-minimize { background: #febc2e; border: 0.5px solid #d4a017; }
+.figma-dot-maximize { background: #28c840; border: 0.5px solid #1aab29; }
+
+.figma-home-btn {
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  color: #000000;
+  margin-left: 2px;
+  align-self: center;
+  flex-shrink: 0;
+}
+
+.figma-home-btn:hover,
+.figma-home-btn:focus-visible {
+  background: none;
+  color: #000000;
+}
+
+.figma-home-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.figma-tab-strip {
+  display: flex;
+  align-items: stretch;
+  align-self: stretch;
+  height: 100%;
+  margin-left: 4px;
+  min-width: 0;
+  gap: 4px;
+  flex: 1;
+}
+
+.figma-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px 0 14px;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 0;
+  border: 1px solid #d0d0d0;
+  border-top: none;
+  border-bottom: 1px solid #ffffff;
+  font-size: 13px;
+  color: #000000;
+  font-weight: 400;
+  white-space: nowrap;
+  max-width: 260px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.figma-tab-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.figma-tab-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.figma-tab-close {
+  width: 18px;
+  height: 18px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #808080;
+  flex-shrink: 0;
+  margin-left: 2px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.figma-tab-close:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #000000;
+}
+
+.figma-tab-close svg {
+  width: 10px;
+  height: 10px;
+}
+
+.figma-tab-add {
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+  border-radius: 0;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  flex-shrink: 0;
+}
+
+.figma-tab-add:hover,
+.figma-tab-add:focus-visible {
+  background: none;
+  color: #555;
+}
+
+.figma-tab-add svg {
+  width: 12px;
+  height: 12px;
+}
+
+.figma-canvas {
+  position: relative;
+  width: 100%;
+  min-height: 560px;
+  aspect-ratio: 16 / 9;
+  background-color: #F5F5F5;
+  background-image: radial-gradient(circle, #d0d0d0 1px, transparent 1px);
+  background-size: 22px 22px;
+  overflow: hidden;
+}
+
+.figma-canvas-inner {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Hero cursor animation stage — fills the figma canvas ── */
+#hero-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border-radius: 0;
+  z-index: 10;
+  overflow: visible;
+  pointer-events: none;
+}
+
+#hero-cursor {
+  position: absolute;
+  width: 22px;
+  height: 31px;
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+#hero-textbox {
+  position: absolute;
+  border: 2.5px solid var(--brand-blue);
+  border-radius: 0;
+  background: rgba(var(--brand-blue-rgb), 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+  opacity: 0;
+}
+
+#hero-typed {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  color: #111111;
+  line-height: 1;
+  pointer-events: none;
+}
+
+#hero-caret {
+  display: inline-block;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--brand-blue);
+  margin-left: 2px;
+  animation: hero-blink 0.7s steps(1) infinite;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+@keyframes hero-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+.hero-corner-handle {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: #ffffff;
+  border: 2.5px solid var(--brand-blue);
+  border-radius: 0;
+  z-index: 15;
+  pointer-events: none;
+  opacity: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  #hero-stage { display: none; }
+}
+
+@media (max-width: 1100px) {
+  .hero-figma-window { width: min(72vw, 1100px); }
+  .figma-canvas { min-height: 480px; }
+}
+
+@media (max-width: 768px) {
+  .hero-figma-window { width: 88vw; }
+  .figma-canvas { min-height: 380px; }
+}
+
+@media (max-width: 600px) {
+  .hero-figma-window { width: 92vw; }
+  .figma-canvas { min-height: 260px; background-size: 18px 18px; }
 }
 
 .hero-figure {
@@ -1118,7 +1427,7 @@ body {
 
 .case-studies {
   padding: 80px 0;
-  background: #fff;
+  background: transparent;
   transition: opacity 0.15s ease-out, transform 0.15s ease-out;
   will-change: opacity, transform;
 }
@@ -1650,7 +1959,7 @@ button.case-card {
 }
 
 .profile-card-connect {
-  background: #2563eb;
+  background: var(--brand-blue);
   color: #FFFFFF;
   padding: 10px 20px;
   border-radius: 10px;
@@ -1661,20 +1970,20 @@ button.case-card {
   align-items: center;
   gap: 6px;
   box-shadow:
-    0 1px 2px rgba(37, 99, 235, 0.25),
-    0 4px 12px rgba(37, 99, 235, 0.2);
+    0 1px 2px rgba(var(--brand-blue-rgb), 0.25),
+    0 4px 12px rgba(var(--brand-blue-rgb), 0.2);
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .profile-card-connect:hover {
-  background: rgba(37, 99, 235, 0.75);
+  background: rgba(var(--brand-blue-rgb), 0.75);
   color: #FFFFFF;
   transform: translateY(-2px);
   box-shadow:
-    0 1px 2px rgba(37, 99, 235, 0.2),
-    0 8px 24px rgba(37, 99, 235, 0.18);
+    0 1px 2px rgba(var(--brand-blue-rgb), 0.2),
+    0 8px 24px rgba(var(--brand-blue-rgb), 0.18);
 }
 
 .connect-plus {
@@ -1906,15 +2215,15 @@ button.case-card {
   gap: 10px;
   margin-top: 28px;
   padding: 14px 28px;
-  background: #2563eb;
+  background: var(--brand-blue);
   color: #FFFFFF;
   font-size: 16px;
   font-weight: 500;
   text-decoration: none;
   border-radius: 10px;
   box-shadow:
-    0 1px 2px rgba(37, 99, 235, 0.25),
-    0 4px 12px rgba(37, 99, 235, 0.2);
+    0 1px 2px rgba(var(--brand-blue-rgb), 0.25),
+    0 4px 12px rgba(var(--brand-blue-rgb), 0.2);
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -1938,12 +2247,12 @@ button.case-card {
 }
 
 .about-cta-btn:not(.about-cta-btn--secondary):hover {
-  background: rgba(37, 99, 235, 0.75);
+  background: rgba(var(--brand-blue-rgb), 0.75);
   color: #FFFFFF;
   transform: translateY(-2px);
   box-shadow:
-    0 1px 2px rgba(37, 99, 235, 0.2),
-    0 8px 24px rgba(37, 99, 235, 0.18);
+    0 1px 2px rgba(var(--brand-blue-rgb), 0.2),
+    0 8px 24px rgba(var(--brand-blue-rgb), 0.18);
 }
 
 .about-cta-btn--secondary:hover {
@@ -2111,8 +2420,6 @@ button.case-card {
   min-height: 500px;
   padding: 32px;
   background-color: #f5f5f5;
-  background-image: radial-gradient(circle, #c8c8c8 1px, transparent 1px);
-  background-size: 22px 22px;
   overflow: hidden;
 }
 
@@ -2218,7 +2525,6 @@ button.case-card {
   .mac-canvas-area {
     min-height: 280px;
     padding: 16px;
-    background-size: 18px 18px;
   }
 
   .mac-photo-grid {
@@ -2681,6 +2987,10 @@ button.case-card {
     padding: 120px 0 40px;
   }
 
+  .hero-container--figma {
+    transform: translateY(-12px);
+  }
+
   .screen-animation {
     top: 42%;
     width: 42%;
@@ -3040,8 +3350,7 @@ button.case-card {
   display: flex;
   flex-direction: row;
   align-items: center;
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.09),
-              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: none;
   border: 0.5px solid rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
@@ -3071,9 +3380,7 @@ button.case-card {
   height: 0;
   border-radius: 10px;
   background-color: #fff;
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.05),
-    0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: none;
   z-index: -1;
   opacity: 0;
   pointer-events: none;

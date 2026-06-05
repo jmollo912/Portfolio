@@ -1,3 +1,18 @@
+// Always start at the top on load unless navigating to a deep-link section.
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
+function ensurePageStartsAtTop() {
+  const hash = window.location.hash;
+  if (hash && hash !== '#hero') return;
+  window.scrollTo(0, 0);
+}
+
+ensurePageStartsAtTop();
+document.addEventListener('DOMContentLoaded', ensurePageStartsAtTop);
+window.addEventListener('load', ensurePageStartsAtTop);
+
 // ==========================================
 // 1. CUSTOM CURSOR WITH DELAY
 // ==========================================
@@ -9,7 +24,7 @@ function siteAssetPrefix() {
 
 // Handle hash navigation on page load (for cross-page links like Work from About page)
 if (window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname.endsWith('/index.html')) {
-  if (window.location.hash) {
+  if (window.location.hash && window.location.hash !== '#hero') {
     const targetId = window.location.hash;
     // Wait for DOM to be ready, then scroll to the target
     document.addEventListener('DOMContentLoaded', function() {
@@ -57,7 +72,7 @@ document.addEventListener('mousemove', (e) => {
 });
 
 function animateCursor() {
-  const speed = 0.18;
+  const speed = 0.26;
   cursorX += (mouseX - cursorX) * speed;
   cursorY += (mouseY - cursorY) * speed;
   
@@ -77,42 +92,266 @@ animateCursor();
 function startHeroAnimations() {
   const navGroup = document.querySelector('.nav-group');
   const heroCaption = document.querySelector('.hero-container > .hero-caption');
-  const heroImage = document.querySelector('.hero-image');
-  const screenAnimation = document.querySelector('.screen-animation');
+  const figmaWindow = document.querySelector('.hero-figma-window');
   const wallPics = document.querySelectorAll('.wall-pic');
-  
-  // Animate nav group first (drop down from top)
+
   setTimeout(() => {
     if (navGroup) navGroup.classList.add('animate-in');
   }, 100);
-  
-  // Animate caption, hero image, and screen animation together
-  setTimeout(() => {
-    if (heroCaption) {
-      heroCaption.classList.add('animate-in');
-    }
-    if (heroImage) {
-      heroImage.classList.add('animate-in');
-    }
-    if (screenAnimation) {
-      screenAnimation.classList.add('animate-in');
-    }
-    
-    // Then animate wall pictures after hero is done
-    setTimeout(() => {
-      wallPics.forEach(pic => {
-        pic.classList.add('animate-in');
-      });
 
-      // After the last wall-pic entrance finishes (max delay 350ms + duration 400ms
-      // + a small buffer), switch to the fast hover micro-transition.
+  setTimeout(() => {
+    if (heroCaption) heroCaption.classList.add('animate-in');
+    if (figmaWindow) figmaWindow.classList.add('animate-in');
+
+    setTimeout(() => {
+      wallPics.forEach(pic => pic.classList.add('animate-in'));
+
       setTimeout(() => {
-        wallPics.forEach(pic => {
-          pic.classList.add('entrance-done');
-        });
+        wallPics.forEach(pic => pic.classList.add('entrance-done'));
       }, 850);
-    }, 300); // Wait for hero animation to mostly complete
-  }, 100); // Small initial delay for page to settle
+    }, 300);
+
+    // Start the cursor animation after the window has mostly settled
+    setTimeout(initHeroCursorAnimation, 700);
+  }, 100);
+}
+
+// ==========================================
+// HERO CURSOR ANIMATION — plays once on load
+// ==========================================
+function initHeroCursorAnimation() {
+  const stage = document.getElementById('hero-stage');
+  if (!stage) return;
+
+  const cursor   = document.getElementById('hero-cursor');
+  const textbox  = document.getElementById('hero-textbox');
+  const typed    = document.getElementById('hero-typed');
+  const caret    = document.getElementById('hero-caret');
+  const handles  = {
+    tl: document.getElementById('hero-h-tl'),
+    tr: document.getElementById('hero-h-tr'),
+    bl: document.getElementById('hero-h-bl'),
+    br: document.getElementById('hero-h-br'),
+  };
+
+  const TEXT = "Hi, I'm Giuseppe";
+
+  function lerp(a, b, t)    { return a + (b - a) * t; }
+  function easeInOut(t)     { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+  function easeOut(t)       { return 1 - Math.pow(1 - t, 3); }
+
+  let animFrame;
+  let animationComplete = false;
+
+  function getMetrics() {
+    const W = stage.offsetWidth;
+    const H = stage.offsetHeight;
+    const boxCX = W / 2;
+    const boxCY = H / 2;
+    const hs = Math.round(Math.max(13, Math.min(W, H) * 0.02));
+
+    const targetW  = W * 0.55;
+    const targetH  = H * 0.22;
+    const targetFS = targetH * 0.4;
+    const finalW   = Math.min(W * 0.68, 480);
+    const finalH   = Math.min(H * 0.28, 108);
+    const finalFS  = Math.min(finalH * 0.42, 44);
+
+    const cursorStartX = W * 0.08;
+    const cursorStartY = H * 0.15;
+    const drawStartX   = boxCX - targetW / 2;
+    const drawStartY   = boxCY - targetH / 2;
+    const drawEndX     = boxCX + targetW / 2;
+    const drawEndY     = boxCY + targetH / 2;
+    const trHandleX    = boxCX + targetW / 2 - hs / 2;
+    const trHandleY    = boxCY - targetH / 2 - hs / 2;
+    const finalTrX     = boxCX + finalW / 2 - hs / 2;
+    const finalTrY     = boxCY - finalH / 2 - hs / 2;
+
+    return {
+      W, H, hs, boxCX, boxCY,
+      targetW, targetH, targetFS,
+      finalW, finalH, finalFS,
+      cursorStartX, cursorStartY,
+      drawStartX, drawStartY,
+      drawEndX, drawEndY,
+      trHandleX, trHandleY,
+      finalTrX, finalTrY,
+    };
+  }
+
+  function setCursor(x, y) {
+    cursor.style.left = `${x}px`;
+    cursor.style.top  = `${y}px`;
+  }
+
+  function setCursorOpacity(op) {
+    cursor.style.opacity = op;
+  }
+
+  function applyBox(cx, cy, w, h, fontSize, hs) {
+    const left = cx - w / 2;
+    const top  = cy - h / 2;
+    textbox.style.left   = `${left}px`;
+    textbox.style.top    = `${top}px`;
+    textbox.style.width  = `${w}px`;
+    textbox.style.height = `${h}px`;
+    typed.style.fontSize = `${fontSize}px`;
+    caret.style.height   = h > 20 ? `${fontSize * 1.15}px` : '0px';
+    const ho = hs / 2;
+    Object.values(handles).forEach(handle => {
+      handle.style.width  = `${hs}px`;
+      handle.style.height = `${hs}px`;
+    });
+    handles.tl.style.left = `${left - ho}px`;
+    handles.tl.style.top  = `${top  - ho}px`;
+    handles.tr.style.left = `${left + w - ho}px`;
+    handles.tr.style.top  = `${top  - ho}px`;
+    handles.bl.style.left = `${left - ho}px`;
+    handles.bl.style.top  = `${top  + h - ho}px`;
+    handles.br.style.left = `${left + w - ho}px`;
+    handles.br.style.top  = `${top  + h - ho}px`;
+  }
+
+  function showBox(show) {
+    const op = show ? '1' : '0';
+    textbox.style.opacity = op;
+    Object.values(handles).forEach(h => h.style.opacity = op);
+  }
+
+  function applyFinalState() {
+    const m = getMetrics();
+    typed.textContent = TEXT;
+    applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
+    showBox(true);
+    setCursorOpacity(0);
+  }
+
+  function runAnimation() {
+    animationComplete = false;
+    const m0 = getMetrics();
+
+    // Phases:
+    //  0 fade-in cursor
+    //  1 move from top-left of stage → top-left click point
+    //  2 drag down-right to draw the box (cursor lands at bottom-right corner)
+    //  3 hold at bottom-right corner while text types in
+    //  4 small hold after typing
+    //  5 move from bottom-right corner → top-right handle
+    //  6 expand animation (cursor follows top-right handle)
+    //  7 hold after expand
+    //  8 cursor fade out
+    const phases = [500, 700, 800, TEXT.length * 90, 400, 600, 900, 500, 500];
+    const ends   = [];
+    let acc = 0;
+    phases.forEach(d => { acc += d; ends.push(acc); });
+
+    showBox(false);
+    typed.textContent = '';
+    setCursorOpacity(0);
+    setCursor(m0.cursorStartX, m0.cursorStartY);
+
+    let start = null;
+
+    function pT(i, elapsed) {
+      const s = i === 0 ? 0 : ends[i - 1];
+      return Math.max(0, Math.min(1, (elapsed - s) / phases[i]));
+    }
+
+    function frame(ts) {
+      const m = getMetrics();
+
+      if (!start) start = ts;
+      const el = ts - start;
+
+      if (el < ends[0]) {
+        // 0. Cursor fade in at top-left of stage
+        setCursorOpacity(pT(0, el));
+        setCursor(m.cursorStartX, m.cursorStartY);
+        showBox(false);
+      } else if (el < ends[1]) {
+        // 1. Move from top-left of stage → top-left click point
+        setCursorOpacity(1);
+        const p = easeInOut(pT(1, el));
+        setCursor(lerp(m.cursorStartX, m.drawStartX, p), lerp(m.cursorStartY, m.drawStartY, p));
+        showBox(false);
+      } else if (el < ends[2]) {
+        // 2. Drag down-right to draw the box
+        setCursorOpacity(1);
+        const p = easeInOut(pT(2, el));
+        const w = lerp(0, m.targetW, p);
+        const h = lerp(0, m.targetH, p);
+        applyBox(m.drawStartX + w/2, m.drawStartY + h/2, w, h, m.targetFS, m.hs);
+        showBox(true);
+        setCursor(m.drawStartX + w, m.drawStartY + h);
+      } else if (el < ends[3]) {
+        // 3. Hold at bottom-right corner while text types in
+        setCursorOpacity(1);
+        typed.textContent = TEXT.slice(0, Math.floor(pT(3, el) * TEXT.length));
+        applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
+        showBox(true);
+        setCursor(m.drawEndX, m.drawEndY);
+      } else if (el < ends[4]) {
+        // 4. Small hold after typing
+        setCursorOpacity(1);
+        typed.textContent = TEXT;
+        applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
+        showBox(true);
+        setCursor(m.drawEndX, m.drawEndY);
+      } else if (el < ends[5]) {
+        // 5. Move from bottom-right corner → top-right handle
+        setCursorOpacity(1);
+        typed.textContent = TEXT;
+        applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
+        showBox(true);
+        const p = easeInOut(pT(5, el));
+        setCursor(lerp(m.drawEndX, m.trHandleX, p), lerp(m.drawEndY, m.trHandleY, p));
+      } else if (el < ends[6]) {
+        // 6. Expand the box (cursor follows top-right handle)
+        setCursorOpacity(1);
+        typed.textContent = TEXT;
+        const p = easeInOut(pT(6, el));
+        applyBox(m.boxCX, m.boxCY, lerp(m.targetW, m.finalW, p), lerp(m.targetH, m.finalH, p), lerp(m.targetFS, m.finalFS, p), m.hs);
+        showBox(true);
+        setCursor(lerp(m.trHandleX, m.finalTrX, p), lerp(m.trHandleY, m.finalTrY, p));
+      } else if (el < ends[7]) {
+        // 7. Hold after expand
+        setCursorOpacity(1);
+        typed.textContent = TEXT;
+        applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
+        showBox(true);
+        setCursor(m.finalTrX, m.finalTrY);
+      } else if (el < ends[8]) {
+        // 8. Cursor fade out
+        typed.textContent = TEXT;
+        applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
+        showBox(true);
+        setCursor(m.finalTrX, m.finalTrY);
+        setCursorOpacity(1 - pT(8, el));
+      } else {
+        animationComplete = true;
+        applyFinalState();
+        return;
+      }
+
+      animFrame = requestAnimationFrame(frame);
+    }
+
+    animFrame = requestAnimationFrame(frame);
+  }
+
+  if (typeof ResizeObserver !== 'undefined') {
+    const resizeObserver = new ResizeObserver(() => {
+      if (animationComplete) applyFinalState();
+    });
+    resizeObserver.observe(stage);
+  } else {
+    window.addEventListener('resize', () => {
+      if (animationComplete) applyFinalState();
+    });
+  }
+
+  runAnimation();
 }
 
 // Wait for loading screen to finish before starting animations
@@ -1312,10 +1551,8 @@ function initLottieAnimation() {
 
     const container = document.getElementById('lottie-container');
     if (!container) {
-        if (lottieRetryCount < maxRetries) {
-            lottieRetryCount++;
-            setTimeout(initLottieAnimation, 100);
-        }
+        // Hero no longer hosts the Lottie animation; bail out quietly.
+        animationInitialized = true;
         return;
     }
 
