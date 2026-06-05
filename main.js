@@ -92,6 +92,7 @@ animateCursor();
 function startHeroAnimations() {
   const navGroup = document.querySelector('.nav-group');
   const resumePill = document.querySelector('.nav-resume-pill');
+  const navWordmark = document.querySelector('.nav-wordmark');
   const heroCaption = document.querySelector('.hero-container > .hero-caption');
   const heroCanvas = document.querySelector('.hero-canvas');
   const wallPics = document.querySelectorAll('.wall-pic');
@@ -99,6 +100,7 @@ function startHeroAnimations() {
   setTimeout(() => {
     if (navGroup) navGroup.classList.add('animate-in');
     if (resumePill) resumePill.classList.add('animate-in');
+    if (navWordmark) navWordmark.classList.add('animate-in');
   }, 100);
 
   setTimeout(() => {
@@ -136,7 +138,7 @@ function initHeroCursorAnimation() {
     br: document.getElementById('hero-h-br'),
   };
 
-  const TEXT = "Hey, I'm Giuseppe";
+  const TEXT = "Welcome to my portfolio";
   const BOX_H_PAD = 28;
   let measureCanvas;
 
@@ -166,7 +168,7 @@ function initHeroCursorAnimation() {
     const maxH = H - edge * 2;
 
     // Final box — scales with viewport, capped on large screens
-    let finalW = Math.min(W * 0.72, 520, maxW);
+    let finalW = Math.min(W * 0.78, 580, maxW);
     let finalH = Math.min(H * 0.31, 118, maxH);
     let finalFS = Math.min(finalH * 0.42, 48);
 
@@ -887,12 +889,15 @@ function updateActiveSection() {
         current = "hero";
     }
 
+    // About Me on the home page sits below Work — keep Work highlighted in the nav
+    const navId = current === 'about' ? 'case-studies' : current;
+
     // Update home link active state
     if (homeLink) {
         homeLink.classList.remove("active");
         homeLink.removeAttribute("aria-current");
         
-        if (current === "hero") {
+        if (navId === "hero") {
             homeLink.classList.add("active");
             homeLink.setAttribute("aria-current", "page");
         }
@@ -903,7 +908,7 @@ function updateActiveSection() {
         a.classList.remove("active");
         a.removeAttribute("aria-current");
         
-        if (a.getAttribute("href") === `#${current}`) {
+        if (a.getAttribute("href") === `#${navId}`) {
             a.classList.add("active");
             a.setAttribute("aria-current", "page");
             positionMarker(a);

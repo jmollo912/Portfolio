@@ -65,7 +65,7 @@ body {
 
 /* Custom cursor — 75% black + blur (dot matches case-study pill) */
 .custom-cursor {
-  --cursor-black: rgba(0, 0, 0, 0.75);
+  --cursor-black: rgba(0, 0, 0, 0.65);
   position: fixed;
   display: flex;
   align-items: center;
@@ -382,7 +382,7 @@ body {
 /* Standalone Resume link — fixed top-right, vertically centered with the floating nav */
 .nav-resume-pill {
   position: fixed;
-  right: 48px;
+  right: 72px;
   top: -80px;
   display: inline-flex;
   align-items: center;
@@ -404,6 +404,49 @@ body {
 
 .nav-resume-pill.animate-in {
   top: 12px;
+}
+
+/* Standalone wordmark — fixed top-left, mirrors resume button */
+.nav-wordmark {
+  position: fixed;
+  left: 72px;
+  top: -80px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 71px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: #000000;
+  font-size: 18px;
+  line-height: 1;
+  text-decoration: none;
+  z-index: 1000;
+  pointer-events: auto;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-wordmark.animate-in {
+  top: 12px;
+}
+
+.nav-wordmark-text {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.nav-wordmark-gm {
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.nav-wordmark-design {
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-left: -0.06em;
 }
 
 /* Home Button Container - White background */
@@ -465,7 +508,7 @@ body {
 /* Floating nav - White background */
 .floating-nav {
   position: relative;
-  background: rgba(224, 224, 224, 0.7);
+  background: rgba(224, 224, 224, 0.5);
   backdrop-filter: blur(10px) saturate(150%);
   -webkit-backdrop-filter: blur(10px) saturate(150%);
   padding: 16px;
@@ -600,7 +643,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 10px 20px;
-  color: #B8B8B8;
+  color: #b8b8b879;
   text-decoration: none;
   border-radius: 10px;
   font-weight: 500;
@@ -707,13 +750,13 @@ body {
   .floating-nav ul {
     display: flex;
     flex-direction: row;
-    gap: 20px;
-    padding: 0 20px;
+    gap: 18px;
+    padding: 0 44px;
     align-items: center;
   }
 
   .floating-nav a {
-    padding: 12px 10px;
+    padding: 12px 18px;
   }
 }
 
@@ -784,8 +827,8 @@ body {
 
 /* Eagles Game */
 .wall-pic-1 {
-  width: 11%;
-  bottom:70%;
+  width: 12%;
+  bottom:68%;
   left: 19%;
   --base-transform: rotate(11deg);
   transition-delay: 0.1s;
@@ -793,9 +836,9 @@ body {
 
 /* Hiking */
 .wall-pic-5 {
-  width: 12%;
+  width: 13%;
   bottom: 38%;
-  left: 10%;
+  left: 8%;
   --base-transform: rotate(-9deg);
   transition-delay: 0.3s;
 }
@@ -811,17 +854,17 @@ body {
 
 /* HCFC */
 .wall-pic-4 {
-  width: 13.5%;
+  width: 15%;
   top: 4%;
   right: 19%;
-  --base-transform: rotate(-2deg);
+  --base-transform: rotate(-5deg);
   transition-delay: 0.25s;
 }
 /* Fishing */
 .wall-pic-2 {
-  width: 11%;
+  width: 13%;
   top: 35%;
-  right: 10%;
+  right: 9%;
   --base-transform: rotate(-7deg);
   transition-delay: 0.15s;
 }
@@ -829,8 +872,8 @@ body {
 /* GeorgiaFlorida */
 .wall-pic-6 {
   width: 14%;
-  bottom: 1%;
-  right: 23%;
+  bottom: 3%;
+  right: 19%;
   --base-transform: rotate(10deg);
   transition-delay: 0.35s;
 }
@@ -844,6 +887,15 @@ body {
 @media (max-width: 620px) {
   .hero-canvas-inner .wall-pic {
     display: none;
+  }
+  .hero-canvas-inner {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-canvas-inner {
+    padding: 0 32px;
   }
 }
 
@@ -867,6 +919,8 @@ body {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  justify-content: center;
 }
 
 .hero-canvas.animate-in {
@@ -874,11 +928,16 @@ body {
   transform: translateY(0);
 }
 
+/* Constrained inner canvas — keeps content from stretching on very wide screens */
 .hero-canvas-inner {
-  position: absolute;
-  inset: 0;
+  position: relative;
   width: 100%;
-  height: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 48px;
+  box-sizing: border-box;
+  flex: 1;
+  min-height: inherit;
 }
 
 .hero-canvas .case-hero-see-btn {
@@ -917,12 +976,12 @@ body {
 
 #hero-cursor {
   position: absolute;
-  width: 22px;
-  height: 31px;
+  width: 200px !important;
+  height: auto !important;
   pointer-events: none;
   z-index: 20;
   opacity: 0;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  user-select: none;
 }
 
 #hero-textbox {
@@ -2021,6 +2080,10 @@ button.case-card {
   .nav-resume-text {
     transition: none;
   }
+
+  .about-cta-btn-mail {
+    transition: none;
+  }
 }
 
 .about-hero-subtitle {
@@ -2050,6 +2113,7 @@ button.case-card {
 .about-cta-btn--secondary {
   background: #fff;
   color: #000000;
+  gap: 0;
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.05),
     0 4px 12px rgba(0, 0, 0, 0.06);
@@ -2085,7 +2149,10 @@ button.case-card {
 }
 
 .about-cta-btn--secondary:hover .about-cta-btn-mail {
-  transform: none;
+  max-width: 18px;
+  opacity: 1;
+  transform: translateX(0);
+  margin-left: 10px;
 }
 
 .about-cta-btn:not(.about-cta-btn--secondary):hover .about-cta-btn-arrow {
@@ -2100,12 +2167,21 @@ button.case-card {
 .about-cta-btn-mail {
   display: inline-block;
   width: 18px;
+  max-width: 0;
   height: 18px;
   flex-shrink: 0;
+  margin-left: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateX(-12px);
   background-color: currentColor;
   -webkit-mask: url("../media/Icons/mail.svg") center / contain no-repeat;
   mask: url("../media/Icons/mail.svg") center / contain no-repeat;
-  transition: transform 0.2s ease;
+  transition:
+    max-width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.25s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-left 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .about-hero-image {
@@ -2787,6 +2863,7 @@ button.case-card {
   .nav-profile,
   .nav-resume,
   .nav-resume-pill,
+  .nav-wordmark,
   .case-nav-group,
   .case-floating-nav,
   .case-back-container {
