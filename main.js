@@ -13,6 +13,15 @@ ensurePageStartsAtTop();
 document.addEventListener('DOMContentLoaded', ensurePageStartsAtTop);
 window.addEventListener('load', ensurePageStartsAtTop);
 
+document.addEventListener('DOMContentLoaded', () => {
+  if (!document.querySelector('.bottom-blur')) {
+    const bottomBlur = document.createElement('div');
+    bottomBlur.className = 'bottom-blur';
+    bottomBlur.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(bottomBlur);
+  }
+});
+
 // ==========================================
 // 1. CUSTOM CURSOR WITH DELAY
 // ==========================================
@@ -682,62 +691,13 @@ function initAboutTitleRotate() {
 
 document.addEventListener('DOMContentLoaded', initAboutTitleRotate);
 
-// ==========================================
-// NAV RESUME LABEL — HOVER ROTATE
-// "Resume" -> "Download" using the same vertical swap pattern.
-// ==========================================
-function initNavResumeRotate() {
-  const resumeLinks = document.querySelectorAll('.nav-resume-rotate');
-  if (resumeLinks.length === 0) return;
-
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  resumeLinks.forEach((link) => {
-    const stage = link.querySelector('.nav-resume-stage');
-    if (!stage) return;
-
-    const items = Array.from(stage.querySelectorAll('.nav-resume-text'));
-    if (items.length < 2) return;
-
-    const defaultItem = items[0];
-    const hoverItem = items[1];
-
-    function transitionTo(newItem) {
-      const current = stage.querySelector('.nav-resume-text.is-active');
-      if (current === newItem) return;
-
-      if (current) {
-        current.classList.remove('is-active');
-        current.classList.add('is-above');
-      }
-
-      newItem.classList.add('no-transition');
-      newItem.classList.remove('is-above');
-      void newItem.offsetWidth;
-      newItem.classList.remove('no-transition');
-      void newItem.offsetWidth;
-      newItem.classList.add('is-active');
-    }
-
-    link.addEventListener('mouseenter', () => {
-      transitionTo(hoverItem);
-    });
-
-    link.addEventListener('mouseleave', () => {
-      transitionTo(defaultItem);
-    });
-  });
-}
-
-document.addEventListener('DOMContentLoaded', initNavResumeRotate);
-
 // Handle cursor pill-expand on case card hover
 let hoveredElements = new Set();
 
 function setupCursorHover(element) {
   element.addEventListener('mouseenter', () => {
     if (!cursor) return;
-    const card = element.closest('.case-card');
+    const card = element.closest('.case-card, .work-card');
     const label = card?.dataset.cursorLabel || 'View Project';
     const showArrow = card?.dataset.cursorArrow !== 'false';
     if (cursorLabelEl) {
@@ -772,20 +732,17 @@ function initCaseStudyCursorHover() {
     return;
   }
 
-  // Apply to case cards (entire card including image and text) - only on index page
-  const caseCards = document.querySelectorAll('.case-card');
-  caseCards.forEach(card => {
+  // Apply to both old case-cards and new work-cards
+  document.querySelectorAll('.case-card, .work-card').forEach(card => {
     setupCursorHover(card);
   });
 
   // Also apply to case figures and case body separately for better coverage
-  const caseFigures = document.querySelectorAll('.case-figure');
-  caseFigures.forEach(fig => {
-    setupCursorHover(fig);
+  document.querySelectorAll('.case-figure, .work-card-image-wrap').forEach(el => {
+    setupCursorHover(el);
   });
 
-  const caseBodies = document.querySelectorAll('.case-body');
-  caseBodies.forEach(body => {
+  document.querySelectorAll('.case-body').forEach(body => {
     setupCursorHover(body);
   });
 }
@@ -795,7 +752,7 @@ document.addEventListener('DOMContentLoaded', initCaseStudyCursorHover);
 
 // Prevent navigation for coming-soon cards while preserving hover states.
 document.addEventListener('click', (e) => {
-  const disabledCard = e.target.closest('.case-card[data-disabled="true"]');
+  const disabledCard = e.target.closest('.case-card[data-disabled="true"], .work-card[data-disabled="true"]');
   if (!disabledCard) return;
   e.preventDefault();
 }, true);
@@ -827,190 +784,107 @@ function initWallPicCursorHover() {
 document.addEventListener('DOMContentLoaded', initWallPicCursorHover);
 
 // ==========================================
-// 2. VARIABLES & SCROLL SPY (Active Link)
+// 2. NAV SCROLL SPY + CLICK HANDLING
 // ==========================================
-const sections = document.querySelectorAll('section');
+const navSections = ['hero', 'case-studies', 'about']
+  .map((id) => document.getElementById(id))
+  .filter(Boolean);
 const navLinks = document.querySelectorAll('.floating-nav ul li a');
-const homeLink = document.querySelector('.nav-home-link');
-
-const marker = document.querySelector('.nav-marker');
-
-// Check if we're on the about page
 const isAboutPage = window.location.pathname.includes('about.html');
+let activeNavHref = '';
 
-function positionMarker(link) {
-    if (!marker || !link) return;
-    const markerSidePadding = 8;
-    marker.style.left = `${link.offsetLeft - markerSidePadding}px`;
-    marker.style.top = `${link.offsetTop}px`;
-    marker.style.width = `${link.offsetWidth + markerSidePadding * 2}px`;
-    marker.style.height = `${link.offsetHeight}px`;
-    marker.style.opacity = '1';
-}
+function setActiveNav(href) {
+  // About on the home page sits below Work — keep Work highlighted there.
+  if (href === '#about') href = '#case-studies';
+  if (href === activeNavHref) return;
+  activeNavHref = href;
 
-function syncMarkerToActive() {
-    const activeLink = document.querySelector('.floating-nav a.active');
-    if (activeLink) positionMarker(activeLink);
-}
-
-// Suppress scroll spy while a programmatic smooth scroll is in flight, so
-// intermediate sections don't briefly flash as active.
-let isAutoScrolling = false;
-let autoScrollTimer = null;
-
-function setActiveNavLink(link) {
-    if (!link) return;
-    navLinks.forEach(a => {
-        a.classList.remove('active');
-        a.removeAttribute('aria-current');
-    });
-    link.classList.add('active');
-    link.setAttribute('aria-current', 'page');
-    positionMarker(link);
+  navLinks.forEach((a) => {
+    const match = a.getAttribute('href') === href;
+    a.classList.toggle('active', match);
+    if (match) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
+  });
 }
 
 function updateActiveSection() {
-    // Skip scroll spy on about page - keep the active class set in HTML
-    if (isAboutPage) return;
-    if (isAutoScrolling) return;
-    
-    let current = "";
-    
-    sections.forEach((section) => {
-        const sectionTop = section.offsetTop;
-        // Trigger point: Middle of the screen
-        if (window.scrollY >= (sectionTop - window.innerHeight * 0.5)) {
-            current = section.getAttribute("id");
-        }
-    });
+  if (isAboutPage || !navSections.length) return;
 
-    // Force Home at top
-    if (window.scrollY < 100) {
-        current = "hero";
+  // Section whose top has crossed this line (just below the nav) is "current".
+  const line = Math.max(120, window.innerHeight * 0.25);
+  let current = 'hero';
+
+  navSections.forEach((section) => {
+    if (section.getBoundingClientRect().top <= line) {
+      current = section.id;
     }
+  });
 
-    // About Me on the home page sits below Work — keep Work highlighted in the nav
-    const navId = current === 'about' ? 'case-studies' : current;
+  if (window.scrollY < 80) current = 'hero';
 
-    // Update home link active state
-    if (homeLink) {
-        homeLink.classList.remove("active");
-        homeLink.removeAttribute("aria-current");
-        
-        if (navId === "hero") {
-            homeLink.classList.add("active");
-            homeLink.setAttribute("aria-current", "page");
-        }
-    }
-
-    // Loop through links to handle Active Class AND Marker Movement
-    navLinks.forEach((a) => {
-        a.classList.remove("active");
-        a.removeAttribute("aria-current");
-        
-        if (a.getAttribute("href") === `#${navId}`) {
-            a.classList.add("active");
-            a.setAttribute("aria-current", "page");
-            positionMarker(a);
-        }
-    });
+  setActiveNav('#' + (current === 'about' ? 'case-studies' : current));
 }
 
-// Run immediately when page loads so the marker snaps to the right link, then
-// enable transitions on the next frame so the initial placement doesn't slide
-// in from (0,0).
-document.addEventListener('DOMContentLoaded', () => {
-    // If the page loaded with a hash that points at one of our nav sections
-    // (e.g. coming from About → Work which lands at index.html#case-studies),
-    // pre-activate that link BEFORE the marker becomes "ready". This places
-    // the pill directly on the destination instead of letting scroll-spy first
-    // place it on Home and then animate over.
-    const hashLink = (!isAboutPage && window.location.hash)
-        ? document.querySelector(`.floating-nav a[href="${window.location.hash}"]`)
-        : null;
+window.addEventListener('scroll', updateActiveSection, { passive: true });
 
-    if (isAboutPage) {
-        syncMarkerToActive();
-    } else if (hashLink) {
-        isAutoScrolling = true;
-        setActiveNavLink(hashLink);
-        if (autoScrollTimer) clearTimeout(autoScrollTimer);
-        autoScrollTimer = setTimeout(() => {
-            isAutoScrolling = false;
-            autoScrollTimer = null;
-            updateActiveSection();
-        }, 1500);
-    } else {
-        updateActiveSection();
+function jumpToHash(hash, behavior = 'auto') {
+  if (!hash || hash === '#' || hash === '#hero') return;
+  const target = document.querySelector(hash);
+  if (!target) return;
+  const header = document.querySelector('.site-header');
+  const offset = header ? header.offsetHeight : 0;
+  const top = Math.max(0, target.getBoundingClientRect().top + window.pageYOffset - Math.round(offset * 0.9));
+  window.scrollTo({ top, behavior });
+}
+
+function restoreSmoothScroll() {
+  document.documentElement.style.scrollBehavior = '';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (isAboutPage) return;
+  const hash = window.location.hash;
+  if (hash && hash !== '#hero') {
+    jumpToHash(hash);
+    restoreSmoothScroll();
+    if (document.querySelector(`.floating-nav a[href="${hash}"]`)) {
+      setActiveNav(hash);
     }
-    requestAnimationFrame(() => {
-        if (marker) marker.classList.add('ready');
-    });
+  } else {
+    updateActiveSection();
+  }
 });
 
-// Run whenever the user scrolls
-window.addEventListener('scroll', updateActiveSection);
+// Re-snap after layout settles (images/fonts) so cross-page hash links land correctly.
+window.addEventListener('load', () => {
+  if (isAboutPage) return;
+  const hash = window.location.hash;
+  if (hash && hash !== '#hero') jumpToHash(hash);
+}, { once: true });
 
-// Keep the marker aligned if the layout changes (resize / orientation)
-window.addEventListener('resize', syncMarkerToActive);
-
-
-// ==========================================
-// 2. ANCHOR LINK NAVIGATION
-// ==========================================
-
-// Unified floating-nav click handler (capture phase). Ensures the active-pill
-// always animates between Home / Work / About / Resume, regardless of whether
-// the destination is a same-page anchor (e.g. #case-studies) or a different
-// page (e.g. ../index.html or html/about.html).
 document.addEventListener('click', function(e) {
   const a = e.target.closest('.floating-nav a');
-  if (!a) return;
-  // Resume opens in a new tab — let the browser handle it natively.
-  if (a.target === '_blank') return;
-  // Modifier-click → let browser open in a new tab/window normally.
+  if (!a || a.target === '_blank') return;
   if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
   const href = a.getAttribute('href');
   if (!href || href === '#') return;
 
-  // Always pre-activate the clicked link so the marker animates immediately.
-  setActiveNavLink(a);
-
-  // Stop the generic anchor handler below from also firing for this click.
   e.preventDefault();
   e.stopPropagation();
 
-  // Same-page anchor: smooth-scroll and lock scroll-spy for the duration.
   if (href.startsWith('#')) {
     const target = document.querySelector(href);
     if (!target) return;
-
+    setActiveNav(href);
     const header = document.querySelector('.site-header');
-    const headerOffset = header ? header.offsetHeight : 0;
-    const targetTop = target.getBoundingClientRect().top + window.pageYOffset - Math.round(headerOffset * 0.9);
-
-    isAutoScrolling = true;
-    if (autoScrollTimer) clearTimeout(autoScrollTimer);
-    autoScrollTimer = setTimeout(() => {
-      isAutoScrolling = false;
-      autoScrollTimer = null;
-      updateActiveSection();
-    }, 750);
-
-    // Defer the smooth scroll one frame so the marker transition kicks off
-    // before the browser starts repainting scroll updates.
-    requestAnimationFrame(() => {
-      window.scrollTo({ top: targetTop, behavior: 'smooth' });
-    });
-    return;
-  }
-
-  // Cross-page navigation: wait for the pill animation (~0.45s) to play,
-  // then navigate.
-  setTimeout(() => {
+    const offset = header ? header.offsetHeight : 0;
+    const top = target.getBoundingClientRect().top + window.pageYOffset - Math.round(offset * 0.9);
+    window.scrollTo({ top, behavior: 'smooth' });
+  } else {
+    setActiveNav(href);
     window.location.href = a.href;
-  }, 450);
+  }
 }, true);
 
 // Generic anchor smooth-scroll handler for links OUTSIDE the floating nav
@@ -1024,10 +898,8 @@ document.addEventListener('click', function(e) {
     if (aboutNavLink) {
       e.preventDefault();
       e.stopPropagation();
-      setActiveNavLink(aboutNavLink);
-      setTimeout(() => {
-        window.location.href = aboutCtaBtn.href;
-      }, 450);
+      setActiveNav('html/about.html');
+      window.location.href = aboutCtaBtn.href;
       return;
     }
   }
@@ -1536,7 +1408,9 @@ document.addEventListener('DOMContentLoaded', initCaseStudyMobileNav);
 // ==========================================
 function initCaseStudyNavTransition() {
   // Only run on index page
-  const caseStudyLinks = document.querySelectorAll('a.case-card[href*="case-study"]');
+  const caseStudyLinks = document.querySelectorAll(
+    'a.case-card[href*="case-study"], a.work-card[href*="case-study"]'
+  );
   if (caseStudyLinks.length === 0) return;
 
   const navGroup = document.querySelector('.nav-group');

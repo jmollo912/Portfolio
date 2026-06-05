@@ -25,11 +25,17 @@ html *::after {
 
 html,
 body {
-  height: 100%;
+  min-height: 100%;
   cursor: none;
   scroll-padding-top: 120px;
   scroll-behavior: smooth;
-  /* ensure anchored content isn't hidden behind fixed header */
+  /* clip (not hidden) prevents the body from becoming its own scroll
+     container, which would stop window scroll events / window.scrollY */
+  overflow-x: clip;
+}
+
+main > section[id] {
+  scroll-margin-top: 100px;
 }
 
 :root {
@@ -597,6 +603,7 @@ body {
   }
 }
 
+
 .floating-nav ul {
   position: relative;
   list-style: none;
@@ -615,35 +622,12 @@ body {
   justify-content: center;
 }
 
-.nav-marker {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 0;
-  border-radius: 10px;
-  background-color: #fff;
-  box-shadow: none;
-  z-index: -1;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.nav-marker.ready {
-  transition:
-    left 0.45s cubic-bezier(0.65, 0.05, 0.36, 1),
-    top 0.45s cubic-bezier(0.65, 0.05, 0.36, 1),
-    width 0.45s cubic-bezier(0.65, 0.05, 0.36, 1),
-    height 0.45s cubic-bezier(0.65, 0.05, 0.36, 1),
-    opacity 0.2s ease;
-}
-
 .floating-nav a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 10px 20px;
-  color: #b8b8b879;
+  color: #000000;
   text-decoration: none;
   border-radius: 10px;
   font-weight: 500;
@@ -651,17 +635,46 @@ body {
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
-  transition: color 200ms ease, background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
   text-align: center;
 }
 
-.floating-nav a:hover:not(.active):not([aria-current="page"]):not(.nav-resume-btn) {
-  color: #000000;
+.nav-link-stage {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr;
+  overflow: hidden;
+  line-height: 1;
+  padding-block: 0.05em;
 }
 
-.floating-nav a:active:not(.active):not([aria-current="page"]) {
-  color: #B8B8B8;
-  font-weight: 400;
+.nav-link-text {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+  transition:
+    transform 0.28s cubic-bezier(0.65, 0.05, 0.36, 1),
+    opacity 0.22s ease;
+}
+
+/* Rest: first label visible, duplicate sits below waiting */
+.nav-link-text:first-child {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.nav-link-text:last-child {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+/* Hover: current text slides up; on leave it slides back down */
+.nav-link-rotate:not(.active):not([aria-current="page"]):hover .nav-link-text:first-child {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.nav-link-rotate:not(.active):not([aria-current="page"]):hover .nav-link-text:last-child {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .floating-nav a:focus-visible {
@@ -684,8 +697,7 @@ body {
 .floating-nav ul a.active,
 .floating-nav a.active,
 .floating-nav a[aria-current="page"] {
-  color: #000000;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .nav-resume-icon {
@@ -717,25 +729,29 @@ body {
 .nav-resume-text {
   grid-area: 1 / 1;
   white-space: nowrap;
-  opacity: 0;
-  transform: translateY(100%);
   transition:
-    transform 0.5s cubic-bezier(0.65, 0.05, 0.36, 1),
-    opacity 0.4s ease;
+    transform 0.28s cubic-bezier(0.65, 0.05, 0.36, 1),
+    opacity 0.22s ease;
 }
 
-.nav-resume-text.is-active {
-  opacity: 1;
+.nav-resume-text:first-child {
   transform: translateY(0);
+  opacity: 1;
 }
 
-.nav-resume-text.is-above {
+.nav-resume-text:last-child {
+  transform: translateY(100%);
   opacity: 0;
-  transform: translateY(-100%);
 }
 
-.nav-resume-text.no-transition {
-  transition: none !important;
+.nav-resume-rotate:hover .nav-resume-text:first-child {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.nav-resume-rotate:hover .nav-resume-text:last-child {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 /* Move floating nav to top-center on larger screens */
@@ -779,6 +795,18 @@ body {
   will-change: opacity, transform;
   position: relative;
   overflow: hidden;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 180px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .hero-container {
@@ -913,6 +941,7 @@ body {
 /* Hero canvas — full-width dotted board (no Figma window chrome) */
 .hero-canvas {
   position: relative;
+  z-index: 1;
   width: 100%;
   flex: 1;
   min-height: calc(100vh - 160px);
@@ -1321,6 +1350,127 @@ body {
   gap: 30px;
 }
 
+/* ── Work grid — 1×4 stacked cards ── */
+.work-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.work-card {
+  display: flex;
+  align-items: stretch;
+  background: #F5F5F5;
+  border-radius: 24px;
+  overflow: visible;
+  text-decoration: none;
+  color: #000000;
+  border: none;
+  padding: 24px;
+  gap: 24px;
+  cursor: none;
+  min-height: 380px;
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+  position: relative;
+  width: 100%;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.work-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+
+.work-card[data-disabled="true"] {
+  cursor: none;
+  opacity: 0.72;
+}
+
+.work-card[data-disabled="true"]:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.work-card-text {
+  flex: 0 0 38%;
+  padding: 24px 12px 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  justify-content: center;
+}
+
+.work-card-title {
+  font-size: clamp(32px, 3.5vw, 52px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin: 0;
+  color: #000000;
+}
+
+.work-card-desc {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.55);
+  margin: 0;
+  max-width: 340px;
+}
+
+.work-card-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.work-card-tag {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.07);
+  border-radius: 999px;
+  padding: 5px 14px;
+  white-space: nowrap;
+}
+
+.work-card-image-wrap {
+  flex: 1;
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.work-card-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+@media (max-width: 700px) {
+  .work-card {
+    flex-direction: column;
+    min-height: unset;
+    padding: 20px;
+    gap: 16px;
+  }
+  .work-card-text {
+    flex: none;
+    padding: 8px 4px 0;
+  }
+  .work-card-image-wrap {
+    width: 100%;
+    height: 220px;
+    flex: none;
+  }
+}
+
 .card {
   background: #fff;
   border-radius: 10px;
@@ -1354,7 +1504,7 @@ body {
 .case-card {
   padding: 0 !important;
   overflow: visible !important;
-  border-radius: 16px !important;
+  border-radius: 10px !important;
   background: transparent;
   display: block;
   position: relative;
@@ -1380,7 +1530,7 @@ button.case-card {
   position: relative;
   margin: 0;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: 10px;
 }
 
 .case-image {
@@ -2077,7 +2227,8 @@ button.case-card {
     transition: none;
   }
 
-  .nav-resume-text {
+  .nav-resume-text,
+  .nav-link-text {
     transition: none;
   }
 
@@ -4626,20 +4777,6 @@ body :where(
   button,
   blockquote
 ) {
-  color: #000000;
-}
-
-/* Floating nav (home + case studies) — inactive #B8B8B8, active #000000 */
-.floating-nav a:not(.active):not([aria-current="page"]) {
-  color: #B8B8B8;
-}
-
-.floating-nav a:hover:not(.active):not([aria-current="page"]) {
-  color: #000000;
-}
-
-.floating-nav a.active,
-.floating-nav a[aria-current="page"] {
   color: #000000;
 }
 

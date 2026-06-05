@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Borel&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/global.css">
-    <script>if('scrollRestoration' in history)history.scrollRestoration='manual';if(!location.hash||location.hash==='#hero')scrollTo(0,0);</script>
+    <script>if('scrollRestoration' in history)history.scrollRestoration='manual';if(!location.hash||location.hash==='#hero'){scrollTo(0,0)}else{document.documentElement.style.scrollBehavior='auto'}</script>
     <script defer src="main.js"></script>
 </head>
 <body>
@@ -36,10 +36,9 @@
             <div class="nav-group">
                 <nav class="floating-nav" aria-label="Primary">
                     <ul>
-                        <div class="nav-marker"></div>
-                        <li><a href="#hero">Home</a></li>
-                        <li><a href="#case-studies">Work</a></li>
-                        <li><a href="html/about.html">About</a></li>
+                        <li><a href="#hero" class="nav-link-rotate"><span class="nav-link-stage" aria-hidden="true"><span class="nav-link-text">Home</span><span class="nav-link-text">Home</span></span><span class="sr-only">Home</span></a></li>
+                        <li><a href="#case-studies" class="nav-link-rotate"><span class="nav-link-stage" aria-hidden="true"><span class="nav-link-text">Work</span><span class="nav-link-text">Work</span></span><span class="sr-only">Work</span></a></li>
+                        <li><a href="html/about.html" class="nav-link-rotate"><span class="nav-link-stage" aria-hidden="true"><span class="nav-link-text">About</span><span class="nav-link-text">About</span></span><span class="sr-only">About</span></a></li>
                     </ul>
                 </nav>
             </div>
@@ -49,8 +48,8 @@
         </a>
         <a href="resume.pdf" target="_blank" rel="noopener" class="nav-resume-pill nav-resume-rotate" aria-label="View resume">
             <span class="nav-resume-stage" aria-hidden="true">
-                <span class="nav-resume-text is-active">Resume</span>
-                <span class="nav-resume-text">Download</span>
+                <span class="nav-resume-text">Resume</span>
+                <span class="nav-resume-text">Resume</span>
             </span>
             <span class="sr-only">Resume</span>
             <span class="nav-resume-icon" aria-hidden="true"></span>
@@ -87,49 +86,65 @@
         </section>
 
         <section id="case-studies" class="case-studies container">
-            <h2 class="section-title">My Favorite Projects</h2>
-            <div class="grid">
-                
+            <h3 class="section-label">SELECTED WORKS</h3>
+            <div class="work-grid">
 
-                <a href="html/case-study-Convoy.html" class="card case-card">
-                    <figure class="case-figure">
-                        <img src="media/HeroPage/CaseStudyCovers/ConvoyCover.jpg" alt="Convoy app screens" class="case-image" loading="lazy" decoding="async">
-                        <div class="case-pill">
-                            <span class="case-pill-title">Convoy</span>
-                            <span class="case-pill-tag">UX/ID</span>
+                <a href="html/case-study-Convoy.html" class="work-card">
+                    <div class="work-card-text">
+                        <h2 class="work-card-title">Convoy</h2>
+                        <p class="work-card-desc">Reimagining the way everyday package delivery works. By addressing the lack of trust between people and technology in the delivery process.</p>
+                        <div class="work-card-tags">
+                            <span class="work-card-tag">UX/UI</span>
+                            <span class="work-card-tag">Product Design</span>
                         </div>
-                    </figure>
+                    </div>
+                    <div class="work-card-image-wrap">
+                        <img src="media/HeroPage/CaseStudyCovers/ConvoyCoverNew.jpg" alt="Convoy app screens" class="work-card-image" loading="lazy" decoding="async">
+                    </div>
                 </a>
 
-                <a href="html/case-study-FlockSports.html" class="card case-card case-card-flock">
-                    <figure class="case-figure">
-                        <img src="media/HeroPage/FlockCaseCover.webp" alt="Flock Sports" class="case-image" loading="lazy" decoding="async">
-                        <div class="case-pill">
-                            <span class="case-pill-title">Flock Sports</span>
-                            <span class="case-pill-tag">Graphic Design</span>
+                <a href="html/case-study-FlockSports.html" class="work-card">
+                    <div class="work-card-text">
+                        <h2 class="work-card-title">Flock Sports</h2>
+                        <p class="work-card-desc">Building a brand identity and design system for a sports social platform bringing fans closer to the game.</p>
+                        <div class="work-card-tags">
+                            <span class="work-card-tag">Graphic Design</span>
+                            <span class="work-card-tag">Branding</span>
                         </div>
-                    </figure>
+                    </div>
+                    <div class="work-card-image-wrap">
+                        <img src="media/HeroPage/CaseStudyCovers/FlockSportsCoverNew.jpg" alt="Flock Sports branding" class="work-card-image" loading="lazy" decoding="async">
+                    </div>
                 </a>
 
-                <button type="button" class="card case-card" data-cursor-label="Coming Soon..." data-cursor-arrow="false" data-disabled="true" aria-disabled="true" tabindex="0">
-                    <figure class="case-figure">
-                        <img src="media/HeroPage/CaseStudyCovers/CoralKeepersCover.jpg" alt="Coral Keepers" class="case-image" loading="lazy" decoding="async">
-                        <div class="case-pill">
-                            <span class="case-pill-title">Coral Keepers</span>
-                            <span class="case-pill-tag">UX/ID</span>
+                <button type="button" class="work-card" data-cursor-label="Coming Soon..." data-cursor-arrow="false" data-disabled="true" aria-disabled="true" tabindex="0">
+                    <div class="work-card-text">
+                        <h2 class="work-card-title">Coral Keepers</h2>
+                        <p class="work-card-desc">Designing a mobile experience to connect reef conservationists and educate divers on protecting coral ecosystems.</p>
+                        <div class="work-card-tags">
+                            <span class="work-card-tag">UX/UI</span>
+                            <span class="work-card-tag">Product Design</span>
                         </div>
-                    </figure>
+                    </div>
+                    <div class="work-card-image-wrap">
+                        <img src="media/HeroPage/CaseStudyCovers/CoralKeepersCoverNew.jpg" alt="Coral Keepers app" class="work-card-image" loading="lazy" decoding="async">
+                    </div>
                 </button>
 
-                <a href="html/case-study-CBSSports.html" class="card case-card cbs-card">
-                    <figure class="case-figure">
-                        <img src="media/HeroPage/CaseStudyCovers/CBSCover.jpg" alt="CBS Sports" class="case-image" loading="lazy" decoding="async">
-                        <div class="case-pill">
-                            <span class="case-pill-title">CBS Sports</span>
-                            <span class="case-pill-tag">UX/Graphic Design</span>
+                <a href="html/case-study-CBSSports.html" class="work-card">
+                    <div class="work-card-text">
+                        <h2 class="work-card-title">CBS Sports</h2>
+                        <p class="work-card-desc">Redesigning the CBS Sports app experience to improve fantasy sports management and live score engagement.</p>
+                        <div class="work-card-tags">
+                            <span class="work-card-tag">UX/UI</span>
+                            <span class="work-card-tag">Graphic Design</span>
                         </div>
-                    </figure>
+                    </div>
+                    <div class="work-card-image-wrap">
+                        <img src="media/HeroPage/CaseStudyCovers/CBSCoverNew.jpg" alt="CBS Sports app" class="work-card-image" loading="lazy" decoding="async">
+                    </div>
                 </a>
+
             </div>
         </section>
 
@@ -174,9 +189,6 @@
                 </div>
                 
             </div>
-        </section>
-        
-        
         </section>
     </main>
 
