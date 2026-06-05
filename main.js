@@ -91,12 +91,14 @@ animateCursor();
 // ==========================================
 function startHeroAnimations() {
   const navGroup = document.querySelector('.nav-group');
+  const resumePill = document.querySelector('.nav-resume-pill');
   const heroCaption = document.querySelector('.hero-container > .hero-caption');
   const heroCanvas = document.querySelector('.hero-canvas');
   const wallPics = document.querySelectorAll('.wall-pic');
 
   setTimeout(() => {
     if (navGroup) navGroup.classList.add('animate-in');
+    if (resumePill) resumePill.classList.add('animate-in');
   }, 100);
 
   setTimeout(() => {
@@ -135,10 +137,18 @@ function initHeroCursorAnimation() {
   };
 
   const TEXT = "Hey, I'm Giuseppe";
+  const BOX_H_PAD = 28;
+  let measureCanvas;
+
+  function measureTextWidth(fontSize) {
+    if (!measureCanvas) measureCanvas = document.createElement('canvas');
+    const ctx = measureCanvas.getContext('2d');
+    ctx.font = `500 ${fontSize}px Inter, system-ui, -apple-system, sans-serif`;
+    return ctx.measureText(TEXT).width;
+  }
 
   function lerp(a, b, t)    { return a + (b - a) * t; }
   function easeInOut(t)     { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
-  function easeOut(t)       { return 1 - Math.pow(1 - t, 3); }
 
   let animFrame;
   let animationComplete = false;
@@ -146,16 +156,35 @@ function initHeroCursorAnimation() {
   function getMetrics() {
     const W = stage.offsetWidth;
     const H = stage.offsetHeight;
+    if (W < 50 || H < 50) return null;
+
     const boxCX = W / 2;
     const boxCY = H / 2;
     const hs = Math.round(Math.max(13, Math.min(W, H) * 0.02));
+    const edge = Math.max(16, Math.min(W, H) * 0.04);
+    const maxW = W - edge * 2;
+    const maxH = H - edge * 2;
 
-    const targetW  = W * 0.41;
-    const targetH  = H * 0.20;
+    // Final box — scales with viewport, capped on large screens
+    let finalW = Math.min(W * 0.72, 520, maxW);
+    let finalH = Math.min(H * 0.31, 118, maxH);
+    let finalFS = Math.min(finalH * 0.42, 48);
+
+    while (finalFS > 14 && measureTextWidth(finalFS) + BOX_H_PAD > finalW) {
+      finalFS -= 1;
+    }
+    finalH = Math.min(Math.max(finalFS / 0.42, finalFS + 16), maxH);
+
+    const textW = measureTextWidth(finalFS) + BOX_H_PAD;
+    finalW = Math.min(Math.max(finalW, textW), maxW);
+
+    // Initial box — always smaller than final so the expand phase grows the box
+    let targetW = Math.min(W * 0.41, finalW * 0.72, maxW);
+    let targetH = Math.min(H * 0.20, finalH * 0.72, maxH);
     const targetFS = targetH * 0.4;
-    const finalW   = Math.min(W * 0.72, 520);
-    const finalH   = Math.min(H * 0.31, 118);
-    const finalFS  = Math.min(finalH * 0.42, 48);
+
+    targetW = Math.min(Math.max(targetW, 80), finalW * 0.82);
+    targetH = Math.min(Math.max(targetH, 32), finalH * 0.82);
 
     const drawStartX   = boxCX - targetW / 2;
     const drawStartY   = boxCY - targetH / 2;
@@ -221,6 +250,7 @@ function initHeroCursorAnimation() {
 
   function applyFinalState() {
     const m = getMetrics();
+    if (!m) return;
     typed.textContent = TEXT;
     applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
     showBox(true);
@@ -228,8 +258,10 @@ function initHeroCursorAnimation() {
   }
 
   function runAnimation() {
-    animationComplete = false;
     const m0 = getMetrics();
+    if (!m0) return;
+
+    animationComplete = false;
 
     // Phases:
     //  0 fade-in cursor
@@ -260,6 +292,10 @@ function initHeroCursorAnimation() {
 
     function frame(ts) {
       const m = getMetrics();
+      if (!m) {
+        animFrame = requestAnimationFrame(frame);
+        return;
+      }
 
       if (!start) start = ts;
       const el = ts - start;
@@ -340,6 +376,14 @@ function initHeroCursorAnimation() {
     animFrame = requestAnimationFrame(frame);
   }
 
+  function startWhenReady() {
+    if (getMetrics()) {
+      runAnimation();
+    } else {
+      requestAnimationFrame(startWhenReady);
+    }
+  }
+
   if (typeof ResizeObserver !== 'undefined') {
     const resizeObserver = new ResizeObserver(() => {
       if (animationComplete) applyFinalState();
@@ -351,7 +395,7 @@ function initHeroCursorAnimation() {
     });
   }
 
-  runAnimation();
+  startWhenReady();
 }
 
 // Wait for loading screen to finish before starting animations
@@ -1643,3 +1687,55 @@ function dispatchLoadingComplete() {
 }
 
 document.addEventListener('DOMContentLoaded', dispatchLoadingComplete);
+
+// ==========================================
+// WALL PICTURE DRAG TO REPOSITION
+// ==========================================
+function initWallPicDrag() {
+  const canvas = document.querySelector('.hero-canvas-inner');
+  if (!canvas) return;
+
+  const wallPics = document.querySelectorAll('.wall-pic');
+
+  wallPics.forEach(pic => {
+    let isDragging = false;
+    let startMouseX, startMouseY, startLeft, startTop;
+
+    pic.addEventListener('mousedown', (e) => {
+      if (!pic.classList.contains('entrance-done')) return;
+      e.preventDefault();
+
+      const canvasRect = canvas.getBoundingClientRect();
+      const picRect = pic.getBoundingClientRect();
+
+      // Convert current rendered position to pixel left/top relative to canvas
+      startLeft = picRect.left - canvasRect.left;
+      startTop  = picRect.top  - canvasRect.top;
+
+      pic.style.left   = `${startLeft}px`;
+      pic.style.top    = `${startTop}px`;
+      pic.style.right  = 'auto';
+      pic.style.bottom = 'auto';
+
+      startMouseX = e.clientX;
+      startMouseY = e.clientY;
+      isDragging  = true;
+
+      pic.classList.add('wall-pic--dragging');
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      pic.style.left = `${startLeft + (e.clientX - startMouseX)}px`;
+      pic.style.top  = `${startTop  + (e.clientY - startMouseY)}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      pic.classList.remove('wall-pic--dragging');
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initWallPicDrag);

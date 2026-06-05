@@ -379,6 +379,33 @@ body {
   transition: top 0.4s cubic-bezier(0.4, 0, 1, 1);
 }
 
+/* Standalone Resume link — fixed top-right, vertically centered with the floating nav */
+.nav-resume-pill {
+  position: fixed;
+  right: 48px;
+  top: -80px;
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  height: 71px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  z-index: 1000;
+  pointer-events: auto;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-resume-pill.animate-in {
+  top: 12px;
+}
+
 /* Home Button Container - White background */
 .nav-home-container {
   position: relative;
@@ -438,7 +465,7 @@ body {
 /* Floating nav - White background */
 .floating-nav {
   position: relative;
-  background: rgba(245, 245, 245, 0.7);
+  background: rgba(224, 224, 224, 0.7);
   backdrop-filter: blur(10px) saturate(150%);
   -webkit-backdrop-filter: blur(10px) saturate(150%);
   padding: 16px;
@@ -586,7 +613,7 @@ body {
 }
 
 .floating-nav a:hover:not(.active):not([aria-current="page"]):not(.nav-resume-btn) {
-  color: #B8B8B8;
+  color: #000000;
 }
 
 .floating-nav a:active:not(.active):not([aria-current="page"]) {
@@ -744,8 +771,15 @@ body {
 }
 
 .wall-pic.entrance-done:hover {
-  transform: translate(0, -4px) scale(1.03) rotate(0deg);
+  transform: translate(0, -4px) scale(1.07) rotate(0deg);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+.wall-pic--dragging {
+  transition: box-shadow 0.1s ease-out !important;
+  transform: scale(1.1) rotate(0deg) !important;
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.32) !important;
+  z-index: 100 !important;
 }
 
 /* Eagles Game */
@@ -775,11 +809,11 @@ body {
   transition-delay: 0.2s;
 }
 
-/* HDFC */
+/* HCFC */
 .wall-pic-4 {
   width: 13.5%;
   top: 4%;
-  right: 18%;
+  right: 19%;
   --base-transform: rotate(-2deg);
   transition-delay: 0.25s;
 }
@@ -2752,6 +2786,7 @@ button.case-card {
   .site-header .floating-nav,
   .nav-profile,
   .nav-resume,
+  .nav-resume-pill,
   .case-nav-group,
   .case-floating-nav,
   .case-back-container {
@@ -4518,9 +4553,12 @@ body :where(
 }
 
 /* Floating nav (home + case studies) — inactive #B8B8B8, active #000000 */
-.floating-nav a:not(.active):not([aria-current="page"]),
-.floating-nav a:hover:not(.active):not([aria-current="page"]) {
+.floating-nav a:not(.active):not([aria-current="page"]) {
   color: #B8B8B8;
+}
+
+.floating-nav a:hover:not(.active):not([aria-current="page"]) {
+  color: #000000;
 }
 
 .floating-nav a.active,
