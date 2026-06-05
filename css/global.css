@@ -36,11 +36,6 @@ body {
   --site-text: #000000;
   --brand-blue: #4763FF;
   --brand-blue-rgb: 71, 99, 255;
-  /* Page background grid lines (4 vertical lines) */
-  --page-grid-outer: 14%;
-  --page-grid-inner: 41%;
-  --page-grid-color: rgba(0, 0, 0, 0.10);
-  --page-grid-color-dashed: rgba(0, 0, 0, 0.18);
 }
 
 html {
@@ -54,43 +49,6 @@ body {
   color: #000000;
   background: transparent;
   position: relative;
-}
-
-/* ========================================
-   PAGE BACKGROUND GRID — 4 vertical lines
-   (outer solid, inner dashed) behind everything
-   ======================================== */
-.page-grid {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.grid-line {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 0;
-  border-left: 1px solid var(--page-grid-color);
-}
-
-.grid-line--inner-left,
-.grid-line--inner-right {
-  border-left-style: dashed;
-  border-left-color: var(--page-grid-color-dashed);
-}
-
-.grid-line--outer-left  { left: var(--page-grid-outer); }
-.grid-line--inner-left  { left: var(--page-grid-inner); }
-.grid-line--inner-right { right: var(--page-grid-inner); }
-.grid-line--outer-right { right: var(--page-grid-outer); }
-
-@media (max-width: 600px) {
-  .page-grid { display: none; }
 }
 
 .sr-only {
@@ -740,15 +698,17 @@ body {
 
 /* HERO SECTION */
 .hero {
-  background: transparent;
-  padding: 145px 0 80px;
+  background-color: #F5F5F5;
+  background-image: radial-gradient(circle, #d0d0d0 1px, transparent 1px);
+  background-size: 22px 22px;
+  padding: 100px 0 60px;
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   transition: opacity 0.15s ease-out, transform 0.15s ease-out;
   will-change: opacity, transform;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .hero-container {
@@ -769,7 +729,6 @@ body {
   height: auto;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
   --base-transform: rotate(0deg);
-  --hover-rotate: rotate(3deg);
   opacity: 0;
   transform: translateY(60px) scale(0.85) var(--base-transform);
   transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease-out;
@@ -778,77 +737,67 @@ body {
 .wall-pic.animate-in {
   opacity: 1;
   transform: translateY(0) scale(1) var(--base-transform);
-  /* Entrance transition comes from .wall-pic above; hover transition
-     is switched in via .entrance-done once the entrance finishes. */
 }
 
-/* Fast hover micro-animation — applied after entrance completes */
 .wall-pic.entrance-done {
   transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
 }
 
 .wall-pic.entrance-done:hover {
-  transform: translate(0, -4px) scale(1.03) var(--hover-rotate);
+  transform: translate(0, -4px) scale(1.03) rotate(0deg);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
+
 /* Eagles Game */
 .wall-pic-1 {
-  width: 12%;
-  top: 7%;
-  left: 12%;
-  --base-transform: rotate(10deg);
-  --hover-rotate: rotate(8deg);
+  width: 11%;
+  bottom:70%;
+  left: 19%;
+  --base-transform: rotate(11deg);
   transition-delay: 0.1s;
 }
 
-/* Fishing */
-.wall-pic-2 {
-  width: 16%;
-  top: 30%;
-  right: 2%;
-  --base-transform: rotate(-7deg);
-  --hover-rotate: rotate(-9deg);
-  transition-delay: 0.15s;
+/* Hiking */
+.wall-pic-5 {
+  width: 12%;
+  bottom: 38%;
+  left: 10%;
+  --base-transform: rotate(-9deg);
+  transition-delay: 0.3s;
 }
 
 /* Flying */
 .wall-pic-3 {
-  width: 20%;
-  bottom: 7%;
-  left: 10%;
+  width: 14%;
+  bottom: 5%;
+  left: 20%;
   --base-transform: rotate(5deg);
-  --hover-rotate: rotate(7deg);
   transition-delay: 0.2s;
 }
 
 /* HDFC */
 .wall-pic-4 {
-  width: 19%;
-  top: 5%;
-  left: auto;
-  right: 12%;
+  width: 13.5%;
+  top: 4%;
+  right: 18%;
   --base-transform: rotate(-2deg);
-  --hover-rotate: rotate(-4deg);
   transition-delay: 0.25s;
 }
-
-/* Hiking */
-.wall-pic-5 {
-  width: 18%;
-  bottom: 38%;
-  left: -1%;
-  --base-transform: rotate(-9deg);
-  --hover-rotate: rotate(-11deg);
-  transition-delay: 0.3s;
+/* Fishing */
+.wall-pic-2 {
+  width: 11%;
+  top: 35%;
+  right: 10%;
+  --base-transform: rotate(-7deg);
+  transition-delay: 0.15s;
 }
 
-/* Savannah */
+/* GeorgiaFlorida */
 .wall-pic-6 {
   width: 14%;
-  top: 70%;
-  right: 10%;
+  bottom: 1%;
+  right: 23%;
   --base-transform: rotate(10deg);
-  --hover-rotate: rotate(12deg);
   transition-delay: 0.35s;
 }
 
@@ -859,7 +808,7 @@ body {
 }
 
 @media (max-width: 620px) {
-  .figma-canvas-inner .wall-pic {
+  .hero-canvas-inner .wall-pic {
     display: none;
   }
 }
@@ -875,202 +824,48 @@ body {
   z-index: 1;
 }
 
-/* Full-bleed container for the figma window so it aligns to the viewport grid */
-.hero-container--figma {
-  max-width: none;
-  width: 100%;
-  padding: 0;
-  transform: translateY(-20px);
-}
-
-/* ========================================
-   HERO FIGMA WINDOW — replaces desk render
-   ======================================== */
-.hero-figma-window {
+/* Hero canvas — full-width dotted board (no Figma window chrome) */
+.hero-canvas {
   position: relative;
-  width: min(68vw, 1280px);
-  margin: 0 auto;
-  border-radius: 14px;
-  overflow: hidden;
-  background: #efefef;
-  border: 1px solid rgba(0, 0, 0, 0.10);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, sans-serif;
-  z-index: 1;
-  /* Entrance animation */
+  width: 100%;
+  flex: 1;
+  min-height: calc(100vh - 160px);
   opacity: 0;
-  transform: translateY(40px) scale(0.98);
+  transform: translateY(30px);
   transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.hero-figma-window.animate-in {
+.hero-canvas.animate-in {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translateY(0);
 }
 
-.figma-title-bar {
-  display: flex;
-  align-items: stretch;
-  height: 44px;
-  background: #ececec;
-  border-bottom: 1px solid #d0d0d0;
-  padding: 0 12px;
-  gap: 10px;
-  user-select: none;
-}
-
-.figma-traffic-lights {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  align-self: center;
-  flex-shrink: 0;
-}
-
-.figma-dot {
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  display: block;
-}
-
-.figma-dot-close    { background: #ff5f57; border: 0.5px solid #e0443e; }
-.figma-dot-minimize { background: #febc2e; border: 0.5px solid #d4a017; }
-.figma-dot-maximize { background: #28c840; border: 0.5px solid #1aab29; }
-
-.figma-home-btn {
-  width: 28px;
-  height: 28px;
-  background: none;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0;
-  color: #000000;
-  margin-left: 2px;
-  align-self: center;
-  flex-shrink: 0;
-}
-
-.figma-home-btn:hover,
-.figma-home-btn:focus-visible {
-  background: none;
-  color: #000000;
-}
-
-.figma-home-btn svg {
-  width: 16px;
-  height: 16px;
-}
-
-.figma-tab-strip {
-  display: flex;
-  align-items: stretch;
-  align-self: stretch;
-  height: 100%;
-  margin-left: 4px;
-  min-width: 0;
-  gap: 4px;
-  flex: 1;
-}
-
-.figma-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 10px 0 14px;
-  height: 100%;
-  background: #ffffff;
-  border-radius: 0;
-  border: 1px solid #d0d0d0;
-  border-top: none;
-  border-bottom: 1px solid #ffffff;
-  font-size: 13px;
-  color: #000000;
-  font-weight: 400;
-  white-space: nowrap;
-  max-width: 260px;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-.figma-tab-icon {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
-
-.figma-tab-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.figma-tab-close {
-  width: 18px;
-  height: 18px;
-  background: none;
-  border: none;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #808080;
-  flex-shrink: 0;
-  margin-left: 2px;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.figma-tab-close:hover {
-  background: rgba(0, 0, 0, 0.08);
-  color: #000000;
-}
-
-.figma-tab-close svg {
-  width: 10px;
-  height: 10px;
-}
-
-.figma-tab-add {
-  width: 24px;
-  height: 24px;
-  background: none;
-  border: none;
-  border-radius: 0;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #555;
-  flex-shrink: 0;
-}
-
-.figma-tab-add:hover,
-.figma-tab-add:focus-visible {
-  background: none;
-  color: #555;
-}
-
-.figma-tab-add svg {
-  width: 12px;
-  height: 12px;
-}
-
-.figma-canvas {
-  position: relative;
-  width: 100%;
-  min-height: 560px;
-  aspect-ratio: 16 / 9;
-  background-color: #F5F5F5;
-  background-image: radial-gradient(circle, #d0d0d0 1px, transparent 1px);
-  background-size: 22px 22px;
-  overflow: hidden;
-}
-
-.figma-canvas-inner {
+.hero-canvas-inner {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+.hero-canvas .case-hero-see-btn {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  margin-top: 0;
+  padding: 8px 16px;
+  font-size: 16px;
+  transform: translateX(-50%);
+  z-index: 20;
+  animation: hero-see-bounce 2s ease-in-out infinite;
+}
+
+@keyframes hero-see-bounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(10px);
+  }
 }
 
 /* ── Hero cursor animation stage — fills the figma canvas ── */
@@ -1148,19 +943,10 @@ body {
   #hero-stage { display: none; }
 }
 
-@media (max-width: 1100px) {
-  .hero-figma-window { width: min(72vw, 1100px); }
-  .figma-canvas { min-height: 480px; }
-}
-
-@media (max-width: 768px) {
-  .hero-figma-window { width: 88vw; }
-  .figma-canvas { min-height: 380px; }
-}
-
 @media (max-width: 600px) {
-  .hero-figma-window { width: 92vw; }
-  .figma-canvas { min-height: 260px; background-size: 18px 18px; }
+  .hero {
+    background-size: 18px 18px;
+  }
 }
 
 .hero-figure {
@@ -2987,10 +2773,6 @@ button.case-card {
     padding: 120px 0 40px;
   }
 
-  .hero-container--figma {
-    transform: translateY(-12px);
-  }
-
   .screen-animation {
     top: 42%;
     width: 42%;
@@ -3659,6 +3441,7 @@ body:has(.case-layout) .site-footer-new :is(h3, p, span, a) {
 
 .case-hero-see-btn .see-arrow {
   display: inline-block;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 @media (max-width: 900px) {

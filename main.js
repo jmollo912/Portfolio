@@ -92,7 +92,7 @@ animateCursor();
 function startHeroAnimations() {
   const navGroup = document.querySelector('.nav-group');
   const heroCaption = document.querySelector('.hero-container > .hero-caption');
-  const figmaWindow = document.querySelector('.hero-figma-window');
+  const heroCanvas = document.querySelector('.hero-canvas');
   const wallPics = document.querySelectorAll('.wall-pic');
 
   setTimeout(() => {
@@ -101,7 +101,7 @@ function startHeroAnimations() {
 
   setTimeout(() => {
     if (heroCaption) heroCaption.classList.add('animate-in');
-    if (figmaWindow) figmaWindow.classList.add('animate-in');
+    if (heroCanvas) heroCanvas.classList.add('animate-in');
 
     setTimeout(() => {
       wallPics.forEach(pic => pic.classList.add('animate-in'));
@@ -134,7 +134,7 @@ function initHeroCursorAnimation() {
     br: document.getElementById('hero-h-br'),
   };
 
-  const TEXT = "Hi, I'm Giuseppe";
+  const TEXT = "Hey, I'm Giuseppe";
 
   function lerp(a, b, t)    { return a + (b - a) * t; }
   function easeInOut(t)     { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
@@ -150,17 +150,17 @@ function initHeroCursorAnimation() {
     const boxCY = H / 2;
     const hs = Math.round(Math.max(13, Math.min(W, H) * 0.02));
 
-    const targetW  = W * 0.55;
-    const targetH  = H * 0.22;
+    const targetW  = W * 0.41;
+    const targetH  = H * 0.20;
     const targetFS = targetH * 0.4;
-    const finalW   = Math.min(W * 0.68, 480);
-    const finalH   = Math.min(H * 0.28, 108);
-    const finalFS  = Math.min(finalH * 0.42, 44);
+    const finalW   = Math.min(W * 0.72, 520);
+    const finalH   = Math.min(H * 0.31, 118);
+    const finalFS  = Math.min(finalH * 0.42, 48);
 
-    const cursorStartX = W * 0.08;
-    const cursorStartY = H * 0.15;
     const drawStartX   = boxCX - targetW / 2;
     const drawStartY   = boxCY - targetH / 2;
+    const cursorStartX = drawStartX;
+    const cursorStartY = drawStartY;
     const drawEndX     = boxCX + targetW / 2;
     const drawEndY     = boxCY + targetH / 2;
     const trHandleX    = boxCX + targetW / 2 - hs / 2;
@@ -767,7 +767,6 @@ function initWallPicCursorHover() {
       if (cursorLabelEl) cursorLabelEl.textContent = label;
       const labelWidth = Math.min(Math.max(label.length * 7.5 + 36, 96), 320);
       cursor.style.setProperty('--cursor-expanded-width', `${labelWidth}px`);
-      // No arrow for photo labels
       cursor.classList.add('expanded', 'no-arrow');
     });
 

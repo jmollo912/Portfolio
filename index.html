@@ -15,12 +15,6 @@
     <script defer src="main.js"></script>
 </head>
 <body>
-    <div class="page-grid" aria-hidden="true">
-        <span class="grid-line grid-line--outer-left"></span>
-        <span class="grid-line grid-line--inner-left"></span>
-        <span class="grid-line grid-line--inner-right"></span>
-        <span class="grid-line grid-line--outer-right"></span>
-    </div>
     <div class="custom-cursor" aria-hidden="true"></div>
     <!-- Mobile Hamburger Button (visible on tablet/mobile) -->
     <button class="case-hamburger" aria-label="Toggle navigation menu">
@@ -63,76 +57,31 @@
     <main>
         <section class="hero" id="hero">
             <h1 class="sr-only">Giuseppe Mollo — Portfolio</h1>
-            <div class="hero-container hero-container--figma">
-                <div class="hero-figma-window" role="figure" aria-label="my portfolio Figma board">
-                    <div class="figma-title-bar">
-                        <div class="figma-traffic-lights" aria-hidden="true">
-                            <span class="figma-dot figma-dot-close"></span>
-                            <span class="figma-dot figma-dot-minimize"></span>
-                            <span class="figma-dot figma-dot-maximize"></span>
+            <div class="hero-canvas" role="figure" aria-label="Portfolio hero canvas">
+                <div class="hero-canvas-inner">
+                    <div id="hero-stage" aria-label="Cursor animation: text box created and resized">
+                        <svg id="hero-cursor" viewBox="0 0 24 34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M3 2 L3 26 L8 21 L12 31 L15 30 L11 20 L19 20 Z"
+                                fill="white" stroke="#222" stroke-width="1.5" stroke-linejoin="round"/>
+                        </svg>
+                        <div id="hero-textbox">
+                            <span id="hero-typed"></span><span id="hero-caret" style="height:0px;"></span>
                         </div>
-
-                        <button class="figma-home-btn" type="button" aria-label="Home">
-                            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path d="M2 6.5L8 2l6 4.5V14a.5.5 0 0 1-.5.5h-3.75v-3.25h-3.5V14.5H2.5A.5.5 0 0 1 2 14V6.5Z"
-                                    stroke="currentColor" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-
-                        <div class="figma-tab-strip">
-                            <div class="figma-tab figma-tab--active">
-                                <svg class="figma-tab-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path d="M5.5 2h2.5v3.5H5.5a1.75 1.75 0 1 1 0-3.5Z" fill="#F24E1E"/>
-                                    <path d="M8 2h2.5a1.75 1.75 0 1 1 0 3.5H8V2Z" fill="#FF7262"/>
-                                    <path d="M8 5.5h2.5a1.75 1.75 0 1 1 0 3.5H8V5.5Z" fill="#A259FF"/>
-                                    <path d="M5.5 5.5h2.5V9H5.5a1.75 1.75 0 1 1 0-3.5Z" fill="#1ABCFE"/>
-                                    <path d="M8 9a1.75 1.75 0 1 1-1.75 1.75A1.75 1.75 0 0 1 8 9Z" fill="#0ACF83"/>
-                                </svg>
-                                <span class="figma-tab-label">my portfolio</span>
-                                <button class="figma-tab-close" type="button" aria-label="Close tab" tabindex="-1">
-                                    <svg viewBox="0 0 12 12" aria-hidden="true">
-                                        <path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <button class="figma-tab-add" type="button" aria-label="New tab">
-                                <svg viewBox="0 0 12 12" aria-hidden="true">
-                                    <path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-                                </svg>
-                            </button>
-                        </div>
+                        <div class="hero-corner-handle" id="hero-h-tl"></div>
+                        <div class="hero-corner-handle" id="hero-h-tr"></div>
+                        <div class="hero-corner-handle" id="hero-h-bl"></div>
+                        <div class="hero-corner-handle" id="hero-h-br"></div>
                     </div>
 
-                    <div class="figma-canvas">
-                        <div class="figma-canvas-inner">
-                            <!-- Centered cursor animation -->
-                            <div id="hero-stage" aria-label="Cursor animation: text box created and resized">
-                                <svg id="hero-cursor" viewBox="0 0 24 34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path d="M3 2 L3 26 L8 21 L12 31 L15 30 L11 20 L19 20 Z"
-                                        fill="white" stroke="#222" stroke-width="1.5" stroke-linejoin="round"/>
-                                </svg>
-                                <div id="hero-textbox">
-                                    <span id="hero-typed"></span><span id="hero-caret" style="height:0px;"></span>
-                                </div>
-                                <div class="hero-corner-handle" id="hero-h-tl"></div>
-                                <div class="hero-corner-handle" id="hero-h-tr"></div>
-                                <div class="hero-corner-handle" id="hero-h-bl"></div>
-                                <div class="hero-corner-handle" id="hero-h-br"></div>
-                            </div>
-
-                            <!-- Wall photos scattered around the canvas -->
-                            <img src="media/HeroPage/WallPictures/Eagles Game.webp" alt="" class="wall-pic wall-pic-1" data-cursor-label="37 - 34 🦅">
-                            <img src="media/HeroPage/WallPictures/Fishing.webp" alt="" class="wall-pic wall-pic-2" data-cursor-label="First Fish 🎣">
-                            <img src="media/HeroPage/WallPictures/Flying.webp" alt="" class="wall-pic wall-pic-3" data-cursor-label="Up In The Air ✈️">
-                            <img src="media/HeroPage/WallPictures/HDFC.webp" alt="" class="wall-pic wall-pic-4" data-cursor-label="HCFC 🪚">
-                            <img src="media/HeroPage/WallPictures/Hiking w mik.webp" alt="" class="wall-pic wall-pic-5" data-cursor-label="Hiking 🥾">
-                            <img src="media/HeroPage/WallPictures/Savannah.webp" alt="" class="wall-pic wall-pic-6" data-cursor-label="Savannah, GA 🌿">
-                        </div>
-                    </div>
+                    <img src="media/HeroPage/WallPictures/Eagles Game.webp" alt="" class="wall-pic wall-pic-1" data-cursor-label="37 - 34 🦅">
+                    <img src="media/HeroPage/WallPictures/Fishing.webp" alt="" class="wall-pic wall-pic-2" data-cursor-label="First Fish 🎣">
+                    <img src="media/HeroPage/WallPictures/Flying.webp" alt="" class="wall-pic wall-pic-3" data-cursor-label="Up In The Air ✈️">
+                    <img src="media/HeroPage/WallPictures/HDFC.webp" alt="" class="wall-pic wall-pic-4" data-cursor-label="HCFC 🪚">
+                    <img src="media/HeroPage/WallPictures/Hiking w mik.webp" alt="" class="wall-pic wall-pic-5" data-cursor-label="Hiking 🥾">
+                    <img src="media/HeroPage/WallPictures/GeorgiaFlorida.jpg" alt="" class="wall-pic wall-pic-6" data-cursor-label="Georgia → Florida 🌴">
                 </div>
-
-                <a href="#case-studies" class="case-hero-see-btn">
-                 <span class="see-arrow">↓</span>
+                <a href="#case-studies" class="case-hero-see-btn" aria-label="Scroll to projects">
+                    <span class="see-arrow">↓</span>
                 </a>
             </div>
         </section>
