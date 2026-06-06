@@ -100,21 +100,18 @@ animateCursor();
 // ==========================================
 function startHeroAnimations() {
   const navGroup = document.querySelector('.nav-group');
-  const resumePill = document.querySelector('.nav-resume-pill');
-  const navWordmark = document.querySelector('.nav-wordmark');
   const heroCaption = document.querySelector('.hero-container > .hero-caption');
   const heroCanvas = document.querySelector('.hero-canvas');
   const wallPics = document.querySelectorAll('.wall-pic');
 
   setTimeout(() => {
     if (navGroup) navGroup.classList.add('animate-in');
-    if (resumePill) resumePill.classList.add('animate-in');
-    if (navWordmark) navWordmark.classList.add('animate-in');
   }, 100);
 
   setTimeout(() => {
     if (heroCaption) heroCaption.classList.add('animate-in');
     if (heroCanvas) heroCanvas.classList.add('animate-in');
+    initHeroCursorAnimation();
 
     setTimeout(() => {
       wallPics.forEach(pic => pic.classList.add('animate-in'));
@@ -124,8 +121,6 @@ function startHeroAnimations() {
       }, 850);
     }, 300);
 
-    // Start the cursor animation after the window has mostly settled
-    setTimeout(initHeroCursorAnimation, 700);
   }, 100);
 }
 
@@ -147,15 +142,18 @@ function initHeroCursorAnimation() {
     br: document.getElementById('hero-h-br'),
   };
 
-  const TEXT = "Welcome to my portfolio";
+  const INTRO_TEXT = "Hey, I'm Giuseppe";
+  const FINAL_TEXT = "Welcome to my portfolio!";
+  const TYPE_CHAR_MS = 72;
+  const DELETE_CHAR_MS = 54;
   const BOX_H_PAD = 28;
   let measureCanvas;
 
-  function measureTextWidth(fontSize) {
+  function measureTextWidth(text, fontSize) {
     if (!measureCanvas) measureCanvas = document.createElement('canvas');
     const ctx = measureCanvas.getContext('2d');
     ctx.font = `500 ${fontSize}px Inter, system-ui, -apple-system, sans-serif`;
-    return ctx.measureText(TEXT).width;
+    return ctx.measureText(text).width;
   }
 
   function lerp(a, b, t)    { return a + (b - a) * t; }
@@ -181,12 +179,12 @@ function initHeroCursorAnimation() {
     let finalH = Math.min(H * 0.31, 118, maxH);
     let finalFS = Math.min(finalH * 0.42, 48);
 
-    while (finalFS > 14 && measureTextWidth(finalFS) + BOX_H_PAD > finalW) {
+    while (finalFS > 14 && measureTextWidth(FINAL_TEXT, finalFS) + BOX_H_PAD > finalW) {
       finalFS -= 1;
     }
     finalH = Math.min(Math.max(finalFS / 0.42, finalFS + 16), maxH);
 
-    const textW = measureTextWidth(finalFS) + BOX_H_PAD;
+    const textW = measureTextWidth(FINAL_TEXT, finalFS) + BOX_H_PAD;
     finalW = Math.min(Math.max(finalW, textW), maxW);
 
     // Initial box — always smaller than final so the expand phase grows the box
@@ -262,7 +260,7 @@ function initHeroCursorAnimation() {
   function applyFinalState() {
     const m = getMetrics();
     if (!m) return;
-    typed.textContent = TEXT;
+    typed.textContent = FINAL_TEXT;
     applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
     showBox(true);
     setCursorOpacity(0);
@@ -275,30 +273,69 @@ function initHeroCursorAnimation() {
     animationComplete = false;
 
     // Phases:
-    //  0 fade-in cursor
-    //  1 move from top-left of stage → top-left click point
-    //  2 drag down-right to draw the box (cursor lands at bottom-right corner)
-    //  3 hold at bottom-right corner while text types in
-    //  4 small hold after typing
-    //  5 move from bottom-right corner → top-right handle
-    //  6 expand animation (cursor follows top-right handle)
-    //  7 hold after expand
-    //  8 cursor fade out
-    const phases = [500, 700, 800, TEXT.length * 90, 400, 600, 900, 500, 500];
+    //  0 hold cursor at draw start
+    //  1 drag down-right to draw the box
+    //  2 type intro text
+    //  3 hold after intro typed
+    //  4 delete intro text
+    //  5 brief hold with empty text
+    //  6 type final text
+    //  7 hold after all typing complete
+    //  8 move cursor to top-right handle
+    //  9 expand animation (cursor follows top-right handle)
+    //  10 hold after expand
+    //  11 cursor fade out
+    const phases = [
+      250,
+      640,
+      INTRO_TEXT.length * TYPE_CHAR_MS,
+      400,
+      INTRO_TEXT.length * DELETE_CHAR_MS,
+      200,
+      FINAL_TEXT.length * TYPE_CHAR_MS,
+      320,
+      480,
+      720,
+      400,
+      400,
+    ];
     const ends   = [];
     let acc = 0;
     phases.forEach(d => { acc += d; ends.push(acc); });
 
     showBox(false);
     typed.textContent = '';
-    setCursorOpacity(0);
-    setCursor(m0.cursorStartX, m0.cursorStartY);
+    setCursorOpacity(1);
+    setCursor(m0.drawStartX, m0.drawStartY);
 
     let start = null;
 
     function pT(i, elapsed) {
       const s = i === 0 ? 0 : ends[i - 1];
       return Math.max(0, Math.min(1, (elapsed - s) / phases[i]));
+    }
+
+    function typedTextForElapsed(el) {
+      if (el < ends[1]) return '';
+
+      if (el < ends[2]) {
+        const t = pT(2, el);
+        return INTRO_TEXT.slice(0, Math.floor(t * INTRO_TEXT.length));
+      }
+      if (el < ends[3]) return INTRO_TEXT;
+
+      if (el < ends[4]) {
+        const t = pT(4, el);
+        return INTRO_TEXT.slice(0, Math.ceil((1 - t) * INTRO_TEXT.length));
+      }
+      if (el < ends[5]) return '';
+
+      if (el < ends[6]) {
+        const t = pT(6, el);
+        return FINAL_TEXT.slice(0, Math.floor(t * FINAL_TEXT.length));
+      }
+
+      return FINAL_TEXT;
     }
 
     function frame(ts) {
@@ -310,71 +347,60 @@ function initHeroCursorAnimation() {
 
       if (!start) start = ts;
       const el = ts - start;
+      const typedText = typedTextForElapsed(el);
 
       if (el < ends[0]) {
-        // 0. Cursor fade in at top-left of stage
-        setCursorOpacity(pT(0, el));
-        setCursor(m.cursorStartX, m.cursorStartY);
+        // 0. Hold cursor at draw start before animation begins
+        setCursorOpacity(1);
+        setCursor(m.drawStartX, m.drawStartY);
         showBox(false);
       } else if (el < ends[1]) {
-        // 1. Move from top-left of stage → top-left click point
+        // 1. Drag down-right to draw the box
         setCursorOpacity(1);
-        const p = easeInOut(pT(1, el));
-        setCursor(lerp(m.cursorStartX, m.drawStartX, p), lerp(m.cursorStartY, m.drawStartY, p));
-        showBox(false);
-      } else if (el < ends[2]) {
-        // 2. Drag down-right to draw the box
-        setCursorOpacity(1);
-        const p = easeInOut(pT(2, el));
+        const p = easeInOut(pT(1, el, ends));
         const w = lerp(0, m.targetW, p);
         const h = lerp(0, m.targetH, p);
         applyBox(m.drawStartX + w/2, m.drawStartY + h/2, w, h, m.targetFS, m.hs);
         showBox(true);
         setCursor(m.drawStartX + w, m.drawStartY + h);
-      } else if (el < ends[3]) {
-        // 3. Hold at bottom-right corner while text types in
+        typed.textContent = '';
+      } else if (el < ends[7]) {
+        // 2–7. Type intro, delete, then type final text at bottom-right corner
         setCursorOpacity(1);
-        typed.textContent = TEXT.slice(0, Math.floor(pT(3, el) * TEXT.length));
+        typed.textContent = typedText;
         applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
         showBox(true);
         setCursor(m.drawEndX, m.drawEndY);
-      } else if (el < ends[4]) {
-        // 4. Small hold after typing
+      } else if (el < ends[8]) {
+        // 8. Move from bottom-right corner → top-right handle
         setCursorOpacity(1);
-        typed.textContent = TEXT;
+        typed.textContent = FINAL_TEXT;
         applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
         showBox(true);
-        setCursor(m.drawEndX, m.drawEndY);
-      } else if (el < ends[5]) {
-        // 5. Move from bottom-right corner → top-right handle
-        setCursorOpacity(1);
-        typed.textContent = TEXT;
-        applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
-        showBox(true);
-        const p = easeInOut(pT(5, el));
+        const p = easeInOut(pT(8, el));
         setCursor(lerp(m.drawEndX, m.trHandleX, p), lerp(m.drawEndY, m.trHandleY, p));
-      } else if (el < ends[6]) {
-        // 6. Expand the box (cursor follows top-right handle)
+      } else if (el < ends[9]) {
+        // 9. Expand the box (cursor follows top-right handle)
         setCursorOpacity(1);
-        typed.textContent = TEXT;
-        const p = easeInOut(pT(6, el));
+        typed.textContent = FINAL_TEXT;
+        const p = easeInOut(pT(9, el));
         applyBox(m.boxCX, m.boxCY, lerp(m.targetW, m.finalW, p), lerp(m.targetH, m.finalH, p), lerp(m.targetFS, m.finalFS, p), m.hs);
         showBox(true);
         setCursor(lerp(m.trHandleX, m.finalTrX, p), lerp(m.trHandleY, m.finalTrY, p));
-      } else if (el < ends[7]) {
-        // 7. Hold after expand
+      } else if (el < ends[10]) {
+        // 10. Hold after expand
         setCursorOpacity(1);
-        typed.textContent = TEXT;
+        typed.textContent = FINAL_TEXT;
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         showBox(true);
         setCursor(m.finalTrX, m.finalTrY);
-      } else if (el < ends[8]) {
-        // 8. Cursor fade out
-        typed.textContent = TEXT;
+      } else if (el < ends[11]) {
+        // 11. Cursor fade out
+        typed.textContent = FINAL_TEXT;
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         showBox(true);
         setCursor(m.finalTrX, m.finalTrY);
-        setCursorOpacity(1 - pT(8, el));
+        setCursorOpacity(1 - pT(11, el));
       } else {
         animationComplete = true;
         applyFinalState();
@@ -455,6 +481,7 @@ function initScrollFadeAnimations() {
   // Select all elements that should fade in on scroll
   // Exclude hero section elements that should animate on page load
   const fadeElements = document.querySelectorAll(
+    '.work-card, ' +
     'section:not(#hero) h2, ' +
     'section:not(#hero) h3, ' +
     'section:not(#hero) h4, ' +
@@ -610,86 +637,6 @@ function initCaseStudyWidowPrevention() {
 }
 
 document.addEventListener('DOMContentLoaded', initCaseStudyWidowPrevention);
-
-// ==========================================
-// ABOUT HERO TITLE — HOVER ROTATE
-// "Who am I?" → cycles through role labels on hover.
-// ==========================================
-function initAboutTitleRotate() {
-  const title = document.querySelector('.hero-title-rotate');
-  if (!title) return;
-
-  const stage = title.querySelector('.hero-rotate-stage');
-  if (!stage) return;
-
-  const items = Array.from(stage.querySelectorAll('.hero-rotate-text'));
-  if (items.length < 2) return;
-
-  // Respect users who've asked for reduced motion.
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  const defaultItem = items[0];
-  const cycleItems = items.slice(1);
-
-  const ROTATE_DELAY = 780;
-  let activeIndex = -1; // -1 = default
-  let cycleTimer = null;
-  let isHovered = false;
-
-  function transitionTo(newItem) {
-    const current = stage.querySelector('.hero-rotate-text.is-active');
-    if (current === newItem) return;
-
-    // Slide the currently active text up out of view.
-    if (current) {
-      current.classList.remove('is-active');
-      current.classList.add('is-above');
-    }
-
-    // Snap the incoming text to its base position (translateY 100%) without
-    // animating, then run the transition into the active position.
-    newItem.classList.add('no-transition');
-    newItem.classList.remove('is-above');
-    void newItem.offsetWidth; // force reflow
-    newItem.classList.remove('no-transition');
-    void newItem.offsetWidth; // force reflow
-    newItem.classList.add('is-active');
-  }
-
-  function nextCycle() {
-    if (!isHovered) return;
-    if (!stage.classList.contains('is-looping')) {
-      stage.classList.add('is-looping');
-      void stage.offsetWidth; // ensure the faster loop transition applies before swapping
-    }
-    activeIndex = (activeIndex + 1) % cycleItems.length;
-    transitionTo(cycleItems[activeIndex]);
-    cycleTimer = setTimeout(nextCycle, ROTATE_DELAY);
-  }
-
-  title.addEventListener('mouseenter', () => {
-    if (isHovered) return;
-    isHovered = true;
-    stage.classList.add('is-looping');
-    void stage.offsetWidth; // ensure the fast transition applies to the first hover state too
-    activeIndex = 0;
-    transitionTo(cycleItems[0]);
-    cycleTimer = setTimeout(nextCycle, ROTATE_DELAY);
-  });
-
-  title.addEventListener('mouseleave', () => {
-    isHovered = false;
-    stage.classList.remove('is-looping');
-    if (cycleTimer) {
-      clearTimeout(cycleTimer);
-      cycleTimer = null;
-    }
-    activeIndex = -1;
-    transitionTo(defaultItem);
-  });
-}
-
-document.addEventListener('DOMContentLoaded', initAboutTitleRotate);
 
 // Handle cursor pill-expand on case card hover
 let hoveredElements = new Set();

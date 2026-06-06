@@ -226,6 +226,14 @@ body {
   filter: blur(0);
 }
 
+.work-card.scroll-fade {
+  transform: translateY(20px) scale(0.96);
+}
+
+.work-card.scroll-fade-in {
+  transform: translateY(0) scale(1);
+}
+
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .scroll-fade {
@@ -236,6 +244,11 @@ body {
   
   .scroll-fade-in {
     opacity: 1;
+    transform: none;
+  }
+
+  .work-card.scroll-fade,
+  .work-card.scroll-fade-in {
     transform: none;
   }
 
@@ -383,76 +396,6 @@ body {
 .nav-group.slide-up {
   top: -80px !important;
   transition: top 0.4s cubic-bezier(0.4, 0, 1, 1);
-}
-
-/* Standalone Resume link — fixed top-right, vertically centered with the floating nav */
-.nav-resume-pill {
-  position: fixed;
-  right: 72px;
-  top: -80px;
-  display: inline-flex;
-  align-items: center;
-  gap: 1px;
-  height: 71px;
-  padding: 0;
-  background: transparent;
-  border: none;
-  color: #000000;
-  font-size: 15px;
-  font-weight: 500;
-  text-decoration: none;
-  z-index: 1000;
-  pointer-events: auto;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: geometricPrecision;
-  transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.nav-resume-pill.animate-in {
-  top: 12px;
-}
-
-/* Standalone wordmark — fixed top-left, mirrors resume button */
-.nav-wordmark {
-  position: fixed;
-  left: 72px;
-  top: -80px;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  height: 71px;
-  padding: 0;
-  background: transparent;
-  border: none;
-  color: #000000;
-  font-size: 18px;
-  line-height: 1;
-  text-decoration: none;
-  z-index: 1000;
-  pointer-events: auto;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: geometricPrecision;
-  transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.nav-wordmark.animate-in {
-  top: 12px;
-}
-
-.nav-wordmark-text {
-  display: inline-flex;
-  align-items: baseline;
-}
-
-.nav-wordmark-gm {
-  font-weight: 900;
-  letter-spacing: -0.02em;
-}
-
-.nav-wordmark-design {
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  margin-left: -0.06em;
 }
 
 /* Home Button Container - White background */
@@ -636,6 +579,10 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
   text-align: center;
+}
+
+.floating-nav .nav-resume-rotate {
+  gap: 4px;
 }
 
 .nav-link-stage {
@@ -856,7 +803,7 @@ body {
 /* Eagles Game */
 .wall-pic-1 {
   width: 12%;
-  bottom:68%;
+  bottom:66%;
   left: 19%;
   --base-transform: rotate(11deg);
   transition-delay: 0.1s;
@@ -864,7 +811,7 @@ body {
 
 /* Hiking */
 .wall-pic-5 {
-  width: 13%;
+  width: 14%;
   bottom: 38%;
   left: 8%;
   --base-transform: rotate(-9deg);
@@ -874,8 +821,8 @@ body {
 /* Flying */
 .wall-pic-3 {
   width: 14%;
-  bottom: 5%;
-  left: 20%;
+  bottom: 8%;
+  left: 21%;
   --base-transform: rotate(5deg);
   transition-delay: 0.2s;
 }
@@ -899,7 +846,7 @@ body {
 
 /* GeorgiaFlorida */
 .wall-pic-6 {
-  width: 14%;
+  width: 15%;
   bottom: 3%;
   right: 19%;
   --base-transform: rotate(10deg);
@@ -974,8 +921,6 @@ body {
   left: 50%;
   bottom: 24px;
   margin-top: 0;
-  padding: 8px 16px;
-  font-size: 16px;
   transform: translateX(-50%);
   z-index: 20;
   animation: hero-see-bounce 2s ease-in-out infinite;
@@ -1354,22 +1299,23 @@ body {
 .work-grid {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 .work-card {
   display: flex;
   align-items: stretch;
   background: #F5F5F5;
-  border-radius: 24px;
+  border-radius: 20px;
   overflow: visible;
   text-decoration: none;
   color: #000000;
+  font-family: inherit;
   border: none;
-  padding: 24px;
-  gap: 24px;
+  padding: 10px;
+  gap: 30px;
   cursor: none;
-  min-height: 520px;
+  min-height: 440px;
   transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
   position: relative;
   width: 100%;
@@ -1394,10 +1340,21 @@ body {
 .work-card-text {
   flex: 0 0 38%;
   padding: 24px 12px 24px 16px;
+  padding-left: 40px;
   display: flex;
   flex-direction: column;
   gap: 14px;
   justify-content: center;
+}
+
+.about-hero-title,
+.overview-project-title,
+.section-heading {
+  font-size: clamp(32px, 3.5vw, 52px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: #000000;
 }
 
 .work-card-title {
@@ -1442,19 +1399,16 @@ body {
   border-radius: 10px;
   overflow: hidden;
   isolation: isolate;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .work-card-image {
-  display: block;
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   object-position: center;
+  display: block;
   border-radius: 10px;
 }
 
@@ -1496,13 +1450,15 @@ body {
 }
 
 .card p {
-  font-size: 16px;
-  color: #000000;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.55);
 }
 
 .card.case-card p {
-  font-size: 16px;
-  color: #000000;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.55);
 }
 
 /* Enhanced case-study card styles */
@@ -1800,7 +1756,7 @@ button.case-card {
   transform: translateX(0);
 }
 .about-cta-section {
-  padding: 100px 0;
+  padding: 100px 0 160px;
   display: flex;
   justify-content: center;
   position: relative;
@@ -1889,7 +1845,6 @@ button.case-card {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
   overflow: hidden;
   flex-shrink: 0;
-  margin-left: 50px;
   transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
@@ -2163,75 +2118,33 @@ button.case-card {
   padding: 0 20px;
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: 60px;
+  gap: 100px;
   align-items: center;
 }
 
 .about-cta-section .about-hero-content {
   max-width: 1200px;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 100px;
+}
+
+.about-cta-section .about-hero-text > .work-card-title {
+  margin-bottom: 14px;
+}
+
+.about-cta-section .about-hero-text > .work-card-desc {
+  padding-bottom: 24px;
+}
+
+.about-cta-section .about-cta-actions {
+  margin-top: 0;
 }
 
 .about-hero-title {
-  font-size: 56px;
-  font-weight: 700;
-  color: #000000;
-  margin-bottom: 16px;
-  letter-spacing: -0.02em;
-}
-
-.hero-title-rotate {
-  cursor: none;
-}
-
-.hero-rotate-stage {
-  position: relative;
-  display: inline-grid;
-  grid-template-columns: 1fr;
-  vertical-align: top;
-  overflow: hidden;
-  line-height: 1.1;
-  /* Add a touch of vertical breathing room so descenders don't get clipped */
-  padding-block: 0.05em;
-}
-
-.hero-rotate-text {
-  grid-area: 1 / 1;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translateY(100%);
-  transition:
-    transform 0.5s cubic-bezier(0.65, 0.05, 0.36, 1),
-    opacity 0.4s ease;
-  pointer-events: none;
-}
-
-.hero-rotate-stage.is-looping .hero-rotate-text {
-  transition:
-    transform 0.28s cubic-bezier(0.65, 0.05, 0.36, 1),
-    opacity 0.22s ease;
-}
-
-.hero-rotate-text.is-active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.hero-rotate-text.is-above {
-  opacity: 0;
-  transform: translateY(-100%);
-}
-
-.hero-rotate-text.no-transition {
-  transition: none !important;
+  margin: 0 0 14px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-rotate-text {
-    transition: none;
-  }
-
   .nav-resume-text,
   .nav-link-text {
     transition: none;
@@ -2608,9 +2521,9 @@ button.case-card {
 }
 
 .about-intro-text {
-  font-size: 18px;
-  color: #000000;
-  line-height: 1.8;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.55);
   margin-bottom: 20px;
 }
 
@@ -2648,9 +2561,9 @@ button.case-card {
 
 .about-update-copy {
   margin: 0;
-  font-size: 16px;
-  line-height: 1.7;
-  color: #000000;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.55);
 }
 
 /* About Early Life */
@@ -2667,10 +2580,10 @@ button.case-card {
 }
 
 .about-body-text {
-  font-size: 16px;
-  color: #000000;
-  line-height: 1.8;
-  margin-bottom: 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.55);
+  margin: 0 0 14px;
 }
 
 .about-early-life-image {
@@ -2748,9 +2661,9 @@ button.case-card {
 .resume-item-details {
   list-style: disc;
   padding-left: 20px;
-  color: #000000;
   font-size: 15px;
-  line-height: 1.7;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.55);
 }
 
 .resume-item-details li {
@@ -2820,10 +2733,6 @@ button.case-card {
     justify-content: flex-start;
   }
   
-  .about-hero-title {
-    font-size: 42px;
-  }
-  
   .about-early-life-grid {
     grid-template-columns: 1fr;
     gap: 40px;
@@ -2848,10 +2757,6 @@ button.case-card {
 }
 
 @media (max-width: 600px) {
-  .about-hero-title {
-    font-size: 32px;
-  }
-  
   .about-section-title {
     font-size: 26px;
   }
@@ -2890,9 +2795,9 @@ button.case-card {
 }
 
 .footer-description {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.6;
-  color: #000000;
+  color: rgba(0, 0, 0, 0.55);
   margin: 0;
   max-width: 46ch;
   margin-inline: auto;
@@ -3018,8 +2923,6 @@ button.case-card {
   .site-header .floating-nav,
   .nav-profile,
   .nav-resume,
-  .nav-resume-pill,
-  .nav-wordmark,
   .case-nav-group,
   .case-floating-nav,
   .case-back-container {
@@ -3526,7 +3429,7 @@ button.case-card {
   text-wrap: pretty;
 }
 
-/* Case study pages — primary copy #000000 (muted only via .section-label / .case-pill-tag) */
+/* Case study pages — headings #000000; body copy muted like work-card-desc */
 .case-main,
 .case-layout,
 .case-hero-centered {
@@ -3540,24 +3443,15 @@ button.case-card {
   h4,
   h5,
   h6,
-  p,
-  li,
-  span,
-  strong,
-  em,
-  small,
   figcaption,
   .section-heading,
-  .section-intro,
   .overview-project-title,
   .overview-subtitle,
   .overview-meta-label,
   .overview-meta-value,
   .overview-role-title,
-  .overview-role-description,
   .overview-column-heading,
   .case-quote,
-  .case-list li,
   .result-number,
   .result-label,
   .info-card-label,
@@ -3571,15 +3465,19 @@ button.case-card {
   .meta-value,
   .case-subtitle,
   .case-title,
-  .text-center,
   .disclaimer
 ) {
   color: #000000;
 }
 
-.case-main .scroll-fade,
-.case-main .scroll-fade-in {
-  color: #000000;
+.case-main .section-intro,
+.case-main .case-content p:not(.disclaimer),
+.case-main .overview-text p:not(.disclaimer),
+.case-main .overview-role-description,
+.case-main .case-list li {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.55);
 }
 
 /* Case study footers (sibling of .case-layout) */
@@ -3839,27 +3737,18 @@ body:has(.case-layout) .site-footer-new :is(h3, p, span, a) {
 }
 
 .section-heading {
-  font-size: clamp(28px, 4vw, 42px);
-  font-weight: 700;
-  color: #000000;
-  line-height: 1.2;
   margin-top: 0;
   margin-bottom: 16px;
-  letter-spacing: -0.02em;
   max-width: 620px;
 }
 
 .section-intro {
-  font-size: 17px;
-  line-height: 1.65;
-  color: #000000;
   margin: 0;
   max-width: 640px;
 }
 
 .section-intro strong {
   font-weight: 600;
-  color: #000000;
 }
 
 .case-content {
@@ -4293,9 +4182,6 @@ body:has(.case-layout) .site-footer-new :is(h3, p, span, a) {
 }
 
 .case-content p {
-  font-size: 18px;
-  line-height: 1.7;
-  color: #000000;
   margin-bottom: 20px;
 }
 
@@ -4315,12 +4201,9 @@ body:has(.case-layout) .site-footer-new :is(h3, p, span, a) {
   color: #000000;
 }
 
-h1.overview-project-title,
-h2,
-.case-content h2,
-.container > h2,
-.section-heading,
-.overview-project-title {
+h2:not(.section-heading):not(.work-card-title),
+.case-content h2:not(.section-heading),
+.container > h2:not(.section-heading) {
   font-size: 50px;
   font-weight: 700;
   margin-bottom: 32px;
@@ -4355,11 +4238,7 @@ h2,
 }
 
 .overview-project-title {
-  font-size: 48px;
-  font-weight: 700;
-  color: #000000;
   margin: 0 0 8px 0;
-  letter-spacing: -0.02em;
 }
 
 .overview-subtitle {
@@ -4429,15 +4308,11 @@ h2,
 }
 
 .overview-text p {
-  font-size: 18px;
-  line-height: 1.7;
-  color: #000000;
   margin: 0;
 }
 
 .overview-text strong {
   font-weight: 500;
-  color: #000000;
 }
 
 .overview-text p.disclaimer {
@@ -4466,9 +4341,7 @@ h2,
 }
 
 .overview-role-description {
-  font-size: 18px;
-  line-height: 1.7;
-  color: #000000;
+  margin: 0;
 }
 
 @media (max-width: 900px) {
@@ -4547,9 +4420,6 @@ h2,
 }
 
 .case-list li {
-  font-size: 18px;
-  line-height: 1.7;
-  color: #000000;
   margin-bottom: 12px;
 }
 
@@ -4730,18 +4600,6 @@ h2,
   .case-meta-grid {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-  }
-
-  .section-heading {
-    font-size: 24px;
-  }
-
-  .section-intro {
-    font-size: 16px;
-  }
-
-  .case-content p {
-    font-size: 16px;
   }
 
   .case-quote {
