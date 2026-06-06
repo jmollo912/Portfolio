@@ -1369,7 +1369,7 @@ body {
   padding: 24px;
   gap: 24px;
   cursor: none;
-  min-height: 380px;
+  min-height: 520px;
   transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
   position: relative;
   width: 100%;
@@ -1378,13 +1378,12 @@ body {
 }
 
 .work-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .work-card[data-disabled="true"] {
   cursor: none;
-  opacity: 0.72;
 }
 
 .work-card[data-disabled="true"]:hover {
@@ -1436,21 +1435,27 @@ body {
 }
 
 .work-card-image-wrap {
-  flex: 1;
-  position: relative;
-  border-radius: 14px;
-  overflow: hidden;
+  flex: 1 1 0;
+  min-width: 0;
   min-height: 0;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .work-card-image {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
   display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 10px;
 }
 
 @media (max-width: 700px) {
@@ -1466,7 +1471,7 @@ body {
   }
   .work-card-image-wrap {
     width: 100%;
-    height: 220px;
+    aspect-ratio: 821 / 508;
     flex: none;
   }
 }
