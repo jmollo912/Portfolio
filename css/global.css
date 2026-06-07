@@ -4044,11 +4044,13 @@ body:has(.case-layout) .site-footer-new :is(h3, p, span, a) {
 /* iPhone breakpoint - hide background images */
 @media (max-width: 480px) {
   .case-hero-floating-images--convoy,
+  .case-hero-floating-images--coral,
   .case-hero-floating-images--vigil,
   .case-hero-floating-images--flock {
     display: none;
   }
   .floating-img-convoy-1, .floating-img-convoy-2, .floating-img-convoy-3, .floating-img-convoy-4, .floating-img-convoy-5, .floating-img-convoy-6,
+  .floating-img-coral-1, .floating-img-coral-2, .floating-img-coral-3, .floating-img-coral-4, .floating-img-coral-5, .floating-img-coral-6,
   .floating-img-vigil-1, .floating-img-vigil-2, .floating-img-vigil-3, .floating-img-vigil-4, .floating-img-vigil-5,
   .floating-img-flock-1, .floating-img-flock-2, .floating-img-flock-3, .floating-img-flock-4, .floating-img-flock-5 {
     display: none;

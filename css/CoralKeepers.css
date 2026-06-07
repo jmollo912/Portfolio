@@ -1,0 +1,134 @@
+/* ==========================================
+   CORAL KEEPERS CASE STUDY – SPECIFIC STYLES
+   Load with global.css on case-study-CoralKeepers.html
+   ========================================== */
+
+/* Shared hero stage — floating images scale with the main mockup */
+.case-hero-stage--coral {
+  position: relative;
+  display: inline-block;
+  max-width: 90vw;
+  max-height: 75vh;
+  margin: 50px 0;
+  flex-shrink: 1;
+  min-height: 0;
+  overflow: visible;
+  line-height: 0;
+}
+
+/* Coral Keepers hero main image */
+.case-hero-main-image--coral {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  display: block;
+}
+
+.case-hero-main-image--coral img {
+  display: block;
+  width: auto;
+  max-width: 90vw;
+  max-height: 75vh;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 900px) {
+  .case-hero-stage--coral {
+    margin: 30px 0;
+  }
+
+  .case-hero-main-image--coral img {
+    max-height: 35vh;
+  }
+}
+
+/* Coral Keepers floating parallax images — positioned relative to hero stage */
+.case-hero-floating-images--coral {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+.case-hero-floating-images--coral .floating-img-coral-1,
+.case-hero-floating-images--coral .floating-img-coral-2,
+.case-hero-floating-images--coral .floating-img-coral-3,
+.case-hero-floating-images--coral .floating-img-coral-4,
+.case-hero-floating-images--coral .floating-img-coral-5,
+.case-hero-floating-images--coral .floating-img-coral-6 {
+  position: absolute;
+  z-index: 0;
+  height: auto;
+  border-radius: 12px;
+}
+
+.floating-img-coral-1.scroll-fade,
+.floating-img-coral-1.scroll-fade-in,
+.floating-img-coral-2.scroll-fade,
+.floating-img-coral-2.scroll-fade-in,
+.floating-img-coral-3.scroll-fade,
+.floating-img-coral-3.scroll-fade-in,
+.floating-img-coral-4.scroll-fade,
+.floating-img-coral-4.scroll-fade-in,
+.floating-img-coral-5.scroll-fade,
+.floating-img-coral-5.scroll-fade-in,
+.floating-img-coral-6.scroll-fade,
+.floating-img-coral-6.scroll-fade-in {
+  transition: opacity 0.6s ease-out !important;
+}
+
+/*green coral*/
+.floating-img-coral-1 {
+  top: -25%;
+  left: -60%;
+  width: 30%;
+  opacity: 0.55;
+  filter: blur(2px);
+}
+
+/*purple coral*/
+.floating-img-coral-2 {
+  top: -2%;
+  right: -2%;
+  width: 14%;
+  opacity: 0.85;
+  filter: blur(1px);
+}
+
+/*orange star*/
+.floating-img-coral-3 {
+  top: 56%;
+  right: -5%;
+  width: 17%;
+  opacity: 0.4;
+  filter: blur(4px);
+}
+
+/*pink star*/
+.floating-img-coral-4 {
+  bottom: -5%;
+  left: -10%;
+  width: 35%;
+  opacity: 0.45;
+  filter: blur(4px);
+}
+
+/*happy corey*/
+.floating-img-coral-5 {
+  bottom: -10%;
+  right: 110%;
+  width: 24%;
+  opacity: 0.60;
+  filter: blur(2px);
+}
+
+/*confused corey*/
+.floating-img-coral-6 {
+  right: -30%;
+  bottom: -5%;
+  width: 10%;
+  opacity: 0.5;
+  filter: blur(2px);
+}
