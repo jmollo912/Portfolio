@@ -845,13 +845,13 @@ document.addEventListener('click', (e) => {
 }, true);
 
 // ==========================================
-// WALL PHOTO CURSOR HOVER
+// WALL PHOTO CURSOR HOVER (about page mac photos only — not hero wall pics)
 // ==========================================
 function initWallPicCursorHover() {
-  const wallPics = document.querySelectorAll('.wall-pic[data-cursor-label], .mac-photo-card[data-cursor-label]');
-  if (!cursor || wallPics.length === 0) return;
+  const photoCards = document.querySelectorAll('.mac-photo-card[data-cursor-label]');
+  if (!cursor || photoCards.length === 0) return;
 
-  wallPics.forEach(pic => {
+  photoCards.forEach(pic => {
     pic.addEventListener('mouseenter', () => {
       const label = pic.dataset.cursorLabel || '';
       if (cursorLabelEl) cursorLabelEl.textContent = label;
