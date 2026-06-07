@@ -559,6 +559,29 @@ body {
   z-index: 1;
 }
 
+.nav-marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: none;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav-marker.ready {
+  transition:
+    left 0.45s cubic-bezier(0.65, 0.05, 0.36, 1),
+    top 0.45s cubic-bezier(0.65, 0.05, 0.36, 1),
+    width 0.45s cubic-bezier(0.65, 0.05, 0.36, 1),
+    height 0.45s cubic-bezier(0.65, 0.05, 0.36, 1),
+    opacity 0.2s ease;
+}
+
 .floating-nav ul > li {
   display: flex;
   align-items: center;
@@ -570,7 +593,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 10px 20px;
-  color: #000000;
+  color: rgba(0, 0, 0, 0.4);
   text-decoration: none;
   border-radius: 10px;
   font-weight: 500;
@@ -579,6 +602,13 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
   text-align: center;
+  position: relative;
+  z-index: 1;
+  transition: color 0.2s ease;
+}
+
+.floating-nav a:hover:not(.active):not([aria-current="page"]) {
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .floating-nav .nav-resume-rotate {
@@ -644,7 +674,8 @@ body {
 .floating-nav ul a.active,
 .floating-nav a.active,
 .floating-nav a[aria-current="page"] {
-  font-weight: 700;
+  color: #000000;
+  font-weight: 600;
 }
 
 .nav-resume-icon {
@@ -776,7 +807,7 @@ body {
   --base-transform: rotate(0deg);
   opacity: 0;
   transform: translateY(60px) scale(0.85) var(--base-transform);
-  transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease-out;
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out, box-shadow 0.4s ease-out;
 }
 
 .wall-pic.animate-in {
@@ -802,11 +833,87 @@ body {
 
 /* Eagles Game */
 .wall-pic-1 {
-  width: 12%;
+  width: 14%;
   bottom:66%;
   left: 19%;
   --base-transform: rotate(11deg);
   transition-delay: 0.1s;
+  z-index: 11;
+}
+
+/* Wall picture hover text — handwritten PNG overlays */
+.wall-pic-hovertext {
+  position: absolute;
+  pointer-events: none;
+  z-index: 12;
+  height: auto;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.wall-pic:hover + .wall-pic-hovertext,
+.wall-pic:focus-visible + .wall-pic-hovertext {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.wall-pic.wall-pic--dragging + .wall-pic-hovertext {
+  opacity: 0;
+}
+
+/* Eagles — text to the left */
+.wall-pic-hovertext-1 {
+  left: 5%;
+  bottom: 77%;
+  width: min(180px, 18vw);
+  transform: translateX(-8px);
+}
+
+/* Fishing — text below */
+.wall-pic-hovertext-2 {
+  right: 2%;
+  top: 65%;
+  width: min(210px, 21vw);
+  transform: translateY(8px);
+}
+
+/* Flying — text above/right */
+.wall-pic-hovertext-3 {
+  left: 37%;
+  bottom: 10%;
+  width: min(250px, 25vw);
+  transform: translateY(8px);
+}
+
+/* Capstone — text to the left */
+.wall-pic-hovertext-4 {
+  right: 35%;
+  top: 1%;
+  width: min(190px, 18vw);
+  transform: translateX(-8px);
+}
+
+/* Hiking — text below */
+.wall-pic-hovertext-5 {
+  left: 0%;
+  bottom: 22%;
+  width: min(200px, 19vw);
+  transform: translateY(8px);
+}
+
+/* Georgia Florida — text to the right */
+.wall-pic-hovertext-6 {
+  right: 2%;
+  bottom: 3%;
+  width: min(200px, 19vw);
+  transform: translateX(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wall-pic-hovertext {
+    transition: opacity 0.15s ease;
+    transform: none;
+  }
 }
 
 /* Hiking */
@@ -827,7 +934,7 @@ body {
   transition-delay: 0.2s;
 }
 
-/* HCFC */
+/* Capstone Group */
 .wall-pic-4 {
   width: 15%;
   top: 4%;
@@ -860,7 +967,8 @@ body {
 }
 
 @media (max-width: 620px) {
-  .hero-canvas-inner .wall-pic {
+  .hero-canvas-inner .wall-pic,
+  .hero-canvas-inner .wall-pic-hovertext {
     display: none;
   }
   .hero-canvas-inner {
@@ -980,18 +1088,39 @@ body {
   pointer-events: none;
 }
 
-#hero-caret {
-  display: inline-block;
-  width: 3px;
-  border-radius: 2px;
-  background: var(--brand-blue);
-  margin-left: 2px;
-  animation: hero-blink 0.7s steps(1) infinite;
-  vertical-align: middle;
-  flex-shrink: 0;
+.hero-textbox-hint {
+  position: absolute;
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-size: clamp(11px, 1.1vw, 14px);
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.4);
+  text-align: center;
+  line-height: 1.3;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  z-index: 12;
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-@keyframes hero-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.hero-textbox-hint.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-textbox-hint {
+    transform: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .hero-textbox-hint.visible {
+    transform: none;
+  }
+}
 
 .hero-corner-handle {
   position: absolute;
@@ -3353,7 +3482,7 @@ button.case-card {
   align-items: center;
   justify-content: center;
   padding: 12px 10px;
-  color: #B8B8B8;
+  color: rgba(0, 0, 0, 0.4);
   text-decoration: none;
   font-size: 15px;
   font-weight: 500;
@@ -3365,7 +3494,7 @@ button.case-card {
 }
 
 .case-floating-nav .case-nav-link:hover:not(.active) {
-  color: #B8B8B8;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .case-floating-nav .case-nav-link.active {
@@ -4647,7 +4776,7 @@ body :where(
 
 .case-floating-nav .case-nav-link:not(.active),
 .case-floating-nav .case-nav-link:hover:not(.active) {
-  color: #B8B8B8;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .case-floating-nav .case-nav-link.active {

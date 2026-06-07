@@ -102,7 +102,6 @@ function startHeroAnimations() {
   const navGroup = document.querySelector('.nav-group');
   const heroCaption = document.querySelector('.hero-container > .hero-caption');
   const heroCanvas = document.querySelector('.hero-canvas');
-  const wallPics = document.querySelectorAll('.wall-pic');
 
   setTimeout(() => {
     if (navGroup) navGroup.classList.add('animate-in');
@@ -111,17 +110,120 @@ function startHeroAnimations() {
   setTimeout(() => {
     if (heroCaption) heroCaption.classList.add('animate-in');
     if (heroCanvas) heroCanvas.classList.add('animate-in');
-    initHeroCursorAnimation();
 
-    setTimeout(() => {
-      wallPics.forEach(pic => pic.classList.add('animate-in'));
-
-      setTimeout(() => {
-        wallPics.forEach(pic => pic.classList.add('entrance-done'));
-      }, 850);
-    }, 300);
-
+    // Wall pics start stacked in the center and spread out one by one.
+    // The cursor + text box animation only begins once they've all landed.
+    initWallPicsSpread(() => {
+      initHeroCursorAnimation();
+    });
   }, 100);
+}
+
+// ==========================================
+// HERO WALL PICTURES — SPREAD ENTRANCE
+// All images start layered in the center, then move one by one to
+// their designated spots. Runs onComplete once the last picture lands.
+// ==========================================
+function initWallPicsSpread(onComplete) {
+  const container = document.querySelector('.hero-canvas-inner');
+  const wallPics = Array.from(document.querySelectorAll('.wall-pic'));
+  const done = () => { if (typeof onComplete === 'function') onComplete(); };
+
+  if (!container || wallPics.length === 0) {
+    done();
+    return;
+  }
+
+  // Reduced motion: drop the pictures straight into place.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    wallPics.forEach(pic => {
+      pic.style.transition = 'none';
+      pic.classList.add('animate-in', 'entrance-done');
+    });
+    done();
+    return;
+  }
+
+  // Wait for the wall images so their measured positions are accurate
+  // (loadingComplete fires before images necessarily finish decoding).
+  function waitForImages(images) {
+    const pending = images.filter(img => !(img.complete && img.naturalHeight > 0));
+    if (pending.length === 0) return Promise.resolve();
+    return new Promise(resolve => {
+      let remaining = pending.length;
+      const settle = () => { remaining -= 1; if (remaining <= 0) resolve(); };
+      pending.forEach(img => {
+        img.addEventListener('load', settle, { once: true });
+        img.addEventListener('error', settle, { once: true });
+      });
+      // Safety net so the hero never gets stuck waiting on a stalled image.
+      setTimeout(resolve, 1200);
+    });
+  }
+
+  function runSpread() {
+    const cx = container.clientWidth / 2;
+    const cy = container.clientHeight / 2;
+    const order = [2, 3, 4, 5, 6, 1];
+    const PAUSE = 280;    // hold stacked in the center before spreading
+    const STEP = 50;      // gap between each picture releasing
+    const DURATION = 240; // travel time per picture
+    const EASING = 'ease-out';
+    const STACK_SCALE = 1.0;
+    const STACK_SCALE_LANDSCAPE = 0.72;
+
+    function stackScaleFor(pic) {
+      // Eagles stays full size on top of the stack.
+      if (pic.classList.contains('wall-pic-1')) return STACK_SCALE;
+      const w = pic.naturalWidth;
+      const h = pic.naturalHeight;
+      if (w > 0 && h > 0 && w > h) return STACK_SCALE_LANDSCAPE;
+      return STACK_SCALE * 0.86;
+    }
+
+    // Stack every picture in the center (no transition).
+    wallPics.forEach(pic => {
+      const dx = cx - (pic.offsetLeft + pic.offsetWidth / 2);
+      const dy = cy - (pic.offsetTop + pic.offsetHeight / 2);
+      const scale = stackScaleFor(pic);
+      pic.style.transition = 'none';
+      pic.style.transform = `translate(${dx}px, ${dy}px) scale(${scale}) rotate(0deg)`;
+      pic.style.opacity = '1';
+    });
+
+    // Commit the stacked state before animating out.
+    void container.offsetHeight;
+
+    requestAnimationFrame(() => {
+      wallPics.forEach(pic => {
+        pic.style.transition = `transform ${DURATION}ms ${EASING}, opacity 0.2s ease-out, box-shadow 0.25s ease-out`;
+        pic.style.transitionDelay = '0s';
+      });
+
+      // Hold the stack briefly, then release pictures one by one.
+      order.forEach((n, i) => {
+        const pic = container.querySelector('.wall-pic-' + n);
+        if (!pic) return;
+        setTimeout(() => {
+          pic.style.transform = '';
+          pic.classList.add('animate-in');
+        }, PAUSE + i * STEP);
+      });
+
+      const total = PAUSE + (order.length - 1) * STEP + DURATION;
+      setTimeout(() => {
+        wallPics.forEach(pic => {
+          pic.style.transition = '';
+          pic.style.transitionDelay = '';
+          pic.style.transform = '';
+          pic.classList.add('entrance-done');
+        });
+        done();
+      }, total + 80);
+    });
+  }
+
+  waitForImages(wallPics).then(runSpread);
 }
 
 // ==========================================
@@ -134,7 +236,7 @@ function initHeroCursorAnimation() {
   const cursor   = document.getElementById('hero-cursor');
   const textbox  = document.getElementById('hero-textbox');
   const typed    = document.getElementById('hero-typed');
-  const caret    = document.getElementById('hero-caret');
+  const hint     = document.getElementById('hero-textbox-hint');
   const handles  = {
     tl: document.getElementById('hero-h-tl'),
     tr: document.getElementById('hero-h-tr'),
@@ -142,10 +244,11 @@ function initHeroCursorAnimation() {
     br: document.getElementById('hero-h-br'),
   };
 
-  const INTRO_TEXT = "Hey, I'm Giuseppe";
-  const FINAL_TEXT = "Welcome to my portfolio!";
+  const FIRST_TEXT = "Hey, I'm Giuseppe";
+  const FINAL_TEXT = "Welcome to my portfolio";
   const TYPE_CHAR_MS = 72;
-  const DELETE_CHAR_MS = 54;
+  const DELETE_CHAR_MS = 48;
+  const CURSOR_ENTRANCE_MS = 520;
   const BOX_H_PAD = 28;
   let measureCanvas;
 
@@ -158,6 +261,7 @@ function initHeroCursorAnimation() {
 
   function lerp(a, b, t)    { return a + (b - a) * t; }
   function easeInOut(t)     { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+  function easeOut(t)       { return 1 - (1 - t) * (1 - t); }
 
   let animFrame;
   let animationComplete = false;
@@ -179,12 +283,18 @@ function initHeroCursorAnimation() {
     let finalH = Math.min(H * 0.31, 118, maxH);
     let finalFS = Math.min(finalH * 0.42, 48);
 
-    while (finalFS > 14 && measureTextWidth(FINAL_TEXT, finalFS) + BOX_H_PAD > finalW) {
+    while (finalFS > 14 && Math.max(
+      measureTextWidth(FIRST_TEXT, finalFS),
+      measureTextWidth(FINAL_TEXT, finalFS)
+    ) + BOX_H_PAD > finalW) {
       finalFS -= 1;
     }
     finalH = Math.min(Math.max(finalFS / 0.42, finalFS + 16), maxH);
 
-    const textW = measureTextWidth(FINAL_TEXT, finalFS) + BOX_H_PAD;
+    const textW = Math.max(
+      measureTextWidth(FIRST_TEXT, finalFS),
+      measureTextWidth(FINAL_TEXT, finalFS)
+    ) + BOX_H_PAD;
     finalW = Math.min(Math.max(finalW, textW), maxW);
 
     // Initial box — always smaller than final so the expand phase grows the box
@@ -199,6 +309,8 @@ function initHeroCursorAnimation() {
     const drawStartY   = boxCY - targetH / 2;
     const cursorStartX = drawStartX;
     const cursorStartY = drawStartY;
+    const cursorEntranceX = W - edge * 1.5;
+    const cursorEntranceY = H - edge * 1.5;
     const drawEndX     = boxCX + targetW / 2;
     const drawEndY     = boxCY + targetH / 2;
     const trHandleX    = boxCX + targetW / 2 - hs / 2;
@@ -211,6 +323,7 @@ function initHeroCursorAnimation() {
       targetW, targetH, targetFS,
       finalW, finalH, finalFS,
       cursorStartX, cursorStartY,
+      cursorEntranceX, cursorEntranceY,
       drawStartX, drawStartY,
       drawEndX, drawEndY,
       trHandleX, trHandleY,
@@ -235,7 +348,6 @@ function initHeroCursorAnimation() {
     textbox.style.width  = `${w}px`;
     textbox.style.height = `${h}px`;
     typed.style.fontSize = `${fontSize}px`;
-    caret.style.height   = h > 20 ? `${fontSize * 1.15}px` : '0px';
     const ho = hs / 2;
     Object.values(handles).forEach(handle => {
       handle.style.width  = `${hs}px`;
@@ -249,12 +361,25 @@ function initHeroCursorAnimation() {
     handles.bl.style.top  = `${top  + h - ho}px`;
     handles.br.style.left = `${left + w - ho}px`;
     handles.br.style.top  = `${top  + h - ho}px`;
+    if (hint) {
+      hint.style.left = `${left}px`;
+      hint.style.top = `${top + h + 10}px`;
+      hint.style.width = `${w}px`;
+    }
   }
 
   function showBox(show) {
     const op = show ? '1' : '0';
     textbox.style.opacity = op;
     Object.values(handles).forEach(h => h.style.opacity = op);
+  }
+
+  function hideHint() {
+    if (hint) hint.classList.remove('visible');
+  }
+
+  function showHint() {
+    if (hint) hint.classList.add('visible');
   }
 
   function applyFinalState() {
@@ -264,6 +389,7 @@ function initHeroCursorAnimation() {
     applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
     showBox(true);
     setCursorOpacity(0);
+    showHint();
   }
 
   function runAnimation() {
@@ -273,26 +399,29 @@ function initHeroCursorAnimation() {
     animationComplete = false;
 
     // Phases:
-    //  0 hold cursor at draw start
-    //  1 drag down-right to draw the box
-    //  2 type intro text
-    //  3 hold after intro typed
-    //  4 delete intro text
-    //  5 brief hold with empty text
-    //  6 type final text
-    //  7 hold after all typing complete
+    //  0 cursor enters from bottom-right (move + fade in)
+    //  1 hold cursor at draw start
+    //  2 drag down-right to draw the box
+    //  3 type "Hey, I'm Giuseppe"
+    //  4 hold after first line
+    //  5 delete first line
+    //  6 type "Welcome to my portfolio"
+    //  7 hold after second line
     //  8 move cursor to top-right handle
     //  9 expand animation (cursor follows top-right handle)
-    //  10 hold after expand
-    //  11 cursor fade out
+    // 10 hold after expand
+    // 11 cursor fade out
+    const TYPE_FIRST_MS = FIRST_TEXT.length * TYPE_CHAR_MS;
+    const DELETE_MS = FIRST_TEXT.length * DELETE_CHAR_MS;
+    const TYPE_SECOND_MS = FINAL_TEXT.length * TYPE_CHAR_MS;
     const phases = [
+      CURSOR_ENTRANCE_MS,
       250,
       640,
-      INTRO_TEXT.length * TYPE_CHAR_MS,
-      400,
-      INTRO_TEXT.length * DELETE_CHAR_MS,
-      200,
-      FINAL_TEXT.length * TYPE_CHAR_MS,
+      TYPE_FIRST_MS,
+      280,
+      DELETE_MS,
+      TYPE_SECOND_MS,
       320,
       480,
       720,
@@ -304,9 +433,10 @@ function initHeroCursorAnimation() {
     phases.forEach(d => { acc += d; ends.push(acc); });
 
     showBox(false);
+    hideHint();
     typed.textContent = '';
-    setCursorOpacity(1);
-    setCursor(m0.drawStartX, m0.drawStartY);
+    setCursorOpacity(0);
+    setCursor(m0.cursorEntranceX, m0.cursorEntranceY);
 
     let start = null;
 
@@ -316,19 +446,20 @@ function initHeroCursorAnimation() {
     }
 
     function typedTextForElapsed(el) {
-      if (el < ends[1]) return '';
+      if (el < ends[2]) return '';
 
-      if (el < ends[2]) {
-        const t = pT(2, el);
-        return INTRO_TEXT.slice(0, Math.floor(t * INTRO_TEXT.length));
+      if (el < ends[3]) {
+        const t = pT(3, el);
+        return FIRST_TEXT.slice(0, Math.floor(t * FIRST_TEXT.length));
       }
-      if (el < ends[3]) return INTRO_TEXT;
 
-      if (el < ends[4]) {
-        const t = pT(4, el);
-        return INTRO_TEXT.slice(0, Math.ceil((1 - t) * INTRO_TEXT.length));
+      if (el < ends[4]) return FIRST_TEXT;
+
+      if (el < ends[5]) {
+        const t = pT(5, el);
+        const remaining = Math.ceil((1 - t) * FIRST_TEXT.length);
+        return FIRST_TEXT.slice(0, remaining);
       }
-      if (el < ends[5]) return '';
 
       if (el < ends[6]) {
         const t = pT(6, el);
@@ -350,14 +481,23 @@ function initHeroCursorAnimation() {
       const typedText = typedTextForElapsed(el);
 
       if (el < ends[0]) {
-        // 0. Hold cursor at draw start before animation begins
+        // 0. Enter from bottom-right — move and fade in to draw start
+        const p = easeOut(pT(0, el));
+        setCursorOpacity(p);
+        setCursor(
+          lerp(m.cursorEntranceX, m.drawStartX, p),
+          lerp(m.cursorEntranceY, m.drawStartY, p)
+        );
+        showBox(false);
+      } else if (el < ends[1]) {
+        // 1. Hold cursor at draw start
         setCursorOpacity(1);
         setCursor(m.drawStartX, m.drawStartY);
         showBox(false);
-      } else if (el < ends[1]) {
-        // 1. Drag down-right to draw the box
+      } else if (el < ends[2]) {
+        // 2. Drag down-right to draw the box
         setCursorOpacity(1);
-        const p = easeInOut(pT(1, el, ends));
+        const p = easeInOut(pT(2, el));
         const w = lerp(0, m.targetW, p);
         const h = lerp(0, m.targetH, p);
         applyBox(m.drawStartX + w/2, m.drawStartY + h/2, w, h, m.targetFS, m.hs);
@@ -365,7 +505,7 @@ function initHeroCursorAnimation() {
         setCursor(m.drawStartX + w, m.drawStartY + h);
         typed.textContent = '';
       } else if (el < ends[7]) {
-        // 2–7. Type intro, delete, then type final text at bottom-right corner
+        // 3–7. Type first line, delete it, then type welcome message
         setCursorOpacity(1);
         typed.textContent = typedText;
         applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
@@ -733,29 +873,86 @@ document.addEventListener('DOMContentLoaded', initWallPicCursorHover);
 // ==========================================
 // 2. NAV SCROLL SPY + CLICK HANDLING
 // ==========================================
-const navSections = ['hero', 'case-studies', 'about']
+// Exclude #about — it is a CTA preview, not the full About page; Work stays active there.
+const navSections = ['hero', 'case-studies']
   .map((id) => document.getElementById(id))
   .filter(Boolean);
 const navLinks = document.querySelectorAll('.floating-nav ul li a');
+const mainFloatingNav = document.querySelector('.floating-nav');
+const mainNavList = mainFloatingNav?.querySelector('ul');
+const mainNavMarker = mainFloatingNav?.querySelector('.nav-marker');
 const isAboutPage = window.location.pathname.includes('about.html');
 let activeNavHref = '';
+let mainNavAutoScrolling = false;
+let mainNavScrollEndTimer = null;
+
+function positionMainNavMarker(link) {
+  if (!mainNavMarker || !mainNavList || !link) return;
+  const sidePadding = 8;
+  const listRect = mainNavList.getBoundingClientRect();
+  const linkRect = link.getBoundingClientRect();
+  mainNavMarker.style.left = `${linkRect.left - listRect.left - sidePadding}px`;
+  mainNavMarker.style.top = `${linkRect.top - listRect.top}px`;
+  mainNavMarker.style.width = `${linkRect.width + sidePadding * 2}px`;
+  mainNavMarker.style.height = `${linkRect.height}px`;
+  mainNavMarker.style.opacity = '1';
+}
+
+function hideMainNavMarker() {
+  if (!mainNavMarker) return;
+  mainNavMarker.style.opacity = '0';
+}
 
 function setActiveNav(href) {
-  // About on the home page sits below Work — keep Work highlighted there.
-  if (href === '#about') href = '#case-studies';
   if (href === activeNavHref) return;
   activeNavHref = href;
 
+  let activeLink = null;
   navLinks.forEach((a) => {
     const match = a.getAttribute('href') === href;
     a.classList.toggle('active', match);
-    if (match) a.setAttribute('aria-current', 'page');
-    else a.removeAttribute('aria-current');
+    if (match) {
+      a.setAttribute('aria-current', 'page');
+      activeLink = a;
+    } else {
+      a.removeAttribute('aria-current');
+    }
   });
+
+  if (activeLink) positionMainNavMarker(activeLink);
+  else hideMainNavMarker();
+}
+
+function initMainNavMarker() {
+  if (!mainNavMarker) return;
+
+  const syncMarker = () => {
+    const active = mainFloatingNav?.querySelector('a.active, a[aria-current="page"]');
+    if (active) positionMainNavMarker(active);
+  };
+
+  requestAnimationFrame(() => {
+    mainNavMarker.classList.add('ready');
+    syncMarker();
+  });
+
+  // Re-sync after the nav entrance animation settles.
+  setTimeout(syncMarker, 700);
+
+  window.addEventListener('resize', syncMarker);
+}
+
+function lockMainNavUntilScrollSettles() {
+  mainNavAutoScrolling = true;
+  if (mainNavScrollEndTimer) clearTimeout(mainNavScrollEndTimer);
+  mainNavScrollEndTimer = setTimeout(() => {
+    mainNavAutoScrolling = false;
+    updateActiveSection();
+  }, 900);
 }
 
 function updateActiveSection() {
-  if (isAboutPage || !navSections.length) return;
+  if (isAboutPage || !navSections.length || mainNavAutoScrolling) return;
 
   // Section whose top has crossed this line (just below the nav) is "current".
   const line = Math.max(120, window.innerHeight * 0.25);
@@ -769,7 +966,7 @@ function updateActiveSection() {
 
   if (window.scrollY < 80) current = 'hero';
 
-  setActiveNav('#' + (current === 'about' ? 'case-studies' : current));
+  setActiveNav('#' + current);
 }
 
 window.addEventListener('scroll', updateActiveSection, { passive: true });
@@ -789,6 +986,8 @@ function restoreSmoothScroll() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initMainNavMarker();
+
   if (isAboutPage) return;
   const hash = window.location.hash;
   if (hash && hash !== '#hero') {
@@ -796,6 +995,8 @@ document.addEventListener('DOMContentLoaded', () => {
     restoreSmoothScroll();
     if (document.querySelector(`.floating-nav a[href="${hash}"]`)) {
       setActiveNav(hash);
+    } else {
+      updateActiveSection();
     }
   } else {
     updateActiveSection();
@@ -824,6 +1025,7 @@ document.addEventListener('click', function(e) {
     const target = document.querySelector(href);
     if (!target) return;
     setActiveNav(href);
+    lockMainNavUntilScrollSettles();
     const header = document.querySelector('.site-header');
     const offset = header ? header.offsetHeight : 0;
     const top = target.getBoundingClientRect().top + window.pageYOffset - Math.round(offset * 0.9);
