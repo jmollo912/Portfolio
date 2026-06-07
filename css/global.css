@@ -877,12 +877,12 @@ body {
   transform: translateY(8px);
 }
 
-/* Flying — text above/right */
+/* Flying — slides in from the right */
 .wall-pic-hovertext-3 {
   left: 37%;
   bottom: 10%;
   width: min(250px, 25vw);
-  transform: translateY(8px);
+  transform: translateX(12px);
 }
 
 /* Capstone — text to the left */
