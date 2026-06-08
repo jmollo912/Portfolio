@@ -824,24 +824,38 @@ body {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
 
-.wall-pic--dragging {
-  transition: box-shadow 0.1s ease-out !important;
-  transform: scale(1.1) rotate(0deg) !important;
-  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.32) !important;
-  z-index: 100 !important;
+/* Group wraps each wall pic + hover text so they move together */
+.wall-pic-group {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.wall-pic-group > .wall-pic {
+  position: relative;
+  display: block;
+  width: 100%;
+  left: auto;
+  right: auto;
+  top: auto;
+  bottom: auto;
+  pointer-events: auto;
 }
 
 /* Eagles Game */
-.wall-pic-1 {
+.wall-pic-group-1 {
   width: 14%;
-  bottom:66%;
+  bottom: 66%;
   left: 19%;
-  --base-transform: rotate(11deg);
-  transition-delay: 0.1s;
   z-index: 11;
 }
 
-/* Wall picture hover text — handwritten PNG overlays */
+.wall-pic-group-1 .wall-pic {
+  --base-transform: rotate(11deg);
+  transition-delay: 0.1s;
+}
+
+/* Wall picture hover text — positioned relative to each group */
 .wall-pic-hovertext {
   position: absolute;
   pointer-events: none;
@@ -851,61 +865,57 @@ body {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.wall-pic:hover + .wall-pic-hovertext,
-.wall-pic:focus-visible + .wall-pic-hovertext {
+.wall-pic-group:hover .wall-pic-hovertext,
+.wall-pic-group:focus-within .wall-pic-hovertext {
   opacity: 1;
   transform: translate(0, 0);
 }
 
-.wall-pic.wall-pic--dragging + .wall-pic-hovertext {
-  opacity: 0;
-}
-
 /* Eagles — text to the left */
 .wall-pic-hovertext-1 {
-  left: 5%;
-  bottom: 77%;
-  width: min(180px, 18vw);
+  right: calc(100% + 8px);
+  bottom: 25%;
+  width: min(180px, 130%);
   transform: translateX(-8px);
 }
 
 /* Fishing — text below */
 .wall-pic-hovertext-2 {
-  right: 2%;
-  top: 65%;
-  width: min(210px, 21vw);
+  top: calc(100% + 12px);
+  right: -15%;
+  width: min(210px, 165%);
   transform: translateY(8px);
 }
 
 /* Flying — slides in from the right */
 .wall-pic-hovertext-3 {
-  left: 37%;
-  bottom: 10%;
-  width: min(250px, 25vw);
+  left: 85%;
+  bottom: -10%;
+  width: min(250px, 185%);
   transform: translateX(12px);
 }
 
 /* Capstone — text to the left */
 .wall-pic-hovertext-4 {
-  right: 35%;
-  top: 1%;
-  width: min(190px, 18vw);
+  right: calc(100% + 8px);
+  top: -5%;
+  width: min(190px, 130%);
   transform: translateX(-8px);
 }
 
 /* Hiking — text below */
 .wall-pic-hovertext-5 {
-  left: 0%;
-  bottom: 22%;
-  width: min(200px, 19vw);
+  top: calc(100% + 16px);
+  left: -30%;
+  width: min(200px, 150%);
   transform: translateY(8px);
 }
 
 /* Georgia Florida — text to the right */
 .wall-pic-hovertext-6 {
-  right: 2%;
-  bottom: 3%;
-  width: min(200px, 19vw);
+  left: calc(100% + 8px);
+  bottom: 0;
+  width: min(200px, 130%);
   transform: translateX(8px);
 }
 
@@ -917,45 +927,61 @@ body {
 }
 
 /* Hiking */
-.wall-pic-5 {
+.wall-pic-group-5 {
   width: 14%;
   bottom: 38%;
   left: 8%;
+}
+
+.wall-pic-group-5 .wall-pic {
   --base-transform: rotate(-9deg);
   transition-delay: 0.3s;
 }
 
 /* Flying */
-.wall-pic-3 {
+.wall-pic-group-3 {
   width: 14%;
   bottom: 8%;
   left: 21%;
+}
+
+.wall-pic-group-3 .wall-pic {
   --base-transform: rotate(5deg);
   transition-delay: 0.2s;
 }
 
 /* Capstone Group */
-.wall-pic-4 {
+.wall-pic-group-4 {
   width: 15%;
   top: 4%;
   right: 19%;
+}
+
+.wall-pic-group-4 .wall-pic {
   --base-transform: rotate(-5deg);
   transition-delay: 0.25s;
 }
+
 /* Fishing */
-.wall-pic-2 {
+.wall-pic-group-2 {
   width: 13%;
   top: 35%;
   right: 9%;
+}
+
+.wall-pic-group-2 .wall-pic {
   --base-transform: rotate(-7deg);
   transition-delay: 0.15s;
 }
 
 /* GeorgiaFlorida */
-.wall-pic-6 {
+.wall-pic-group-6 {
   width: 15%;
   bottom: 3%;
   right: 19%;
+}
+
+.wall-pic-group-6 .wall-pic {
   --base-transform: rotate(10deg);
   transition-delay: 0.35s;
 }
@@ -967,8 +993,7 @@ body {
 }
 
 @media (max-width: 620px) {
-  .hero-canvas-inner .wall-pic,
-  .hero-canvas-inner .wall-pic-hovertext {
+  .hero-canvas-inner .wall-pic-group {
     display: none;
   }
   .hero-canvas-inner {
@@ -3217,39 +3242,63 @@ button.case-card {
     transform: translate(-50%, -50%) !important;
   }
 
-  .wall-pic-1 {
+  .wall-pic-group-1 {
     top: -18%;
     left: 15%;
+    bottom: auto;
+  }
+
+  .wall-pic-group-1 .wall-pic {
     transform: rotate(-5deg) !important;
   }
 
-  .wall-pic-2 {
+  .wall-pic-group-2 {
     top: -15%;
     right: 14%;
+    bottom: auto;
+  }
+
+  .wall-pic-group-2 .wall-pic {
     transform: rotate(-7deg) !important;
   }
 
-  .wall-pic-3 {
+  .wall-pic-group-3 {
     top: 12%;
     left: 4%;
+    bottom: auto;
+  }
+
+  .wall-pic-group-3 .wall-pic {
     transform: rotate(-6deg) !important;
   }
 
-  .wall-pic-4 {
+  .wall-pic-group-4 {
     top: -12%;
     right: 2%;
+    bottom: auto;
+  }
+
+  .wall-pic-group-4 .wall-pic {
     transform: rotate(2deg) !important;
   }
 
-  .wall-pic-5 {
+  .wall-pic-group-5 {
     top: -6%;
     left: 6%;
+    bottom: auto;
+  }
+
+  .wall-pic-group-5 .wall-pic {
     transform: rotate(9deg) !important;
   }
 
-  .wall-pic-6 {
+  .wall-pic-group-6 {
     top: 8%;
     right: 3%;
+    bottom: auto;
+  }
+
+  .wall-pic-group-6 .wall-pic {
     transform: rotate(1deg) !important;
   }
 

@@ -181,10 +181,20 @@ function initWallPicsSpread(onComplete) {
       return STACK_SCALE * 0.86;
     }
 
+    function picCenterInContainer(pic) {
+      const containerRect = container.getBoundingClientRect();
+      const picRect = pic.getBoundingClientRect();
+      return {
+        x: picRect.left - containerRect.left + picRect.width / 2,
+        y: picRect.top - containerRect.top + picRect.height / 2,
+      };
+    }
+
     // Stack every picture in the center (no transition).
     wallPics.forEach(pic => {
-      const dx = cx - (pic.offsetLeft + pic.offsetWidth / 2);
-      const dy = cy - (pic.offsetTop + pic.offsetHeight / 2);
+      const { x: px, y: py } = picCenterInContainer(pic);
+      const dx = cx - px;
+      const dy = cy - py;
       const scale = stackScaleFor(pic);
       pic.style.transition = 'none';
       pic.style.transform = `translate(${dx}px, ${dy}px) scale(${scale}) rotate(0deg)`;
@@ -1720,55 +1730,3 @@ function dispatchLoadingComplete() {
 }
 
 document.addEventListener('DOMContentLoaded', dispatchLoadingComplete);
-
-// ==========================================
-// WALL PICTURE DRAG TO REPOSITION
-// ==========================================
-function initWallPicDrag() {
-  const canvas = document.querySelector('.hero-canvas-inner');
-  if (!canvas) return;
-
-  const wallPics = document.querySelectorAll('.wall-pic');
-
-  wallPics.forEach(pic => {
-    let isDragging = false;
-    let startMouseX, startMouseY, startLeft, startTop;
-
-    pic.addEventListener('mousedown', (e) => {
-      if (!pic.classList.contains('entrance-done')) return;
-      e.preventDefault();
-
-      const canvasRect = canvas.getBoundingClientRect();
-      const picRect = pic.getBoundingClientRect();
-
-      // Convert current rendered position to pixel left/top relative to canvas
-      startLeft = picRect.left - canvasRect.left;
-      startTop  = picRect.top  - canvasRect.top;
-
-      pic.style.left   = `${startLeft}px`;
-      pic.style.top    = `${startTop}px`;
-      pic.style.right  = 'auto';
-      pic.style.bottom = 'auto';
-
-      startMouseX = e.clientX;
-      startMouseY = e.clientY;
-      isDragging  = true;
-
-      pic.classList.add('wall-pic--dragging');
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      pic.style.left = `${startLeft + (e.clientX - startMouseX)}px`;
-      pic.style.top  = `${startTop  + (e.clientY - startMouseY)}px`;
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (!isDragging) return;
-      isDragging = false;
-      pic.classList.remove('wall-pic--dragging');
-    });
-  });
-}
-
-document.addEventListener('DOMContentLoaded', initWallPicDrag);
