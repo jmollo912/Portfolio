@@ -816,10 +816,12 @@ body {
 }
 
 .wall-pic.entrance-done {
-  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition-delay: 0s;
 }
 
-.wall-pic.entrance-done:hover {
+.wall-pic-group:hover .wall-pic.entrance-done,
+.wall-pic-group:focus-within .wall-pic.entrance-done {
   transform: translate(0, -4px) scale(1.07) rotate(0deg);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
@@ -852,6 +854,9 @@ body {
 
 .wall-pic-group-1 .wall-pic {
   --base-transform: rotate(11deg);
+}
+
+.wall-pic-group-1 .wall-pic:not(.entrance-done) {
   transition-delay: 0.1s;
 }
 
@@ -863,12 +868,14 @@ body {
   height: auto;
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
+  transition-delay: 0s;
 }
 
 .wall-pic-group:hover .wall-pic-hovertext,
 .wall-pic-group:focus-within .wall-pic-hovertext {
   opacity: 1;
   transform: translate(0, 0);
+  transition-delay: 0s;
 }
 
 /* Eagles — text to the left */
@@ -889,9 +896,9 @@ body {
 
 /* Flying — slides in from the right */
 .wall-pic-hovertext-3 {
-  left: 85%;
+  right: calc(100% + 10px);
   bottom: -10%;
-  width: min(250px, 185%);
+  width: min(140px, 100%);
   transform: translateX(12px);
 }
 
@@ -935,6 +942,9 @@ body {
 
 .wall-pic-group-5 .wall-pic {
   --base-transform: rotate(-9deg);
+}
+
+.wall-pic-group-5 .wall-pic:not(.entrance-done) {
   transition-delay: 0.3s;
 }
 
@@ -947,6 +957,9 @@ body {
 
 .wall-pic-group-3 .wall-pic {
   --base-transform: rotate(5deg);
+}
+
+.wall-pic-group-3 .wall-pic:not(.entrance-done) {
   transition-delay: 0.2s;
 }
 
@@ -959,6 +972,9 @@ body {
 
 .wall-pic-group-4 .wall-pic {
   --base-transform: rotate(-5deg);
+}
+
+.wall-pic-group-4 .wall-pic:not(.entrance-done) {
   transition-delay: 0.25s;
 }
 
@@ -971,6 +987,9 @@ body {
 
 .wall-pic-group-2 .wall-pic {
   --base-transform: rotate(-7deg);
+}
+
+.wall-pic-group-2 .wall-pic:not(.entrance-done) {
   transition-delay: 0.15s;
 }
 
@@ -983,27 +1002,55 @@ body {
 
 .wall-pic-group-6 .wall-pic {
   --base-transform: rotate(10deg);
+}
+
+.wall-pic-group-6 .wall-pic:not(.entrance-done) {
   transition-delay: 0.35s;
 }
 
-@media (max-width: 900px) {
-  .wall-pic.animate-in {
-    opacity: 0.8;
+/* ===========================================
+   HERO WALL PICTURES — RESPONSIVE BREAKPOINTS
+   1) Desktop LG : > 1366px  → base values defined above
+   2) Desktop    : 1200–1365px
+   3) Tablet     : 810–1199px
+   4) Phone      : <= 809px  → no wall images, text box animation only
+   =========================================== */
+
+/* 2) Desktop (1200–1365px) */
+@media (min-width: 1200px) and (max-width: 1365px) {
+  .hero-canvas-inner {
+    padding: 0 40px;
   }
+
+  .wall-pic-group-1 { width: 15%; left: 16%; bottom: 66%; }
+  .wall-pic-group-2 { width: 14%; right: 7%;  top: 35%; }
+  .wall-pic-group-3 { width: 15%; left: 19%; bottom: 8%; }
+  .wall-pic-group-4 { width: 16%; right: 16%; top: 4%; }
+  .wall-pic-group-5 { width: 15%; left: 6%;  bottom: 38%; }
+  .wall-pic-group-6 { width: 16%; right: 16%; bottom: 3%; }
 }
 
-@media (max-width: 620px) {
+/* 3) Tablet (810–1199px) */
+@media (min-width: 810px) and (max-width: 1199px) {
+  .hero-canvas-inner {
+    padding: 0 28px;
+  }
+
+  .wall-pic-group-1 { width: 17%; left: 5%;  bottom: 67%; }
+  .wall-pic-group-2 { width: 16%; right: 4%; top: 33%; }
+  .wall-pic-group-3 { width: 17%; left: 8%;  bottom: 7%; }
+  .wall-pic-group-4 { width: 18%; right: 5%; top: 3%; }
+  .wall-pic-group-5 { width: 16%; left: 3%;  bottom: 40%; }
+  .wall-pic-group-6 { width: 18%; right: 5%; bottom: 3%; }
+}
+
+/* 4) Phone (<= 809px) — hide wall images, keep the text box animation */
+@media (max-width: 809px) {
   .hero-canvas-inner .wall-pic-group {
     display: none;
   }
   .hero-canvas-inner {
     padding: 0 20px;
-  }
-}
-
-@media (max-width: 900px) {
-  .hero-canvas-inner {
-    padding: 0 32px;
   }
 }
 
@@ -1158,10 +1205,6 @@ body {
   pointer-events: none;
   opacity: 0;
   box-sizing: border-box;
-}
-
-@media (max-width: 600px) {
-  #hero-stage { display: none; }
 }
 
 @media (max-width: 600px) {
@@ -4864,4 +4907,151 @@ body :where(
 .case-main .section-label,
 .case-main h3.section-label {
   color: rgba(0, 0, 0, 0.4);
+}
+
+/* ===========================================
+   TABLET + PHONE (<= 1199px) — touch-style behavior
+   • No custom cursor (use the native pointer)
+   • No hover states on buttons / interactive elements
+   Placed last so these rules win over earlier hover styles.
+   =========================================== */
+@media (max-width: 1199px) {
+  /* 1) Disable the custom cursor, restore the native pointer */
+  .custom-cursor {
+    display: none !important;
+  }
+
+  html,
+  body,
+  html *,
+  html *::before,
+  html *::after {
+    cursor: auto !important;
+  }
+
+  html a,
+  html button,
+  html [role="button"],
+  html label,
+  html summary,
+  html .work-card,
+  html .case-card {
+    cursor: pointer !important;
+  }
+
+  /* 2) Neutralize hover states — reset each to its resting style */
+  .nav-home-link:hover {
+    transform: none;
+  }
+  .nav-home-link:hover .nav-home-icon {
+    filter: brightness(0) saturate(100%) invert(45%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(90%);
+  }
+
+  /* Floating nav text rotation */
+  .nav-link-rotate:not(.active):not([aria-current="page"]):hover .nav-link-text:first-child {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .nav-link-rotate:not(.active):not([aria-current="page"]):hover .nav-link-text:last-child {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  /* Resume nav rotation + icon nudge */
+  .nav-resume-rotate:hover .nav-resume-icon {
+    transform: none;
+  }
+  .nav-resume-rotate:hover .nav-resume-text:first-child {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .nav-resume-rotate:hover .nav-resume-text:last-child {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  /* Work / case cards */
+  .work-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .case-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* About CTA link card */
+  .about-cta-link:hover {
+    background: #ffffff;
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transform: none;
+  }
+
+  /* Profile card + connect button */
+  .profile-card:hover {
+    transform: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+  .profile-card-connect:hover {
+    background: var(--brand-blue);
+    transform: none;
+    box-shadow:
+      0 1px 2px rgba(var(--brand-blue-rgb), 0.25),
+      0 4px 12px rgba(var(--brand-blue-rgb), 0.2);
+  }
+
+  /* About buttons */
+  .about-btn:hover {
+    background: #e8e8e8;
+    transform: none;
+  }
+  .about-cta-btn:not(.about-cta-btn--secondary):hover {
+    background: var(--brand-blue);
+    transform: none;
+    box-shadow:
+      0 1px 2px rgba(var(--brand-blue-rgb), 0.25),
+      0 4px 12px rgba(var(--brand-blue-rgb), 0.2);
+  }
+  .about-cta-btn:not(.about-cta-btn--secondary):hover .about-cta-btn-arrow {
+    transform: none;
+  }
+  .about-cta-btn--secondary:hover {
+    background: #fff;
+    transform: none;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.05),
+      0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+  .about-cta-btn--secondary:hover .about-cta-btn-mail {
+    max-width: 0;
+    opacity: 0;
+    margin-left: 0;
+  }
+
+  /* Mac window home button */
+  .mac-home-btn:hover {
+    background: transparent;
+  }
+
+  /* Resume download button */
+  .resume-download-btn:hover {
+    background: #e8e8e8;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Footer pill links */
+  .footer-pill-link:hover {
+    background: #fff;
+    border-color: rgba(0, 0, 0, 0.06);
+    transform: none;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.05),
+      0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Case study back link */
+  .case-back-link:hover {
+    transform: none;
+  }
 }
