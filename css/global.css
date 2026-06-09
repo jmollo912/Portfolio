@@ -901,7 +901,7 @@ body {
 
 /* 1 — Eagles */
 .wall-pic-group-1 {
-  width: 15%;
+  width: 14%;
   bottom: 66%;
   left: 17%;
   z-index: 11;
@@ -946,9 +946,9 @@ body {
 
 /* 3 — Flying */
 .wall-pic-group-3 {
-  width: 18%;
-  bottom: 3%;
-  left: 21%;
+  width: 19%;
+  bottom: 1%;
+  left: 22%;
 }
 
 .wall-pic-group-3 .wall-pic {
@@ -1179,7 +1179,7 @@ body {
   position: absolute;
   margin: 0;
   font-family: Inter, system-ui, -apple-system, sans-serif;
-  font-size: clamp(11px, 1.1vw, 14px);
+  font-size: clamp(18px, 1.25vw, 30px);
   font-weight: 400;
   font-style: italic;
   color: rgba(0, 0, 0, 0.4);
