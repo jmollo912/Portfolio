@@ -888,8 +888,8 @@ body {
 
 /* Fishing — text below */
 .wall-pic-hovertext-2 {
-  top: calc(100% + 12px);
-  right: -15%;
+  top: calc(100% + 6px);
+  right: -65%;
   width: min(210px, 165%);
   transform: translateY(8px);
 }
@@ -920,7 +920,7 @@ body {
 
 /* Georgia Florida — text to the right */
 .wall-pic-hovertext-6 {
-  left: calc(100% + 8px);
+  left: calc(100% + 30px);
   bottom: 0;
   width: min(200px, 130%);
   transform: translateX(8px);
@@ -3254,6 +3254,48 @@ button.case-card {
   }
 }
 
+/* Phone (<= 809px) — vertically center the hero text box animation */
+@media (max-width: 809px) {
+  .hero {
+    padding: 64px 0 40px;
+    min-height: 100dvh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero-canvas {
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-canvas-inner {
+    width: 100%;
+    flex: none;
+    height: min(52vh, 420px);
+    min-height: 300px;
+    max-height: calc(100dvh - 160px);
+    padding: 0 20px;
+    position: relative;
+  }
+
+  #hero-stage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-canvas .case-hero-see-btn {
+    bottom: 12px;
+  }
+}
+
 /* Reduced motion support - respects user accessibility preferences */
 @media (prefers-reduced-motion: reduce) {
 
@@ -4916,6 +4958,11 @@ body :where(
    Placed last so these rules win over earlier hover styles.
    =========================================== */
 @media (max-width: 1199px) {
+  /* Hide "hover over the images" hint — no wall pics on phone; touch on tablet */
+  .hero-textbox-hint {
+    display: none !important;
+  }
+
   /* 1) Disable the custom cursor, restore the native pointer */
   .custom-cursor {
     display: none !important;
