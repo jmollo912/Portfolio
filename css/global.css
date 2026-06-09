@@ -1,3 +1,21 @@
+/* =============================================================================
+   GLOBAL.CSS — Giuseppe Mollo Portfolio
+   =============================================================================
+   TABLE OF CONTENTS
+   1.  Reset & base (html, body, :root, sr-only)
+   2.  Custom cursor
+   3.  Scroll animations & reduced motion
+   4.  Layout (.container)
+   5.  Navigation (header, floating nav, profile)
+   6.  Hero (canvas, wall pictures, text-box animation)
+   7.  Case studies grid (home page work cards)
+   8.  About page
+   9.  Footer
+   10. Responsive breakpoints (tablet, mobile, phone)
+   11. Case study pages
+   12. Global brand overrides & touch behavior (must stay last)
+   ============================================================================= */
+
 /* BASIC RESET */
 * {
   box-sizing: border-box;
@@ -69,7 +87,9 @@ body {
   border: 0;
 }
 
-/* Custom cursor — 75% black + blur (dot matches case-study pill) */
+/* =============================================================================
+   CUSTOM CURSOR
+   ============================================================================= */
 .custom-cursor {
   --cursor-black: rgba(0, 0, 0, 0.65);
   position: fixed;
@@ -274,7 +294,9 @@ body {
   padding: 0 20px;
 }
 
-/* NAVIGATION - SPLIT LAYOUT */
+/* =============================================================================
+   NAVIGATION
+   ============================================================================= */
 .site-header {
   position: fixed;
   top: 0;
@@ -760,7 +782,9 @@ body {
   z-index: 1201 !important;
 }
 
-/* HERO SECTION */
+/* =============================================================================
+   HERO SECTION
+   ============================================================================= */
 .hero {
   background-color: #F5F5F5;
   background-image: radial-gradient(circle, #d0d0d0 1px, transparent 1px);
@@ -790,9 +814,15 @@ body {
 .hero-container {
   position: relative;
   z-index: 1;
+  max-width: 1500px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 0 20px;
+  transition: opacity 0.1s ease-out, transform 0.1s ease-out;
+  will-change: opacity, transform;
 }
 
-/* Wall pictures — now live inside the figma canvas */
+/* ── Wall pictures (shared) ── */
 .wall-pic {
   pointer-events: auto;
   position: absolute;
@@ -826,7 +856,7 @@ body {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
 
-/* Group wraps each wall pic + hover text so they move together */
+/* ── Wall picture groups & hover text ── */
 .wall-pic-group {
   position: absolute;
   pointer-events: none;
@@ -845,23 +875,6 @@ body {
   pointer-events: auto;
 }
 
-/* Eagles Game */
-.wall-pic-group-1 {
-  width: 14%;
-  bottom: 66%;
-  left: 19%;
-  z-index: 11;
-}
-
-.wall-pic-group-1 .wall-pic {
-  --base-transform: rotate(11deg);
-}
-
-.wall-pic-group-1 .wall-pic:not(.entrance-done) {
-  transition-delay: 0.1s;
-}
-
-/* Wall picture hover text — positioned relative to each group */
 .wall-pic-hovertext {
   position: absolute;
   pointer-events: none;
@@ -879,55 +892,6 @@ body {
   transition-delay: 0s;
 }
 
-/* Eagles — text to the left */
-.wall-pic-hovertext-1 {
-  right: calc(100% + 8px);
-  bottom: 25%;
-  width: min(180px, 130%);
-  transform: translateX(-8px);
-}
-
-/* Fishing — text below */
-.wall-pic-hovertext-2 {
-  top: calc(100% + 6px);
-  right: -65%;
-  width: min(210px, 165%);
-  transform: translateY(8px);
-}
-
-/* Flying — slides in from the right */
-.wall-pic-hovertext-3 {
-  right: calc(100% + 10px);
-  bottom: -10%;
-  width: min(140px, 100%);
-  transform: translateX(12px);
-}
-
-/* Capstone — text to the left */
-.wall-pic-hovertext-4 {
-  right: calc(100% + 8px);
-  top: -5%;
-  width: min(190px, 130%);
-  transform: translateX(-8px);
-}
-
-/* Hiking — text to the left */
-.wall-pic-hovertext-5 {
-  right: calc(100% - 80px);
-  top: 90%;
-  bottom: auto;
-  width: min(200px, 130%);
-  transform: translateX(-8px);
-}
-
-/* Georgia Florida — text to the right */
-.wall-pic-hovertext-6 {
-  left: calc(100% + 30px);
-  bottom: 0;
-  width: min(200px, 130%);
-  transform: translateX(8px);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .wall-pic-hovertext {
     transition: opacity 0.15s ease;
@@ -935,25 +899,55 @@ body {
   }
 }
 
-/* Hiking */
-.wall-pic-group-5 {
-  width: 14%;
-  bottom: 38%;
-  left: 8%;
+/* 1 — Eagles */
+.wall-pic-group-1 {
+  width: 15%;
+  bottom: 66%;
+  left: 17%;
+  z-index: 11;
 }
 
-.wall-pic-group-5 .wall-pic {
-  --base-transform: rotate(-9deg);
+.wall-pic-group-1 .wall-pic {
+  --base-transform: rotate(11deg);
 }
 
-.wall-pic-group-5 .wall-pic:not(.entrance-done) {
-  transition-delay: 0.3s;
+.wall-pic-group-1 .wall-pic:not(.entrance-done) {
+  transition-delay: 0.1s;
 }
 
-/* Flying */
+.wall-pic-hovertext-1 {
+  right: calc(100% + 8px);
+  bottom: 25%;
+  width: min(180px, 130%);
+  transform: translateX(-8px);
+}
+
+/* 2 — Fishing */
+.wall-pic-group-2 {
+  width: 17%;
+  top: 19%;
+  right: 1%;
+}
+
+.wall-pic-group-2 .wall-pic {
+  --base-transform: rotate(-7deg);
+}
+
+.wall-pic-group-2 .wall-pic:not(.entrance-done) {
+  transition-delay: 0.15s;
+}
+
+.wall-pic-hovertext-2 {
+  top: calc(100% + 6px);
+  right: -45%;
+  width: min(210px, 165%);
+  transform: translateY(8px);
+}
+
+/* 3 — Flying */
 .wall-pic-group-3 {
-  width: 14%;
-  bottom: 8%;
+  width: 18%;
+  bottom: 3%;
   left: 21%;
 }
 
@@ -965,11 +959,18 @@ body {
   transition-delay: 0.2s;
 }
 
-/* Capstone Group */
+.wall-pic-hovertext-3 {
+  right: calc(100% + 10px);
+  bottom: -10%;
+  width: min(140px, 100%);
+  transform: translateX(12px);
+}
+
+/* 4 — Capstone */
 .wall-pic-group-4 {
-  width: 15%;
-  top: 4%;
-  right: 19%;
+  width: 19%;
+  top: 5%;
+  right: 31%;
 }
 
 .wall-pic-group-4 .wall-pic {
@@ -980,34 +981,56 @@ body {
   transition-delay: 0.25s;
 }
 
-/* Fishing */
-.wall-pic-group-2 {
-  width: 13%;
-  top: 35%;
-  right: 9%;
+.wall-pic-hovertext-4 {
+  right: calc(100% + 8px);
+  top: -5%;
+  width: min(190px, 130%);
+  transform: translateX(-8px);
 }
 
-.wall-pic-group-2 .wall-pic {
-  --base-transform: rotate(-7deg);
+/* 5 — Hiking */
+.wall-pic-group-5 {
+  width: 18%;
+  bottom: 32%;
+  left: 2%;
 }
 
-.wall-pic-group-2 .wall-pic:not(.entrance-done) {
-  transition-delay: 0.15s;
+.wall-pic-group-5 .wall-pic {
+  --base-transform: rotate(-9deg);
 }
 
-/* GeorgiaFlorida */
+.wall-pic-group-5 .wall-pic:not(.entrance-done) {
+  transition-delay: 0.3s;
+}
+
+.wall-pic-hovertext-5 {
+  right: calc(100% - 80px);
+  top: 90%;
+  bottom: auto;
+  width: min(200px, 130%);
+  transform: translateX(-8px);
+}
+
+/* 6 — Georgia / Florida */
 .wall-pic-group-6 {
-  width: 15%;
+  width: 19%;
   bottom: 3%;
   right: 19%;
 }
 
 .wall-pic-group-6 .wall-pic {
-  --base-transform: rotate(10deg);
+  --base-transform: rotate(13deg);
 }
 
 .wall-pic-group-6 .wall-pic:not(.entrance-done) {
   transition-delay: 0.35s;
+}
+
+.wall-pic-hovertext-6 {
+  left: calc(100% + 30px);
+  bottom: 0;
+  width: min(200px, 130%);
+  transform: translateX(8px);
 }
 
 /* ===========================================
@@ -1056,18 +1079,7 @@ body {
   }
 }
 
-.hero-container {
-  max-width: 1500px;
-  width: 90%;
-  margin: 0 auto;
-  padding: 0 20px;
-  transition: opacity 0.1s ease-out, transform 0.1s ease-out;
-  will-change: opacity, transform;
-  position: relative;
-  z-index: 1;
-}
-
-/* Hero canvas — full-width dotted board (no Figma window chrome) */
+/* ── Hero canvas & text-box animation ── */
 .hero-canvas {
   position: relative;
   z-index: 1;
@@ -1457,7 +1469,9 @@ body {
   }
 }
 
-/* CASE STUDIES */
+/* =============================================================================
+   CASE STUDIES — Home page work grid
+   ============================================================================= */
 .section-title {
   font-size: clamp(28px, 4vw, 42px);
   font-weight: 600;
@@ -1938,7 +1952,9 @@ button.case-card {
 
 /* CBS SPORTS NDA MODAL */
 
-/* ABOUT */
+/* =============================================================================
+   ABOUT PAGE
+   ============================================================================= */
 .about {
   padding: 80px 0;
   background: #fff;
@@ -2260,7 +2276,9 @@ button.case-card {
   }
 }
 
-/* FOOTER */
+/* =============================================================================
+   FOOTER
+   ============================================================================= */
 .site-footer {
   padding: 30px 0;
   text-align: center;
@@ -3101,7 +3119,9 @@ button.case-card {
   }
 }
 
-/* RESPONSIVE - TABLET */
+/* =============================================================================
+   RESPONSIVE — Tablet, mobile & phone
+   ============================================================================= */
 @media (max-width: 1199px) {
   /* Keep desktop/tablet nav visible at this size */
   .nav-profile-name {
@@ -3399,9 +3419,9 @@ button.case-card {
   }
 }
 
-/* ===========================================
-   CASE STUDY PAGE STYLES
-   =========================================== */
+/* =============================================================================
+   CASE STUDY PAGES
+   ============================================================================= */
 
 /* Case Study Header */
 .case-header {
@@ -4887,6 +4907,10 @@ h2:not(.section-heading):not(.work-card-title),
     font-size: 24px;
   }
 }
+
+/* =============================================================================
+   GLOBAL BRAND OVERRIDES — keep last for cascade
+   ============================================================================= */
 
 /* Uniform typography — all readable text uses #000000 */
 body :where(
