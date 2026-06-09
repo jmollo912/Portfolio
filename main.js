@@ -254,7 +254,7 @@ function initHeroCursorAnimation() {
     br: document.getElementById('hero-h-br'),
   };
 
-  const FIRST_TEXT = "Hey, I'm Giuseppe";
+  const FIRST_TEXT = "Hey, I’m Giuseppe";
   const FINAL_TEXT = "Welcome to my portfolio";
   const TYPE_CHAR_MS = 72;
   const DELETE_CHAR_MS = 48;
@@ -412,7 +412,7 @@ function initHeroCursorAnimation() {
     //  0 cursor enters from bottom-right (move + fade in)
     //  1 hold cursor at draw start
     //  2 drag down-right to draw the box
-    //  3 type "Hey, I'm Giuseppe"
+    //  3 type "Hey, I’m Giuseppe"
     //  4 hold after first line
     //  5 delete first line
     //  6 type "Welcome to my portfolio"
