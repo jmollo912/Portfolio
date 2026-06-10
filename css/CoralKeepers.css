@@ -7,8 +7,8 @@
 .case-hero-stage--coral {
   position: relative;
   display: inline-block;
-  max-width: 90vw;
-  max-height: 75vh;
+  max-width: min(720px, 75vw);
+  max-height: 55vh;
   margin: 50px 0;
   flex-shrink: 1;
   min-height: 0;
@@ -27,8 +27,8 @@
 .case-hero-main-image--coral img {
   display: block;
   width: auto;
-  max-width: 90vw;
-  max-height: 75vh;
+  max-width: 100%;
+  max-height: 55vh;
   height: auto;
   object-fit: contain;
 }
@@ -118,8 +118,8 @@
 /*happy corey*/
 .floating-img-coral-5 {
   bottom: -10%;
-  right: 110%;
-  width: 24%;
+  left: -40%;
+  width: 20%;
   opacity: 0.60;
   filter: blur(2px);
 }
@@ -127,7 +127,7 @@
 /*confused corey*/
 .floating-img-coral-6 {
   right: -30%;
-  bottom: -5%;
+  top: 5%;
   width: 10%;
   opacity: 0.5;
   filter: blur(2px);
