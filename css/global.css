@@ -75,6 +75,40 @@ body {
   position: relative;
 }
 
+/* Frosted blur along the bottom edge of the viewport */
+body::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: min(120px, 16vh);
+  pointer-events: none;
+  z-index: 500;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(
+    to top,
+    rgb(0 0 0 / 1) 0%,
+    rgb(0 0 0 / 0.82) 22%,
+    rgb(0 0 0 / 0.48) 52%,
+    rgb(0 0 0 / 0.18) 78%,
+    rgb(0 0 0 / 0) 100%
+  );
+  mask-image: linear-gradient(
+    to top,
+    rgb(0 0 0 / 1) 0%,
+    rgb(0 0 0 / 0.82) 22%,
+    rgb(0 0 0 / 0.48) 52%,
+    rgb(0 0 0 / 0.18) 78%,
+    rgb(0 0 0 / 0) 100%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -939,15 +973,15 @@ body {
 
 .wall-pic-hovertext-2 {
   top: calc(100% + 6px);
-  right: -45%;
-  width: min(210px, 165%);
+  right: -35%;
+  width: min(180px, 165%);
   transform: translateY(8px);
 }
 
 /* 3 — Flying */
 .wall-pic-group-3 {
   width: 19%;
-  bottom: 1%;
+  bottom: 3%;
   left: 22%;
 }
 
@@ -960,7 +994,7 @@ body {
 }
 
 .wall-pic-hovertext-3 {
-  right: calc(100% + 10px);
+  right: calc(100% + 20px);
   bottom: -10%;
   width: min(140px, 100%);
   transform: translateX(12px);
