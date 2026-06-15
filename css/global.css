@@ -918,7 +918,7 @@ body {
 .wall-pic-hovertext-1 {
   right: calc(100% + 8px);
   bottom: 25%;
-  width: min(180px, 130%);
+  width: min(200px, 130%);
   transform: translateX(-8px);
 }
 
