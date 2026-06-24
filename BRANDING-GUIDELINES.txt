@@ -57,8 +57,7 @@ Hero only:
 - Monitor "gm design" label: #FFFFFF (lottie-label on hero screen)
 
 Custom cursor:
-- Dot and pill fill: rgba(0, 0, 0, 0.75) — CSS variable --cursor-black
-- Blur: backdrop-filter blur(12px)
+- Dot and pill fill: #000000 (100% opacity) — CSS variable --cursor-black
 - Expanded pill label and arrow: #FFFFFF
 
 

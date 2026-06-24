@@ -651,6 +651,7 @@ function initScrollFadeAnimations() {
     '.case-list li, ' +
     '.about-text p, ' +
     '.about-photo, ' +
+    '.about-cta-link, ' +
     '.about-cta-text, ' +
     '.about-cta-section .profile-card, ' +
     '.about-cta-section .about-hero-text, ' +
@@ -661,8 +662,7 @@ function initScrollFadeAnimations() {
     '.about-page .about-contact-cta, ' +
     '.mac-window, ' +
     '.mac-photo-card, ' +
-    '.skill-item, ' +
-    '.resume-section, ' +
+    '.resume-row, ' +
     '.resume-download, ' +
     '.case-section, ' +
     '.case-image, ' +
@@ -695,6 +695,7 @@ function initScrollFadeAnimations() {
   // Add fade class to all elements immediately to set initial state
   fadeElements.forEach(element => {
     if (element.tagName === 'H3' && element.closest('.case-body')) return;
+    if (element.closest('.skills-carousel')) return;
     element.classList.add('scroll-fade');
   });
 
@@ -726,8 +727,42 @@ function initScrollFadeAnimations() {
   });
 }
 
+// ==========================================
+// SKILLS CAROUSEL — pixel-perfect seamless loop
+// ==========================================
+function initSkillsCarousel() {
+  const carousels = document.querySelectorAll('.skills-carousel');
+  if (carousels.length === 0) return;
+
+  carousels.forEach((carousel) => {
+    const items = carousel.querySelectorAll(':scope > .skill-item');
+    if (items.length < 2 || items.length % 2 !== 0) return;
+
+    const updateScrollDistance = () => {
+      const halfIndex = items.length / 2;
+      const loopPoint = items[halfIndex];
+      if (!loopPoint) return;
+      carousel.style.setProperty('--carousel-scroll', `-${loopPoint.offsetLeft}px`);
+      carousel.classList.add('skills-carousel--ready');
+    };
+
+    const images = carousel.querySelectorAll('img');
+    const imagePromises = [...images].map((img) => {
+      if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+      return new Promise((resolve) => {
+        img.addEventListener('load', resolve, { once: true });
+        img.addEventListener('error', resolve, { once: true });
+      });
+    });
+
+    Promise.all(imagePromises).then(updateScrollDistance);
+    window.addEventListener('resize', updateScrollDistance, { passive: true });
+  });
+}
+
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', initScrollFadeAnimations);
+document.addEventListener('DOMContentLoaded', initSkillsCarousel);
 
 // ==========================================
 // CASE STUDIES — TYPOGRAPHIC WIDOWS

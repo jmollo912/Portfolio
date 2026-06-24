@@ -91,7 +91,7 @@ body {
    CUSTOM CURSOR
    ============================================================================= */
 .custom-cursor {
-  --cursor-black: rgba(0, 0, 0, 0.65);
+  --cursor-black: #000000;
   position: fixed;
   display: flex;
   align-items: center;
@@ -102,8 +102,6 @@ body {
   height: 12px;
   border-radius: 999px;
   background: var(--cursor-black);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
   pointer-events: none;
   z-index: 10000;
   transform: translate(-50%, -50%);
@@ -127,8 +125,6 @@ body {
   gap: 8px;
   border-radius: 12px;
   background: var(--cursor-black);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
   /* Expand: no delay on the shape opening */
   transition:
@@ -270,6 +266,12 @@ body {
   .work-card.scroll-fade,
   .work-card.scroll-fade-in {
     transform: none;
+  }
+
+  .work-card:not([data-disabled="true"]):hover .work-card-image,
+  .work-card-image {
+    transform: none;
+    transition: none;
   }
 
   html {
@@ -1530,7 +1532,7 @@ body {
   gap: 30px;
   cursor: none;
   min-height: 440px;
-  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+  transition: transform 0.15s ease-out;
   position: relative;
   width: 100%;
   text-align: left;
@@ -1539,7 +1541,6 @@ body {
 
 .work-card:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .work-card[data-disabled="true"] {
@@ -1624,6 +1625,12 @@ body {
   object-position: center;
   display: block;
   border-radius: 10px;
+  transition: transform 0.3s cubic-bezier(0.45, 0, 0.55, 1);
+  will-change: transform;
+}
+
+.work-card:not([data-disabled="true"]):hover .work-card-image {
+  transform: scale(1.03);
 }
 
 @media (max-width: 700px) {
@@ -1832,16 +1839,20 @@ button.case-card {
 .skills-carousel {
   display: flex;
   gap: 32px;
-  animation: scroll-skills 20s linear infinite;
   width: fit-content;
+  will-change: transform;
+}
+
+.skills-carousel.skills-carousel--ready {
+  animation: scroll-skills 20s linear infinite;
 }
 
 @keyframes scroll-skills {
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(calc(-50% - 16px));
+    transform: translate3d(var(--carousel-scroll, -50%), 0, 0);
   }
 }
 
@@ -1892,6 +1903,16 @@ button.case-card {
   text-align: center;
 }
 
+/* Carousel items must not inherit scroll-fade motion */
+.skills-carousel .skill-item,
+.skills-carousel .skill-item.scroll-fade,
+.skills-carousel .skill-item.scroll-fade-in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: none !important;
+}
+
 @media (max-width: 900px) {
   .skills-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -1904,6 +1925,10 @@ button.case-card {
   
   .skills-carousel {
     gap: 24px;
+  }
+
+  .resume-platforms-carousel .skills-carousel {
+    gap: 16px;
   }
 }
 
@@ -1920,7 +1945,11 @@ button.case-card {
   .skills-carousel {
     gap: 20px;
   }
-  
+
+  .resume-platforms-carousel .skills-carousel {
+    gap: 16px;
+  }
+
   .skill-icon {
     width: 56px;
     height: 56px;
@@ -1934,7 +1963,8 @@ button.case-card {
 
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .skills-carousel {
+  .skills-carousel,
+  .skills-carousel.skills-carousel--ready {
     animation: none;
   }
   
@@ -1947,6 +1977,13 @@ button.case-card {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 32px;
     width: 100%;
+  }
+
+  .resume-platforms-carousel .skills-carousel {
+    display: flex;
+    grid-template-columns: none;
+    gap: 16px;
+    width: fit-content;
   }
 }
 
@@ -1972,7 +2009,7 @@ button.case-card {
   transform: translateX(0);
 }
 .about-cta-section {
-  padding: 100px 0 160px;
+  padding: 140px 0 220px;
   display: flex;
   justify-content: center;
   position: relative;
@@ -1983,54 +2020,51 @@ button.case-card {
 .about-cta-link {
   display: flex;
   align-items: center;
-  gap: 24px;
-  padding: 20px 32px;
-  border-radius: 15px;
-  background: #ffffff;
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.09),
-              inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  gap: 20px;
+  padding: 0;
+  background: transparent;
+  border: none;
   text-decoration: none;
   position: relative;
   z-index: 1;
-  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 
-.about-cta-link:hover {
-  background: #e8e6e3;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  transform: translateY(-1px);
+.about-cta-link:hover .about-cta-text {
+  color: rgba(0, 0, 0, 0.4);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-color: rgba(0, 0, 0, 0.4);
 }
 
 .about-cta-avatar {
-  width: 72px;
-  height: 72px;
-  min-width: 72px;
-  min-height: 72px;
-  border-radius: 20%;
+  width: 68px;
+  height: 68px;
+  min-width: 68px;
+  min-height: 68px;
+  border-radius: 10px;
   overflow: hidden;
   flex-shrink: 0;
   position: relative;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
 }
 
 .about-cta-img {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 20%;
   display: block;
 }
 
 .about-cta-text {
   display: inline-block;
-  font-size: clamp(18px, 2.5vw, 26px);
-  font-weight: 300;
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-weight: 400;
   color: #000000;
   letter-spacing: -0.01em;
+  line-height: 1.4;
+  text-decoration: none;
 }
 
 .about-inner {
@@ -2074,7 +2108,7 @@ button.case-card {
 }
 
 .profile-card:hover {
-  transform: translateY(-4px) rotate(-4deg);
+  transform: rotate(4deg);
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
@@ -2185,7 +2219,6 @@ button.case-card {
 .profile-card-connect:hover {
   background: rgba(var(--brand-blue-rgb), 0.75);
   color: #FFFFFF;
-  transform: translateY(-2px);
   box-shadow:
     0 1px 2px rgba(var(--brand-blue-rgb), 0.2),
     0 8px 24px rgba(var(--brand-blue-rgb), 0.18);
@@ -2248,7 +2281,6 @@ button.case-card {
 
 .about-btn:hover {
   background: #d4d4d4;
-  transform: translateY(-2px);
 }
 
 .about-text p {
@@ -2323,7 +2355,7 @@ button.case-card {
   display: flex;
   justify-content: flex-start;
   width: 100%;
-  margin-top: 28px;
+  margin-top: 44px;
 }
 
 .about-hero .about-contact-cta .about-cta-btn {
@@ -2359,7 +2391,7 @@ button.case-card {
 }
 
 .about-hero-title {
-  margin: 0 0 14px;
+  margin: 0 0 44px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2420,7 +2452,6 @@ button.case-card {
 .about-cta-btn:not(.about-cta-btn--secondary):hover {
   background: rgba(var(--brand-blue-rgb), 0.75);
   color: #FFFFFF;
-  transform: translateY(-2px);
   box-shadow:
     0 1px 2px rgba(var(--brand-blue-rgb), 0.2),
     0 8px 24px rgba(var(--brand-blue-rgb), 0.18);
@@ -2429,7 +2460,6 @@ button.case-card {
 .about-cta-btn--secondary:hover {
   background: #fff;
   color: #000000;
-  transform: translateY(-2px);
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.05),
     0 4px 12px rgba(0, 0, 0, 0.06);
@@ -2444,6 +2474,13 @@ button.case-card {
 
 .about-cta-btn:not(.about-cta-btn--secondary):hover .about-cta-btn-arrow {
   transform: translateX(4px);
+}
+
+.about-cta-btn:not(.about-cta-btn--secondary):hover .about-cta-btn-mail {
+  max-width: 18px;
+  opacity: 1;
+  transform: translateX(0);
+  margin-left: 10px;
 }
 
 .about-cta-btn-arrow {
@@ -2818,125 +2855,171 @@ button.case-card {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
 }
 
-/* About Skills */
-.about-skills {
-  padding: 80px 0;
-  background: #f9f9f9;
-}
-
 /* About Resume Section */
 .about-resume {
-  padding: 80px 0;
+  padding: 80px 0 160px;
   background: #fff;
 }
 
-.resume-section {
-  margin-bottom: 48px;
+.resume-rows {
+  max-width: 1140px;
+  margin: 0 auto;
 }
 
-.resume-section-title {
-  font-size: 24px;
-  font-weight: 600;
+.resume-row {
+  display: grid;
+  grid-template-columns: minmax(140px, 24%) 1fr;
+  gap: clamp(32px, 5vw, 64px);
+  padding: 48px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  align-items: start;
+}
+
+.resume-rows > .resume-row:first-child {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.resume-row-label {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: #000000;
-  margin-bottom: 24px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #eee;
+  line-height: 1.4;
 }
 
-.resume-item {
-  margin-bottom: 32px;
-  padding-left: 20px;
-  border-left: 3px solid #ddd;
+.resume-row-content {
+  min-width: 0;
 }
 
-.resume-item-header {
+.resume-pills {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 4px;
-}
-
-.resume-item-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #000000;
-}
-
-.resume-item-date {
-  font-size: 14px;
-  color: #000000;
-  font-weight: 500;
-}
-
-.resume-item-company {
-  font-size: 16px;
-  color: #000000;
-  margin-bottom: 12px;
-}
-
-.resume-item-details {
-  list-style: disc;
-  padding-left: 20px;
-  font-size: 15px;
-  line-height: 1.6;
-  color: rgba(0, 0, 0, 0.55);
-}
-
-.resume-item-details li {
-  margin-bottom: 6px;
-}
-
-/* Resume Skills Grid */
-.resume-skills-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-}
-
-.resume-skill-category-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #000000;
-  margin-bottom: 12px;
-}
-
-.resume-skill-list {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
-.resume-skill-list li {
-  font-size: 15px;
+.resume-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.3;
   color: #000000;
-  padding: 6px 0;
-  border-bottom: 1px solid #eee;
+  white-space: nowrap;
+}
+
+.resume-row--platforms {
+  align-items: center;
+}
+
+.resume-platforms-carousel {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.resume-platforms-carousel .skills-carousel {
+  gap: 16px;
+}
+
+.resume-platforms-carousel .skills-carousel.skills-carousel--ready {
+  animation-duration: 22s;
+}
+
+.resume-platforms-carousel .skill-item {
+  width: auto;
+  gap: 0;
+}
+
+.resume-platforms-carousel .skill-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.resume-platforms-carousel .skill-icon-img {
+  border-radius: 12px;
+}
+
+.resume-platforms-carousel .skill-name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.resume-exp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.resume-exp-company {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #000000;
+  line-height: 1.35;
+}
+
+.resume-exp-meta {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #000000;
+}
+
+.resume-exp-sep {
+  margin: 0 0.35em;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 /* Resume Download Button */
 .resume-download {
-  margin-top: 48px;
+  margin-top: 72px;
   text-align: center;
 }
 
 .resume-download-btn {
   display: inline-block;
-  padding: 16px 32px;
-  background: #e8e8e8;
-  color: #000000;
+  padding: 14px 28px;
+  background: var(--brand-blue);
+  color: #FFFFFF;
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
-  border-radius: 50px;
-  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  border: none;
+  border-radius: 10px;
+  box-shadow:
+    0 1px 2px rgba(var(--brand-blue-rgb), 0.25),
+    0 4px 12px rgba(var(--brand-blue-rgb), 0.2);
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .resume-download-btn:hover {
-  background: #d4d4d4;
-  color: #000000;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  background: rgba(var(--brand-blue-rgb), 0.75);
+  color: #FFFFFF;
+  box-shadow:
+    0 1px 2px rgba(var(--brand-blue-rgb), 0.2),
+    0 8px 24px rgba(var(--brand-blue-rgb), 0.18);
 }
 
 /* About Page Responsive */
@@ -2964,9 +3047,10 @@ button.case-card {
     order: 2;
   }
   
-  .resume-skills-grid {
+  .resume-row {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 20px;
+    padding: 36px 0;
   }
 
   .about-what-ive-been-up-to {
@@ -2977,11 +3061,6 @@ button.case-card {
 @media (max-width: 600px) {
   .about-section-title {
     font-size: 26px;
-  }
-  
-  .resume-item-header {
-    flex-direction: column;
-    gap: 4px;
   }
 }
 
@@ -3077,18 +3156,17 @@ button.case-card {
     border-color 0.2s ease;
 }
 
-.footer-pill-link:hover {
-  background: #e8e8e8;
-  color: #000000;
-  border-color: rgba(0, 0, 0, 0.12);
-  transform: translateY(-2px);
+.site-footer-new .footer-pill-link:hover {
+  background: var(--brand-blue);
+  color: #FFFFFF;
+  border-color: var(--brand-blue);
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.06),
-    0 8px 24px rgba(0, 0, 0, 0.08);
+    0 1px 2px rgba(var(--brand-blue-rgb), 0.25),
+    0 4px 12px rgba(var(--brand-blue-rgb), 0.2);
 }
 
-.footer-pill-link:hover .footer-pill-icon {
-  color: #000000;
+.site-footer-new .footer-pill-link:hover :is(span, .footer-pill-icon) {
+  color: #FFFFFF;
 }
 
 .footer-pill-icon {
@@ -3575,7 +3653,6 @@ button.case-card {
 
 .case-back-link:hover {
   color: #000000;
-  transform: translateY(-2px);
 }
 
 /* Case Study Floating Nav - White background */
@@ -4956,7 +5033,11 @@ body :where(
 .about-cta-btn:not(.about-cta-btn--secondary) :is(span, .about-cta-btn-arrow),
 .profile-card-connect,
 .profile-card-connect:hover,
-.profile-card-connect :is(span, .connect-plus) {
+.profile-card-connect :is(span, .connect-plus),
+.resume-download-btn,
+.resume-download-btn:hover,
+.site-footer-new .footer-pill-link:hover,
+.site-footer-new .footer-pill-link:hover :is(span, .footer-pill-icon) {
   color: #FFFFFF;
 }
 
@@ -5049,16 +5130,18 @@ body :where(
     transform: none;
     box-shadow: none;
   }
+  .work-card:not([data-disabled="true"]):hover .work-card-image {
+    transform: none;
+  }
   .case-card:hover {
     transform: none;
     box-shadow: none;
   }
 
-  /* About CTA link card */
-  .about-cta-link:hover {
-    background: #ffffff;
-    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    transform: none;
+  /* About CTA link */
+  .about-cta-link:hover .about-cta-text {
+    color: #000000;
+    text-decoration: none;
   }
 
   /* Profile card + connect button */
@@ -5109,19 +5192,25 @@ body :where(
 
   /* Resume download button */
   .resume-download-btn:hover {
-    background: #e8e8e8;
-    transform: none;
-    box-shadow: none;
+    background: var(--brand-blue);
+    box-shadow:
+      0 1px 2px rgba(var(--brand-blue-rgb), 0.25),
+      0 4px 12px rgba(var(--brand-blue-rgb), 0.2);
   }
 
   /* Footer pill links */
-  .footer-pill-link:hover {
-    background: #fff;
-    border-color: rgba(0, 0, 0, 0.06);
+  .site-footer-new .footer-pill-link:hover {
+    background: var(--brand-blue);
+    color: #FFFFFF;
+    border-color: var(--brand-blue);
     transform: none;
     box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.05),
-      0 4px 12px rgba(0, 0, 0, 0.06);
+      0 1px 2px rgba(var(--brand-blue-rgb), 0.25),
+      0 4px 12px rgba(var(--brand-blue-rgb), 0.2);
+  }
+
+  .site-footer-new .footer-pill-link:hover :is(span, .footer-pill-icon) {
+    color: #FFFFFF;
   }
 
   /* Case study back link */
