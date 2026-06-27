@@ -1006,11 +1006,17 @@ body {
 }
 
 .wall-pic-hovertext-5 {
-  right: calc(100% - 80px);
+  left: -110px;
+  right: auto;
   top: 90%;
   bottom: auto;
   width: min(200px, 130%);
   transform: translateX(-8px);
+}
+
+.wall-pic-group-5:hover .wall-pic-hovertext-5,
+.wall-pic-group-5:focus-within .wall-pic-hovertext-5 {
+  transform: translateX(24px);
 }
 
 /* 6 — Georgia / Florida */
