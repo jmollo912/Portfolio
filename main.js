@@ -666,6 +666,10 @@ function initScrollFadeAnimations() {
     '.resume-download, ' +
     '.case-section, ' +
     '.case-image, ' +
+    '.problem-corey-meet, ' +
+    '.problem-corey-dead, ' +
+    '.problem-corey-health, ' +
+    '.coral-research-img, ' +
     '.case-hero-main-image--convoy img, .case-hero-main-image--coral img, .case-hero-main-image--vigil img, .case-hero-main-image--flock img, ' +
     '.floating-img-convoy-1, .floating-img-convoy-2, .floating-img-convoy-3, .floating-img-convoy-4, .floating-img-convoy-5, .floating-img-convoy-6, .floating-img-coral-1, .floating-img-coral-2, .floating-img-coral-3, .floating-img-coral-4, .floating-img-coral-5, .floating-img-coral-6, .floating-img-vigil-1, .floating-img-vigil-2, .floating-img-vigil-3, .floating-img-vigil-4, .floating-img-vigil-5, .floating-img-flock-1, .floating-img-flock-2, .floating-img-flock-3, .floating-img-flock-4, .floating-img-flock-5, ' +
     '.case-hero-title, ' +

@@ -155,3 +155,141 @@
   opacity: 0.5;
   filter: blur(2px);
 }
+
+/* Problem section — Corey image trio */
+/* Full-width stack that stays within the case study container margins.
+   Images are large (~62% of the container) and alternate alignment:
+   Meet + Dead flush left, Corey's Health flush right. */
+.problem-corey-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.problem-corey-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Meet Corey — left aligned to the content margin */
+.problem-corey-meet {
+  align-self: flex-start;
+}
+
+/* Meet Corey + Dead Corey — slide + fade in from the left (instead of the default up) */
+.problem-corey-meet.scroll-fade,
+.problem-corey-dead.scroll-fade {
+  transform: translateX(-120px);
+}
+
+.problem-corey-meet.scroll-fade-in,
+.problem-corey-dead.scroll-fade-in {
+  transform: translateX(0);
+}
+
+/* Corey's Health — slide + fade in from the right */
+.problem-corey-health.scroll-fade {
+  transform: translateX(120px);
+}
+
+.problem-corey-health.scroll-fade-in {
+  transform: translateX(0);
+}
+
+/* Dead Corey — left aligned to the content margin */
+.problem-corey-dead {
+  align-self: flex-start;
+}
+
+/* Corey's Health — right aligned to the content margin */
+.problem-corey-health {
+  align-self: flex-end;
+}
+
+@media (max-width: 700px) {
+  .problem-corey-img {
+    width: 100%;
+  }
+
+  .problem-corey-meet,
+  .problem-corey-dead,
+  .problem-corey-health {
+    align-self: stretch;
+  }
+}
+
+/* Research section — three concern images within case study margins */
+.coral-research-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  padding-top: 32px;
+}
+
+.coral-research-item {
+  min-width: 0;
+}
+
+.coral-research-img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Research images — translate up + scale in (staggered) */
+.coral-research-img.scroll-fade,
+.coral-research-img.scroll-fade-in {
+  transition:
+    opacity 0.9s ease-out,
+    transform 0.9s ease-out,
+    filter 0.9s ease-out !important;
+}
+
+.coral-research-img.scroll-fade {
+  transform: translateY(20px) scale(0.96);
+}
+
+.coral-research-img.scroll-fade-in {
+  transform: translateY(0) scale(1);
+}
+
+.coral-research-item:nth-child(1) .coral-research-img.scroll-fade,
+.coral-research-item:nth-child(1) .coral-research-img.scroll-fade-in {
+  transition-delay: 0s !important;
+}
+
+.coral-research-item:nth-child(2) .coral-research-img.scroll-fade,
+.coral-research-item:nth-child(2) .coral-research-img.scroll-fade-in {
+  transition-delay: 0.25s !important;
+}
+
+.coral-research-item:nth-child(3) .coral-research-img.scroll-fade,
+.coral-research-item:nth-child(3) .coral-research-img.scroll-fade-in {
+  transition-delay: 0.5s !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coral-research-img.scroll-fade,
+  .coral-research-img.scroll-fade-in {
+    transform: none;
+    transition-delay: 0s !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .coral-research-row {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.coral-research-hmw {
+  padding-top: 32px;
+  width: 100%;
+}
