@@ -292,4 +292,87 @@
 .coral-research-hmw {
   padding-top: 32px;
   width: 100%;
+  max-width: 100%;
+}
+
+.coral-research-hmw img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.coral-journey-map {
+  padding-bottom: 48px;
+}
+
+.coral-content-image--no-top-gap {
+  margin-top: 0;
+}
+
+/* Physical prototype — same image treatment as case content, light bottom spacing only */
+.coral-prototype-media {
+  width: 100%;
+  max-width: 100%;
+  padding-top: 0;
+  padding-bottom: 24px;
+}
+
+.coral-prototype-img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Body text — matches section intro styling with spacing below */
+.body-text {
+  margin: 0;
+  max-width: 640px;
+  padding-bottom: 24px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+/* Solution feature screenshots */
+.coral-features-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  margin: 24px 0 16px;
+}
+
+.coral-features-item {
+  min-width: 0;
+}
+
+.coral-features-img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .coral-features-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.coral-solution-cta {
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.coral-solution-cta .about-cta-btn {
+  margin-top: 0;
 }
