@@ -627,6 +627,34 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================
 // SCROLL FADE IN ANIMATION FOR ALL ELEMENTS
 // ==========================================
+function shouldAnimateScrollFade(element) {
+  if (element.tagName === 'H3' && element.closest('.case-body')) return false;
+  if (element.closest('.skills-carousel')) return false;
+  if (element.classList.contains('case-section') && element.closest('.case-layout')) return false;
+  return true;
+}
+
+function isInScrollFadeViewport(element, bottomMargin = 80) {
+  const rect = element.getBoundingClientRect();
+  return rect.top < window.innerHeight - bottomMargin && rect.bottom > 0;
+}
+
+function revealScrollFadeElement(element) {
+  if (element.classList.contains('scroll-fade') && !element.classList.contains('scroll-fade-in')) {
+    element.classList.add('scroll-fade-in');
+  }
+}
+
+function refreshScrollFadeInView(bottomMargin = 80) {
+  document.querySelectorAll('.scroll-fade:not(.scroll-fade-in)').forEach((element) => {
+    if (isInScrollFadeViewport(element, bottomMargin)) {
+      revealScrollFadeElement(element);
+    }
+  });
+}
+
+window.refreshScrollFadeInView = refreshScrollFadeInView;
+
 function initScrollFadeAnimations() {
   // Select all elements that should fade in on scroll
   // Exclude hero section elements that should animate on page load
@@ -664,12 +692,22 @@ function initScrollFadeAnimations() {
     '.mac-photo-card, ' +
     '.resume-row, ' +
     '.resume-download, ' +
-    '.case-section, ' +
     '.case-image, ' +
+    'section:not(#hero) h1, ' +
+    '.section-label, ' +
+    '.overview-header, ' +
+    '.overview-metadata, ' +
+    '.overview-separator, ' +
+    '.overview-project-title, ' +
+    '.overview-meta-item, ' +
+    '.case-content-image, ' +
     '.problem-corey-meet, ' +
     '.problem-corey-dead, ' +
     '.problem-corey-health, ' +
     '.coral-research-img, ' +
+    '.coral-features-img, ' +
+    '.coral-prototype-img, ' +
+    '.case-main .about-cta-btn, ' +
     '.case-hero-main-image--convoy img, .case-hero-main-image--coral img, .case-hero-main-image--vigil img, .case-hero-main-image--flock img, ' +
     '.floating-img-convoy-1, .floating-img-convoy-2, .floating-img-convoy-3, .floating-img-convoy-4, .floating-img-convoy-5, .floating-img-convoy-6, .floating-img-coral-1, .floating-img-coral-2, .floating-img-coral-3, .floating-img-coral-4, .floating-img-coral-5, .floating-img-coral-6, .floating-img-vigil-1, .floating-img-vigil-2, .floating-img-vigil-3, .floating-img-vigil-4, .floating-img-vigil-5, .floating-img-flock-1, .floating-img-flock-2, .floating-img-flock-3, .floating-img-flock-4, .floating-img-flock-5, ' +
     '.case-hero-title, ' +
@@ -679,18 +717,20 @@ function initScrollFadeAnimations() {
 
   if (fadeElements.length === 0) return;
 
+  const isCaseStudyPage = Boolean(document.querySelector('.case-layout'));
+  const viewportBottomMargin = isCaseStudyPage ? 40 : 80;
+
   // Options for IntersectionObserver
   const observerOptions = {
     root: null,
-    rootMargin: '0px 0px -80px 0px', // Trigger when element is 80px from bottom of viewport
-    threshold: 0.1 // Trigger when 10% of element is visible
+    rootMargin: `0px 0px -${viewportBottomMargin}px 0px`,
+    threshold: isCaseStudyPage ? 0.05 : 0.1
   };
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('scroll-fade-in');
-        // Unobserve after animation to improve performance
+        revealScrollFadeElement(entry.target);
         observer.unobserve(entry.target);
       }
     });
@@ -698,8 +738,7 @@ function initScrollFadeAnimations() {
 
   // Add fade class to all elements immediately to set initial state
   fadeElements.forEach(element => {
-    if (element.tagName === 'H3' && element.closest('.case-body')) return;
-    if (element.closest('.skills-carousel')) return;
+    if (!shouldAnimateScrollFade(element)) return;
     element.classList.add('scroll-fade');
   });
 
@@ -712,23 +751,25 @@ function initScrollFadeAnimations() {
     requestAnimationFrame(() => {
       // Now check which elements are already in viewport
       fadeElements.forEach(element => {
-        const rect = element.getBoundingClientRect();
-        const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-        
-        if (isInViewport) {
+        if (!element.classList.contains('scroll-fade')) return;
+
+        if (isInScrollFadeViewport(element, viewportBottomMargin)) {
           // Add a delay to ensure the initial opacity: 0 state is visible first
           setTimeout(() => {
-            if (element.classList.contains('scroll-fade')) {
-              element.classList.add('scroll-fade-in');
-            }
+            revealScrollFadeElement(element);
           }, 150);
         } else {
-          // Only observe elements not in viewport
           observer.observe(element);
         }
       });
     });
   });
+
+  if (isCaseStudyPage) {
+    window.addEventListener('load', () => {
+      refreshScrollFadeInView(viewportBottomMargin);
+    }, { once: true });
+  }
 }
 
 // ==========================================
@@ -1244,6 +1285,9 @@ function initCaseStudyScrollSpy() {
       autoScrollFallbackTimer = null;
     }
     isAutoScrolling = false;
+    if (typeof window.refreshScrollFadeInView === 'function') {
+      requestAnimationFrame(() => window.refreshScrollFadeInView(40));
+    }
   }
 
   // Lock scroll-spy until the smooth scroll truly settles. We listen for scroll
