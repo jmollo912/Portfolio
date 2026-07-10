@@ -4568,9 +4568,9 @@ body:has(.case-layout) .site-footer-new :is(h3, p, span, a) {
   color: #000000;
 }
 
-h2:not(.section-heading):not(.work-card-title),
-.case-content h2:not(.section-heading),
-.container > h2:not(.section-heading) {
+h2:not(.section-heading):not(.work-card-title):not(.section-label),
+.case-content h2:not(.section-heading):not(.section-label),
+.container > h2:not(.section-heading):not(.section-label) {
   font-size: 50px;
   font-weight: 700;
   margin-bottom: 32px;
@@ -5059,6 +5059,11 @@ body :where(
 .case-main .section-label,
 .case-main h3.section-label {
   color: rgba(0, 0, 0, 0.4);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
 }
 
 /* ===========================================
