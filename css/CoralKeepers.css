@@ -19,7 +19,9 @@
 
 /* True vertical centering: see button sits outside the flex column */
 .case-hero-centered:has(.case-hero-stage--coral) {
-  padding: 40px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  padding-inline: clamp(15px, 5vw, 40px);
 }
 
 .case-hero-centered:has(.case-hero-stage--coral) .case-hero-see-btn {
@@ -50,7 +52,9 @@
 
 @media (max-width: 900px) {
   .case-hero-centered:has(.case-hero-stage--coral) {
-    padding: 80px 20px 40px;
+    padding-top: 80px;
+    padding-bottom: 40px;
+    padding-inline: 15px;
   }
 
   .case-hero-stage--coral {

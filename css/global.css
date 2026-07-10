@@ -941,7 +941,7 @@ body {
 
 .wall-pic-hovertext-2 {
   top: calc(100% + 6px);
-  right: -35%;
+  right: -20%;
   width: min(180px, 165%);
   transform: translateY(8px);
 }
@@ -1006,9 +1006,9 @@ body {
 }
 
 .wall-pic-hovertext-5 {
-  left: -110px;
+  left: -70px;
   right: auto;
-  top: 90%;
+  top: 110%;
   bottom: auto;
   width: min(200px, 130%);
   transform: translateX(-8px);
@@ -1045,8 +1045,8 @@ body {
    HERO WALL PICTURES — RESPONSIVE BREAKPOINTS
    1) Desktop LG : > 1366px  → base values defined above
    2) Desktop    : 1200–1365px
-   3) Tablet     : 810–1199px
-   4) Phone      : <= 809px  → no wall images, text box animation only
+   3) Below 1200px : hide wall images, text box animation only
+   4) Phone      : <= 809px  → tighter hero canvas padding
    =========================================== */
 
 /* 2) Desktop (1200–1365px) */
@@ -1063,25 +1063,22 @@ body {
   .wall-pic-group-6 { width: 16%; right: 16%; bottom: 3%; }
 }
 
-/* 3) Tablet (810–1199px) */
+/* 3) Below 1200px — hide wall images */
+@media (max-width: 1199px) {
+  .hero-canvas-inner .wall-pic-group {
+    display: none;
+  }
+}
+
+/* Tablet (810–1199px) */
 @media (min-width: 810px) and (max-width: 1199px) {
   .hero-canvas-inner {
     padding: 0 28px;
   }
-
-  .wall-pic-group-1 { width: 17%; left: 5%;  bottom: 67%; }
-  .wall-pic-group-2 { width: 16%; right: 4%; top: 33%; }
-  .wall-pic-group-3 { width: 17%; left: 8%;  bottom: 7%; }
-  .wall-pic-group-4 { width: 18%; right: 5%; top: 3%; }
-  .wall-pic-group-5 { width: 16%; left: 3%;  bottom: 40%; }
-  .wall-pic-group-6 { width: 18%; right: 5%; bottom: 3%; }
 }
 
-/* 4) Phone (<= 809px) — hide wall images, keep the text box animation */
+/* 4) Phone (<= 809px) */
 @media (max-width: 809px) {
-  .hero-canvas-inner .wall-pic-group {
-    display: none;
-  }
   .hero-canvas-inner {
     padding: 0 20px;
   }
@@ -1509,6 +1506,7 @@ body {
 
 .case-studies.container {
   max-width: 1200px;
+  padding-inline: 15px;
 }
 
 .case-studies .grid {
@@ -3769,7 +3767,11 @@ button.case-card {
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 20px;
+  padding-inline: 15px;
+}
+
+body:has(.case-layout) .site-footer-new > .container {
+  padding-inline: 15px;
 }
 
 /* Case study copy: minimize typographic widows (supported in Chromium & Safari) */
@@ -3888,7 +3890,9 @@ body:has(.case-layout) .site-footer-new :is(h3, p, span, a) {
 .case-hero-centered {
   width: 100%;
   height: 100vh;
-  padding: 80px 40px 40px;
+  padding-top: 80px;
+  padding-bottom: 40px;
+  padding-inline: clamp(15px, 5vw, 40px);
   background: #ffffff;
   text-align: center;
   display: flex;
@@ -3979,7 +3983,9 @@ body:has(.case-layout) .site-footer-new :is(h3, p, span, a) {
 
 @media (max-width: 900px) {
   .case-hero-centered {
-    padding: 80px 20px 40px;
+    padding-top: 80px;
+    padding-bottom: 40px;
+    padding-inline: 15px;
     height: 100vh;
   }
 
