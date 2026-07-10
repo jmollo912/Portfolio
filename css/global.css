@@ -942,7 +942,8 @@ body {
 .wall-pic-hovertext-2 {
   top: calc(100% + 6px);
   right: -20%;
-  width: min(180px, 165%);
+  width: 80%;
+  height: auto;
   transform: translateY(8px);
 }
 
@@ -1043,27 +1044,12 @@ body {
 
 /* ===========================================
    HERO WALL PICTURES — RESPONSIVE BREAKPOINTS
-   1) Desktop LG : > 1366px  → base values defined above
-   2) Desktop    : 1200–1365px
-   3) Below 1200px : hide wall images, text box animation only
-   4) Phone      : <= 809px  → tighter hero canvas padding
+   1) Desktop (1200px+) : base values defined above
+   2) Below 1200px      : hide wall images, text box animation only
+   3) Phone (<= 809px)  : tighter hero canvas padding
    =========================================== */
 
-/* 2) Desktop (1200–1365px) */
-@media (min-width: 1200px) and (max-width: 1365px) {
-  .hero-canvas-inner {
-    padding: 0 40px;
-  }
-
-  .wall-pic-group-1 { width: 15%; left: 16%; bottom: 66%; }
-  .wall-pic-group-2 { width: 14%; right: 7%;  top: 35%; }
-  .wall-pic-group-3 { width: 15%; left: 19%; bottom: 8%; }
-  .wall-pic-group-4 { width: 16%; right: 16%; top: 4%; }
-  .wall-pic-group-5 { width: 15%; left: 6%;  bottom: 38%; }
-  .wall-pic-group-6 { width: 16%; right: 16%; bottom: 3%; }
-}
-
-/* 3) Below 1200px — hide wall images */
+/* Below 1200px — hide wall images */
 @media (max-width: 1199px) {
   .hero-canvas-inner .wall-pic-group {
     display: none;
@@ -1077,7 +1063,7 @@ body {
   }
 }
 
-/* 4) Phone (<= 809px) */
+/* 3) Phone (<= 809px) */
 @media (max-width: 809px) {
   .hero-canvas-inner {
     padding: 0 20px;
