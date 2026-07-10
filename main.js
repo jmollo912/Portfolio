@@ -708,8 +708,8 @@ function initScrollFadeAnimations() {
     '.coral-features-img, ' +
     '.coral-prototype-img, ' +
     '.case-main .about-cta-btn, ' +
-    '.case-hero-main-image--convoy img, .case-hero-main-image--coral img, .case-hero-main-image--vigil img, .case-hero-main-image--flock img, ' +
-    '.floating-img-convoy-1, .floating-img-convoy-2, .floating-img-convoy-3, .floating-img-convoy-4, .floating-img-convoy-5, .floating-img-convoy-6, .floating-img-coral-1, .floating-img-coral-2, .floating-img-coral-3, .floating-img-coral-4, .floating-img-coral-5, .floating-img-coral-6, .floating-img-vigil-1, .floating-img-vigil-2, .floating-img-vigil-3, .floating-img-vigil-4, .floating-img-vigil-5, .floating-img-flock-1, .floating-img-flock-2, .floating-img-flock-3, .floating-img-flock-4, .floating-img-flock-5, ' +
+    '.case-hero-main-image--convoy img, .case-hero-main-image--coral img, .case-hero-main-image--flock img, ' +
+    '.floating-img-convoy-1, .floating-img-convoy-2, .floating-img-convoy-3, .floating-img-convoy-4, .floating-img-convoy-5, .floating-img-convoy-6, .floating-img-coral-1, .floating-img-coral-2, .floating-img-coral-3, .floating-img-coral-4, .floating-img-coral-5, .floating-img-coral-6, .floating-img-flock-1, .floating-img-flock-2, .floating-img-flock-3, .floating-img-flock-4, .floating-img-flock-5, ' +
     '.case-hero-title, ' +
     '.case-hero-subtitle, ' +
     '.case-hero-description'
@@ -1394,15 +1394,13 @@ document.addEventListener('DOMContentLoaded', initCaseStudyScrollSpy);
 // PARALLAX FLOATING IMAGES (Case Study Hero)
 // ==========================================
 function initParallaxFloatingImages() {
-  const floatingImages = document.querySelectorAll('.floating-img-convoy-1, .floating-img-convoy-2, .floating-img-convoy-3, .floating-img-convoy-4, .floating-img-convoy-5, .floating-img-convoy-6, .floating-img-coral-1, .floating-img-coral-2, .floating-img-coral-3, .floating-img-coral-4, .floating-img-coral-5, .floating-img-coral-6, .floating-img-vigil-1, .floating-img-vigil-2, .floating-img-vigil-3, .floating-img-vigil-4, .floating-img-vigil-5, .floating-img-flock-1, .floating-img-flock-2, .floating-img-flock-3, .floating-img-flock-4, .floating-img-flock-5');
+  const floatingImages = document.querySelectorAll('.floating-img-convoy-1, .floating-img-convoy-2, .floating-img-convoy-3, .floating-img-convoy-4, .floating-img-convoy-5, .floating-img-convoy-6, .floating-img-coral-1, .floating-img-coral-2, .floating-img-coral-3, .floating-img-coral-4, .floating-img-coral-5, .floating-img-coral-6, .floating-img-flock-1, .floating-img-flock-2, .floating-img-flock-3, .floating-img-flock-4, .floating-img-flock-5');
   
   if (floatingImages.length === 0) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   
   // Different parallax speeds for each image (larger = more movement).
-  // Vigil gets stronger motion than Convoy without changing Convoy's feel.
   const defaultSpeeds = [0.45, 0.38, 0.19, 0.35, 0.28, 0.10]; // index 5 = convoy-6 (less dramatic)
-  const vigilSpeeds = [0.6, 0.5, 0.32, 0.45, 0.28];
 
   floatingImages.forEach(img => {
     img.style.willChange = 'transform';
@@ -1414,15 +1412,12 @@ function initParallaxFloatingImages() {
     const scrollY = window.scrollY;
 
     floatingImages.forEach((img, index) => {
-      const vigilMatch = img.className.match(/floating-img-vigil-(\d+)/);
       const coralMatch = img.className.match(/floating-img-coral-(\d+)/);
       const convoyMatch = img.className.match(/floating-img-convoy-(\d+)/);
       const flockMatch = img.className.match(/floating-img-flock-(\d+)/);
-      const speed = vigilMatch
-        ? vigilSpeeds[Number(vigilMatch[1]) - 1] || 0.4
-        : coralMatch || convoyMatch || flockMatch
-          ? defaultSpeeds[(Number((coralMatch || convoyMatch || flockMatch)[1]) - 1)] || 0.1
-          : defaultSpeeds[index] || 0.1;
+      const speed = coralMatch || convoyMatch || flockMatch
+        ? defaultSpeeds[(Number((coralMatch || convoyMatch || flockMatch)[1]) - 1)] || 0.1
+        : defaultSpeeds[index] || 0.1;
       const yOffset = scrollY * speed;
       img.style.transform = `translate3d(0, ${yOffset}px, 0)`;
     });
