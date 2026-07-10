@@ -1554,7 +1554,8 @@ body {
 
 .about-hero-title,
 .overview-project-title,
-.section-heading {
+.section-heading,
+.resume-row-label {
   font-size: clamp(32px, 3.5vw, 52px);
   font-weight: 500;
   letter-spacing: -0.03em;
@@ -2869,12 +2870,6 @@ button.case-card {
 
 .resume-row-label {
   margin: 0;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #000000;
-  line-height: 1.4;
 }
 
 .resume-row-content {
