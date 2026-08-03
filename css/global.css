@@ -959,7 +959,7 @@ body {
 .wall-pic-group-2 {
   width: 17%;
   top: 19%;
-  right: 1%;
+  right: 7%;
 }
 
 .wall-pic-group-2 .wall-pic {
@@ -982,7 +982,7 @@ body {
 .wall-pic-group-3 {
   width: 19%;
   bottom: 3%;
-  left: 22%;
+  left: 26%;
 }
 
 .wall-pic-group-3 .wall-pic {
@@ -1025,8 +1025,8 @@ body {
 /* 5 — Hiking */
 .wall-pic-group-5 {
   width: 18%;
-  bottom: 32%;
-  left: 2%;
+  bottom: 28%;
+  left: 5%;
 }
 
 .wall-pic-group-5 .wall-pic {
