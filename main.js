@@ -145,11 +145,15 @@ if (CUSTOM_CURSOR_ENABLED) {
 // ==========================================
 function startHeroAnimations() {
   const navGroup = document.querySelector('.nav-group');
+  const navBrand = document.querySelector('.nav-brand');
+  const navResume = document.querySelector('.nav-resume');
   const heroCaption = document.querySelector('.hero-container > .hero-caption');
   const heroCanvas = document.querySelector('.hero-canvas');
 
   setTimeout(() => {
     if (navGroup) navGroup.classList.add('animate-in');
+    if (navBrand) navBrand.classList.add('animate-in');
+    if (navResume) navResume.classList.add('animate-in');
   }, 100);
 
   setTimeout(() => {
@@ -1013,24 +1017,74 @@ const navSections = ['hero', 'case-studies']
   .map((id) => document.getElementById(id))
   .filter(Boolean);
 const navLinks = document.querySelectorAll('.floating-nav ul li a');
+const navLinkList = Array.from(navLinks);
 const mainFloatingNav = document.querySelector('.floating-nav');
-const mainNavList = mainFloatingNav?.querySelector('ul');
 const mainNavMarker = mainFloatingNav?.querySelector('.nav-marker');
+const mainNavGroup = document.querySelector('.nav-group');
+const mainNavLabel = document.querySelector('.nav-active-label');
 const isAboutPage = window.location.pathname.includes('about.html');
+const NAV_HANDOFF_KEY = 'floatingNavHandoff';
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let activeNavHref = '';
 let mainNavAutoScrolling = false;
 let mainNavScrollEndTimer = null;
 
 function positionMainNavMarker(link) {
-  if (!mainNavMarker || !mainNavList || !link) return;
-  const sidePadding = 8;
-  const listRect = mainNavList.getBoundingClientRect();
+  if (!mainNavMarker || !mainFloatingNav || !link) return;
+
+  const navRect = mainFloatingNav.getBoundingClientRect();
   const linkRect = link.getBoundingClientRect();
-  mainNavMarker.style.left = `${linkRect.left - listRect.left - sidePadding}px`;
-  mainNavMarker.style.top = `${linkRect.top - listRect.top}px`;
-  mainNavMarker.style.width = `${linkRect.width + sidePadding * 2}px`;
+  const navStyles = getComputedStyle(mainFloatingNav);
+  const borderLeft = parseFloat(navStyles.borderLeftWidth) || 0;
+  const borderTop = parseFloat(navStyles.borderTopWidth) || 0;
+
+  // Position relative to .floating-nav padding box (absolute containing block).
+  const left = linkRect.left - navRect.left - borderLeft;
+  const top = linkRect.top - navRect.top - borderTop;
+
+  mainNavMarker.style.left = `${left}px`;
+  mainNavMarker.style.top = `${top}px`;
+  mainNavMarker.style.width = `${linkRect.width}px`;
   mainNavMarker.style.height = `${linkRect.height}px`;
   mainNavMarker.style.opacity = '1';
+}
+
+let navLabelHoverLink = null;
+
+function positionNavLabel(link) {
+  if (!mainNavLabel || !mainNavGroup || !link) return;
+  const label = link.getAttribute('data-nav-label') || '';
+  if (label) mainNavLabel.textContent = label;
+  const groupRect = mainNavGroup.getBoundingClientRect();
+  const linkRect = link.getBoundingClientRect();
+  const centerX = linkRect.left + linkRect.width / 2 - groupRect.left;
+  mainNavLabel.style.left = `${centerX}px`;
+}
+
+function showNavLabel(link) {
+  if (!mainNavLabel || !link) return;
+
+  // Moving between buttons: jump horizontally, replay top-down (no side slide).
+  if (navLabelHoverLink && navLabelHoverLink !== link) {
+    mainNavLabel.classList.remove('is-visible');
+    mainNavLabel.style.transition = 'none';
+    positionNavLabel(link);
+    void mainNavLabel.offsetWidth;
+    mainNavLabel.style.transition = '';
+    requestAnimationFrame(() => {
+      mainNavLabel.classList.add('is-visible');
+    });
+  } else {
+    positionNavLabel(link);
+    mainNavLabel.classList.add('is-visible');
+  }
+
+  navLabelHoverLink = link;
+}
+
+function hideNavLabel() {
+  mainNavLabel?.classList.remove('is-visible');
+  navLabelHoverLink = null;
 }
 
 function hideMainNavMarker() {
@@ -1038,8 +1092,100 @@ function hideMainNavMarker() {
   mainNavMarker.style.opacity = '0';
 }
 
-function setActiveNav(href) {
-  if (href === activeNavHref) return;
+function getNavLinkIndex(link) {
+  return navLinkList.indexOf(link);
+}
+
+function getActiveNavLink() {
+  return mainFloatingNav?.querySelector('a.active, a[aria-current="page"]') || null;
+}
+
+function saveFloatingNavHandoff() {
+  if (!mainFloatingNav || !navLinkList.length) return null;
+  const active = getActiveNavLink() || navLinkList[0];
+  const fromIndex = getNavLinkIndex(active);
+  if (fromIndex < 0) return null;
+  try {
+    sessionStorage.setItem(NAV_HANDOFF_KEY, JSON.stringify({ fromIndex }));
+  } catch (_) {
+    /* ignore quota / private mode */
+  }
+  return fromIndex;
+}
+
+function consumeFloatingNavHandoff() {
+  let fromIndex = null;
+
+  // Prefer URL param (reliable across page loads); fall back to sessionStorage.
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('navFrom')) {
+      const parsed = parseInt(params.get('navFrom'), 10);
+      if (!Number.isNaN(parsed)) fromIndex = parsed;
+      params.delete('navFrom');
+      const qs = params.toString();
+      const clean =
+        window.location.pathname + (qs ? `?${qs}` : '') + window.location.hash;
+      history.replaceState(null, '', clean);
+    }
+  } catch (_) {
+    /* ignore */
+  }
+
+  try {
+    const raw = sessionStorage.getItem(NAV_HANDOFF_KEY);
+    sessionStorage.removeItem(NAV_HANDOFF_KEY);
+    if (fromIndex === null && raw) {
+      const data = JSON.parse(raw);
+      if (typeof data?.fromIndex === 'number') fromIndex = data.fromIndex;
+    }
+  } catch (_) {
+    /* ignore */
+  }
+
+  if (fromIndex === null) return null;
+  return { fromIndex };
+}
+
+function navigateWithNavHandoff(url) {
+  const fromIndex = saveFloatingNavHandoff();
+  try {
+    const next = new URL(url, window.location.href);
+    if (typeof fromIndex === 'number') {
+      next.searchParams.set('navFrom', String(fromIndex));
+    }
+    window.location.href = next.href;
+  } catch (_) {
+    window.location.href = url;
+  }
+}
+
+function resolveInitialNavHref() {
+  if (isAboutPage) {
+    const about = navLinkList.find((a) => a.getAttribute('data-nav-label') === 'About');
+    return about?.getAttribute('href') || '#';
+  }
+
+  const hash = window.location.hash;
+  if (hash && hash !== '#hero' && navLinkList.some((a) => a.getAttribute('href') === hash)) {
+    return hash;
+  }
+
+  if (!navSections.length) return '#hero';
+
+  const line = Math.max(120, window.innerHeight * 0.25);
+  let current = 'hero';
+  navSections.forEach((section) => {
+    if (section.getBoundingClientRect().top <= line) {
+      current = section.id;
+    }
+  });
+  if (window.scrollY < 80) current = 'hero';
+  return '#' + current;
+}
+
+function setActiveNav(href, { force = false } = {}) {
+  if (!force && href === activeNavHref) return;
   activeNavHref = href;
 
   let activeLink = null;
@@ -1059,22 +1205,86 @@ function setActiveNav(href) {
 }
 
 function initMainNavMarker() {
-  if (!mainNavMarker) return;
+  if (!mainNavMarker || !mainFloatingNav) return;
 
   const syncMarker = () => {
-    const active = mainFloatingNav?.querySelector('a.active, a[aria-current="page"]');
+    const active = getActiveNavLink();
     if (active) positionMainNavMarker(active);
   };
 
-  requestAnimationFrame(() => {
+  const targetHref = resolveInitialNavHref();
+  const targetLink = navLinkList.find((a) => a.getAttribute('href') === targetHref) || getActiveNavLink();
+  const handoff = consumeFloatingNavHandoff();
+  const fromLink =
+    handoff && handoff.fromIndex >= 0 && handoff.fromIndex < navLinkList.length
+      ? navLinkList[handoff.fromIndex]
+      : null;
+
+  const finishReady = () => {
     mainNavMarker.classList.add('ready');
-    syncMarker();
-  });
+    mainNavLabel?.classList.add('ready');
+  };
 
-  // Re-sync after the nav entrance animation settles.
+  // Cross-page continuity: start on the previous tab, then slide to the new one.
+  if (
+    fromLink &&
+    targetLink &&
+    fromLink !== targetLink &&
+    !prefersReducedMotion
+  ) {
+    mainNavAutoScrolling = true;
+    mainNavMarker.classList.remove('ready');
+    setActiveNav(fromLink.getAttribute('href') || '', { force: true });
+    positionMainNavMarker(fromLink);
+    mainNavMarker.style.opacity = '1';
+    // Force layout so the "from" position paints before enabling transitions.
+    void mainNavMarker.offsetWidth;
+
+    requestAnimationFrame(() => {
+      finishReady();
+      // Double rAF: ensure .ready transitions apply to the next style change.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setActiveNav(targetHref, { force: true });
+          setTimeout(() => {
+            mainNavAutoScrolling = false;
+            if (!isAboutPage) updateActiveSection();
+            syncMarker();
+          }, 500);
+        });
+      });
+    });
+  } else {
+    // First paint at the correct tab (no slide from 0,0).
+    if (targetLink) setActiveNav(targetHref, { force: true });
+    requestAnimationFrame(() => {
+      syncMarker();
+      finishReady();
+    });
+  }
+
+  // Re-sync after the nav entrance animation / layout settles.
   setTimeout(syncMarker, 700);
-
+  window.addEventListener('load', syncMarker, { once: true });
   window.addEventListener('resize', syncMarker);
+
+  // Label only appears while hovering a nav button (fine pointers).
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    mainFloatingNav.addEventListener('pointerover', (e) => {
+      const link = e.target.closest('a.nav-icon-link');
+      if (!link || !mainFloatingNav.contains(link)) return;
+      showNavLabel(link);
+    });
+    mainFloatingNav.addEventListener('pointerleave', hideNavLabel);
+  }
+
+  // Keyboard: show label while a nav link is focused.
+  navLinks.forEach((link) => {
+    link.addEventListener('focus', () => showNavLabel(link));
+    link.addEventListener('blur', () => {
+      if (!mainFloatingNav?.matches(':hover')) hideNavLabel();
+    });
+  });
 }
 
 function lockMainNavUntilScrollSettles() {
@@ -1106,6 +1316,50 @@ function updateActiveSection() {
 
 window.addEventListener('scroll', updateActiveSection, { passive: true });
 
+function initNavScrollHide() {
+  if (!mainNavGroup || prefersReducedMotion) return;
+
+  const navBrand = document.querySelector('.nav-brand');
+  const navResume = document.querySelector('.nav-resume');
+  let lastY = window.scrollY || 0;
+  let ticking = false;
+  const deltaThreshold = 6;
+  const topRevealY = 48;
+
+  const setHidden = (hidden) => {
+    mainNavGroup.classList.toggle('nav-scroll-hidden', hidden);
+    navBrand?.classList.toggle('nav-scroll-hidden', hidden);
+    navResume?.classList.toggle('nav-scroll-hidden', hidden);
+    if (hidden) hideNavLabel();
+  };
+
+  const onScroll = () => {
+    if (mainNavAutoScrolling || mainNavGroup.classList.contains('slide-up')) {
+      lastY = window.scrollY || 0;
+      return;
+    }
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      const y = window.scrollY || 0;
+      const delta = y - lastY;
+
+      if (y <= topRevealY) {
+        setHidden(false);
+      } else if (delta > deltaThreshold) {
+        setHidden(true);
+      } else if (delta < -deltaThreshold) {
+        setHidden(false);
+      }
+
+      lastY = y;
+    });
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+}
+
 function jumpToHash(hash, behavior = 'auto') {
   if (!hash || hash === '#' || hash === '#hero') return;
   const target = document.querySelector(hash);
@@ -1121,21 +1375,15 @@ function restoreSmoothScroll() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  initMainNavMarker();
-
-  if (isAboutPage) return;
-  const hash = window.location.hash;
-  if (hash && hash !== '#hero') {
-    jumpToHash(hash);
-    restoreSmoothScroll();
-    if (document.querySelector(`.floating-nav a[href="${hash}"]`)) {
-      setActiveNav(hash);
-    } else {
-      updateActiveSection();
+  if (!isAboutPage) {
+    const hash = window.location.hash;
+    if (hash && hash !== '#hero') {
+      jumpToHash(hash);
+      restoreSmoothScroll();
     }
-  } else {
-    updateActiveSection();
   }
+  initMainNavMarker();
+  initNavScrollHide();
 });
 
 // Re-snap after layout settles (images/fonts) so cross-page hash links land correctly.
@@ -1166,8 +1414,8 @@ document.addEventListener('click', function(e) {
     const top = target.getBoundingClientRect().top + window.pageYOffset - Math.round(offset * 0.9);
     smoothScrollTo(top);
   } else {
-    setActiveNav(href);
-    window.location.href = a.href;
+    // Separate HTML pages remount the nav — hand off marker index for a seamless slide.
+    navigateWithNavHandoff(a.href);
   }
 }, true);
 
@@ -1182,8 +1430,27 @@ document.addEventListener('click', function(e) {
     if (aboutNavLink) {
       e.preventDefault();
       e.stopPropagation();
-      setActiveNav('html/about.html');
-      window.location.href = aboutCtaBtn.href;
+      navigateWithNavHandoff(aboutCtaBtn.href);
+      return;
+    }
+  }
+
+  // Mobile / other links between Home and About — keep marker continuity.
+  const crossLink = e.target.closest('a[href]');
+  if (
+    crossLink &&
+    mainFloatingNav &&
+    !crossLink.closest('.floating-nav') &&
+    !crossLink.classList.contains('about-cta-btn') &&
+    crossLink.target !== '_blank' &&
+    !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey
+  ) {
+    const href = crossLink.getAttribute('href') || '';
+    const toAbout = href.includes('about.html');
+    const toHomeFromAbout = isAboutPage && (href.includes('index.html') || href === '../' || href === '/');
+    if (toAbout || toHomeFromAbout) {
+      e.preventDefault();
+      navigateWithNavHandoff(crossLink.href);
       return;
     }
   }

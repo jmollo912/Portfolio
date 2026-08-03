@@ -34,17 +34,52 @@
 
     <header class="site-header">
         <div class="nav-wrapper">
+            <a href="../index.html" class="nav-brand" aria-label="gm design — Home">
+                <img src="../media/NavBar/gmdesign.svg" alt="gm design" class="nav-brand-logo" width="82" height="17" decoding="async">
+            </a>
             <div class="nav-group">
                 <nav class="floating-nav" aria-label="Primary">
+                    <div class="nav-marker" aria-hidden="true"></div>
                     <ul>
-                        <div class="nav-marker" aria-hidden="true"></div>
-                        <li><a href="../index.html" class="nav-link-rotate"><span class="nav-link-stage" aria-hidden="true"><span class="nav-link-text">Home</span><span class="nav-link-text">Home</span></span><span class="sr-only">Home</span></a></li>
-                        <li><a href="../index.html#case-studies" class="nav-link-rotate"><span class="nav-link-stage" aria-hidden="true"><span class="nav-link-text">Work</span><span class="nav-link-text">Work</span></span><span class="sr-only">Work</span></a></li>
-                        <li><a href="#" class="nav-link-rotate active"><span class="nav-link-stage" aria-hidden="true"><span class="nav-link-text">About</span><span class="nav-link-text">About</span></span><span class="sr-only">About</span></a></li>
-                        <li><a href="../resume.pdf" target="_blank" rel="noopener" class="nav-resume-rotate" aria-label="View resume"><span class="nav-resume-stage" aria-hidden="true"><span class="nav-resume-text">Resume</span><span class="nav-resume-text">Resume</span></span><span class="sr-only">Resume</span><span class="nav-resume-icon" aria-hidden="true"></span></a></li>
+                        <li>
+                            <a href="../index.html" class="nav-icon-link" data-nav-label="Home">
+                                <span class="nav-icon-wrap" aria-hidden="true">
+                                    <img class="nav-icon nav-icon--inactive" src="../media/NavBar/Inactive%20Icons/Home.png" alt="" width="24" height="24" decoding="async">
+                                    <img class="nav-icon nav-icon--active" src="../media/NavBar/Active%20Icons/Home.png" alt="" width="24" height="24" decoding="async">
+                                </span>
+                                <span class="sr-only">Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="../index.html#case-studies" class="nav-icon-link" data-nav-label="Work">
+                                <span class="nav-icon-wrap" aria-hidden="true">
+                                    <img class="nav-icon nav-icon--inactive" src="../media/NavBar/Inactive%20Icons/Work.png" alt="" width="24" height="24" decoding="async">
+                                    <img class="nav-icon nav-icon--active" src="../media/NavBar/Active%20Icons/Work.png" alt="" width="24" height="24" decoding="async">
+                                </span>
+                                <span class="sr-only">Work</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-icon-link" data-nav-label="About">
+                                <span class="nav-icon-wrap" aria-hidden="true">
+                                    <img class="nav-icon nav-icon--inactive" src="../media/NavBar/Inactive%20Icons/About.png" alt="" width="24" height="24" decoding="async">
+                                    <img class="nav-icon nav-icon--active" src="../media/NavBar/Active%20Icons/About.png" alt="" width="24" height="24" decoding="async">
+                                </span>
+                                <span class="sr-only">About</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
+                <span class="nav-active-label" aria-hidden="true">About</span>
             </div>
+            <a href="../resume.pdf" target="_blank" rel="noopener" class="nav-resume" aria-label="View resume">
+                <span class="nav-resume-stage" aria-hidden="true">
+                    <span class="nav-resume-text">Resume</span>
+                    <span class="nav-resume-text">Resume</span>
+                </span>
+                <span class="sr-only">Resume</span>
+                <span class="nav-resume-icon" aria-hidden="true"></span>
+            </a>
         </div>
     </header>
 

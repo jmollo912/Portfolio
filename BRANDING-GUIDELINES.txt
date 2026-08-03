@@ -15,7 +15,7 @@ BRAND OVERVIEW
 Name: Giuseppe Mollo
 Site: Personal portfolio (UX/UI + graphic design case studies)
 Tone: Clear, confident, approachable. Not corporate jargon. Short sentences. Show craft and process.
-Layout: Spacious, Main White backgrounds, glass-style floating nav, subtle motion.
+Layout: Spacious, Main White backgrounds, white floating icon nav, subtle motion.
 
 
 TYPOGRAPHY
@@ -37,21 +37,23 @@ COLOR PALETTE
 Use hex values below unless opacity is noted.
 
 Primary text:
-- Text primary: #000000 — headings, body, footer, case studies, active nav links
+- Text primary: #000000 — headings, body, footer, case studies
 - Text muted (40%): rgba(0, 0, 0, 0.4) — section labels and case pill tags only
-- Nav inactive: #B8B8B8 — floating nav when link is not active
-- Nav active: #000000 — floating nav .active or aria-current="page"
+- Nav inactive: #B8B8B8 — floating nav inactive icons (semi-transparent charcoal assets) + hover label under nav
+- Nav active: charcoal square #2B2B2B (--cta) with white icon; label text #B8B8B8 under active item
 
 Backgrounds:
 - Page: #FFFFFF
 - Subtle sections: #F5F5F5 — footer, some case UI
 - Grid / card boxes: #E4E8F2 — work grid cards, case info cards, logo breakdown, Mac photo canvas
-- Floating nav glass: rgba(245, 245, 245, 0.7) with blur
+- Floating nav: solid #FFFFFF pill (no glass)
 
 Accent / interactive:
-- Primary CTA: #4763FF (rgb(71, 99, 255)) — about-cta-btn (primary), profile-card-connect, hero animation lines/fill (button text #FFFFFF)
+- Primary CTA: #2B2B2B (--cta) resting and hover, text #FFFFFF — about-cta-btn (primary), profile-card-connect, resume-download-btn; hover scales to 1.12 and rotates 2deg (touch: no transform)
+- Profile card: rests tilted; hover straightens (0deg) and scales to 1.05 (touch: no expand)
+- Brand blue accent: #4763FF (rgb(71, 99, 255)) — hero animation lines/fill, footer pill hover (not primary CTAs)
 - CTA secondary: white pill, #000000 text (about-cta-btn--secondary, Contact links)
-- Footer pill hover: #E8E8E8 background, text stays #000000
+- Footer pill hover: #4763FF background, text #FFFFFF
 - Pill separator dot: #C7C7C7 (before case pill tag)
 
 Hero only:
@@ -65,12 +67,12 @@ Custom cursor:
 
 UI COMPONENTS
 -------------
-1. Floating navigation — centered glass bar; inactive #B8B8B8, active #000000.
+1. Floating navigation — white pill with Home / Work / About icons (media/NavBar); charcoal (#2B2B2B) rounded square marker slides to active item; white active icon / grey inactive icon; grey Home/Work/About label appears under the hovered icon only (hidden otherwise). Top-left gmdesign.svg wordmark (17px tall, left: 28px) links home; top-right Resume text + download icon (17px, right: 28px) opens resume.pdf. Cross-page (index ↔ about): ?navFrom= handoff slides marker from previous tab. Resume also in mobile menu.
 2. Case study cards (home page) — white pill bottom-left; project name black; tag at 40% opacity. Cursor pill shows white text (e.g. "View Project" or custom data-cursor-label).
 3. Case study section headers — section label at 40% opacity; heading and intro full black.
-4. Buttons — rounded about 10px; primary blue (#4763FF) with white text; secondary white pill with black text; do not add random new colors.
+4. Buttons — rounded about 10px; primary charcoal (#2B2B2B) with white text; hover keeps charcoal, scales to 1.12, and rotates 2deg; secondary white pill with black text; do not add random new colors.
 5. Custom cursor — currently DISABLED (native pointer). Re-enable via CUSTOM_CURSOR_ENABLED in main.js + CSS toggle in global.css.
-6. Motion — scroll fade, nav marker; honor reduced-motion in CSS.
+6. Motion — scroll fade, nav marker, nav hide-on-scroll-down / show-on-scroll-up (ease-in-out); honor reduced-motion in CSS.
 
 
 LOGO AND IDENTITY
@@ -102,7 +104,7 @@ RULES FOR AI
 1. Match this document. If you change colors or fonts in CSS, update this file too (or ask Giuseppe).
 2. Do not bring back gray body text (e.g. #6F6F6F) unless this file is updated. Body is #000000.
 3. Muted text is only section labels and case pill tags at 40% black, unless this file says otherwise.
-4. Nav: inactive #B8B8B8, active #000000.
+4. Nav: icon pill; inactive icons grey, active charcoal square + white icon; label #B8B8B8 only on hover.
 5. Keep accessibility: focus outlines, aria-current, semantic HTML, sr-only helpers.
 6. Minimize scope — static HTML/CSS/JS; no frameworks unless requested.
 
@@ -112,3 +114,9 @@ CHANGELOG (edit when brand changes)
 2026-06-04 — Initial: black typography, 40% muted labels/tags, nav grays, cursor and hero rules.
 2026-06-04 — Primary blue CTAs use #FFFFFF text (not black).
 2026-06-05 — Primary blue updated to #4763FF (rgb(71, 99, 255)).
+2026-07-10 — Primary CTAs switched to charcoal (#2B2B2B) with light grey hover (#E8E8E8); brand blue kept for accents.
+2026-07-10 — Primary CTA hover: keep charcoal, scale 1.04 (no color change).
+2026-07-10 — Primary CTA hover: scale 1.12 + rotate(2deg).
+2026-07-10 — Profile card hover: straighten + scale 1.05.
+2026-08-03 — Floating nav redesigned to icon pill (Home/Work/About) with charcoal active marker + under-label.
+2026-08-03 — Cross-page nav continuity: marker handoff + view transitions (index ↔ about).
