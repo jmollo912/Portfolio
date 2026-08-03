@@ -737,6 +737,7 @@ function initScrollFadeAnimations() {
     '.about-page .about-hero-image, ' +
     '.about-page .about-body-text, ' +
     '.about-page .about-contact-cta, ' +
+    '.about-page .about-hero .profile-card, ' +
     '.mac-window, ' +
     '.mac-photo-card, ' +
     '.resume-row, ' +
