@@ -15,6 +15,7 @@
     <script defer src="main.js"></script>
 </head>
 <body>
+    <!-- Custom cursor kept in DOM; disabled via CSS + CUSTOM_CURSOR_ENABLED in main.js -->
     <div class="custom-cursor" aria-hidden="true"></div>
     <!-- Mobile Hamburger Button (visible on tablet/mobile) -->
     <button class="case-hamburger" aria-label="Toggle navigation menu">
@@ -100,59 +101,101 @@
             <h2 class="section-label">MY FAVORITE WORK</h2>
             <div class="work-grid">
 
-                <a href="html/case-study-CoralKeepers.html" class="work-card">
-                    <div class="work-card-text">
-                        <h3 class="work-card-title">Coral Keepers</h3>
-                        <p class="work-card-desc">Innovating the way we protect, restore, and educate our coral reefs.</p>
-                        <div class="work-card-tags">
-                            <span class="work-card-tag">UX/UI</span>
-                            <span class="work-card-tag">Product Design</span>
+                <a href="html/case-study-CoralKeepers.html" class="work-card work-card--media" aria-label="Coral Keepers — UX/UI, Product Design">
+                    <span class="work-card-corner" aria-hidden="true">
+                        <img src="media/HeroPage/arrowAngleUp.svg" alt="" class="work-card-corner-arrow">
+                    </span>
+                    <div class="work-card-image-wrap work-card-image-wrap--media">
+                        <img
+                            src="media/HeroPage/CaseStudyCovers/CoralKeepersCover.jpg"
+                            alt=""
+                            class="work-card-image"
+                            loading="lazy"
+                            decoding="async"
+                            aria-hidden="true"
+                        >
+                        <div class="work-card-hover-bar" aria-hidden="true">
+                            <span class="work-card-hover-title">Coral Keepers</span>
+                            <div class="work-card-tags work-card-tags--inline">
+                                <span class="work-card-tag">UX/UI</span>
+                                <span class="work-card-tag">Product Design</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="work-card-image-wrap">
-                        <img src="media/HeroPage/CaseStudyCovers/CoralKeepersCoverNew.jpg" alt="Coral Keepers app" class="work-card-image" loading="lazy" decoding="async">
                     </div>
                 </a>
 
-                <a href="html/case-study-Convoy.html" class="work-card">
-                    <div class="work-card-text">
-                        <h3 class="work-card-title">Convoy</h3>
-                        <p class="work-card-desc">Reimagining the way everyday package delivery works. By addressing the lack of trust between people and technology in the delivery process.</p>
-                        <div class="work-card-tags">
-                            <span class="work-card-tag">UX/UI</span>
-                            <span class="work-card-tag">Product Design</span>
+                <a href="html/case-study-Convoy.html" class="work-card work-card--media" aria-label="Convoy — UX/UI, Product Design">
+                    <span class="work-card-corner" aria-hidden="true">
+                        <img src="media/HeroPage/arrowAngleUp.svg" alt="" class="work-card-corner-arrow">
+                    </span>
+                    <div class="work-card-image-wrap work-card-image-wrap--media">
+                        <video
+                            class="work-card-image"
+                            src="media/HeroPage/CaseStudyCovers/Videos/ConvoyCover_2.mp4"
+                            poster="media/HeroPage/CaseStudyCovers/ConvoyCoverNew.jpg"
+                            autoplay
+                            muted
+                            loop
+                            playsinline
+                            preload="metadata"
+                            aria-hidden="true"
+                        ></video>
+                        <div class="work-card-hover-bar" aria-hidden="true">
+                            <span class="work-card-hover-title">Convoy</span>
+                            <div class="work-card-tags work-card-tags--inline">
+                                <span class="work-card-tag">UX/UI</span>
+                                <span class="work-card-tag">Product Design</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="work-card-image-wrap">
-                        <img src="media/HeroPage/CaseStudyCovers/ConvoyCoverNew.jpg" alt="Convoy app screens" class="work-card-image" loading="lazy" decoding="async">
                     </div>
                 </a>
 
-                <a href="html/case-study-CBSSports.html" class="work-card">
-                    <div class="work-card-text">
-                        <h3 class="work-card-title">CBS Sports</h3>
-                        <p class="work-card-desc">Revamping the entire GFX package for the World’s Strongest Man Competition Live Broadcast, with CBS Sports.</p>
-                        <div class="work-card-tags">
-                            <span class="work-card-tag">UX/UI</span>
-                            <span class="work-card-tag">Graphic Design</span>
+                <a href="html/case-study-CBSSports.html" class="work-card work-card--media" aria-label="CBS Sports — UX/UI, Graphic Design">
+                    <span class="work-card-corner" aria-hidden="true">
+                        <img src="media/HeroPage/arrowAngleUp.svg" alt="" class="work-card-corner-arrow">
+                    </span>
+                    <div class="work-card-image-wrap work-card-image-wrap--media">
+                        <video
+                            class="work-card-image"
+                            src="media/HeroPage/CaseStudyCovers/Videos/WSM.mp4"
+                            poster="media/HeroPage/CaseStudyCovers/CBSCoverNew.jpg"
+                            autoplay
+                            muted
+                            loop
+                            playsinline
+                            preload="metadata"
+                            aria-hidden="true"
+                        ></video>
+                        <div class="work-card-hover-bar" aria-hidden="true">
+                            <span class="work-card-hover-title">CBS Sports</span>
+                            <div class="work-card-tags work-card-tags--inline">
+                                <span class="work-card-tag">UX/UI</span>
+                                <span class="work-card-tag">Graphic Design</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="work-card-image-wrap">
-                        <img src="media/HeroPage/CaseStudyCovers/CBSCoverNew.jpg" alt="CBS Sports app" class="work-card-image" loading="lazy" decoding="async">
                     </div>
                 </a>
 
-                <a href="html/case-study-FlockSports.html" class="work-card">
-                    <div class="work-card-text">
-                        <h3 class="work-card-title">Flock Sports</h3>
-                        <p class="work-card-desc">Building a Sports Social Media Brand from the ground up.</p>
-                        <div class="work-card-tags">
-                            <span class="work-card-tag">Graphic Design</span>
-                            <span class="work-card-tag">Branding</span>
+                <a href="html/case-study-FlockSports.html" class="work-card work-card--media" aria-label="Flock Sports — Graphic Design, Branding">
+                    <span class="work-card-corner" aria-hidden="true">
+                        <img src="media/HeroPage/arrowAngleUp.svg" alt="" class="work-card-corner-arrow">
+                    </span>
+                    <div class="work-card-image-wrap work-card-image-wrap--media">
+                        <img
+                            src="media/HeroPage/CaseStudyCovers/FlockSportsCover03.jpg"
+                            alt=""
+                            class="work-card-image"
+                            loading="lazy"
+                            decoding="async"
+                            aria-hidden="true"
+                        >
+                        <div class="work-card-hover-bar" aria-hidden="true">
+                            <span class="work-card-hover-title">Flock Sports</span>
+                            <div class="work-card-tags work-card-tags--inline">
+                                <span class="work-card-tag">Graphic Design</span>
+                                <span class="work-card-tag">Branding</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="work-card-image-wrap">
-                        <img src="media/HeroPage/CaseStudyCovers/FlockSportsCoverNew.jpg" alt="Flock Sports branding" class="work-card-image" loading="lazy" decoding="async">
                     </div>
                 </a>
 

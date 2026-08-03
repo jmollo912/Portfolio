@@ -23,16 +23,45 @@
   padding: 0;
 }
 
+/* =============================================================================
+   CUSTOM CURSOR — currently DISABLED
+   To turn back on:
+   1) Uncomment the "Suppress native pointer" block below
+   2) Delete / comment out the "DISABLED override" block below
+   3) Set CUSTOM_CURSOR_ENABLED = true in main.js
+   ============================================================================= */
+
 /* Suppress native pointer/hand cursor — .custom-cursor handles feedback.
    Bare `*` has zero specificity; UA `button`/`a` rules can still win. Descendants
    of `html` use at least one type in the selector chain so `cursor: none`
    consistently overrides interactive defaults (including on buttons). */
+/*
 html,
 body,
 html *,
 html *::before,
 html *::after {
   cursor: none !important;
+}
+*/
+
+/* DISABLED override — remove this block when re-enabling the custom cursor */
+html,
+body,
+html *,
+html *::before,
+html *::after {
+  cursor: auto !important;
+}
+
+html a,
+html button,
+html [role="button"],
+html label,
+html summary,
+html .work-card,
+html .case-card {
+  cursor: pointer !important;
 }
 
 .svg-defs {
@@ -44,7 +73,7 @@ html *::after {
 html,
 body {
   min-height: 100%;
-  cursor: none;
+  /* cursor: none; — custom cursor disabled; restore with CUSTOM_CURSOR_ENABLED */
   scroll-padding-top: 120px;
   scroll-behavior: smooth;
   /* clip (not hidden) prevents the body from becoming its own scroll
@@ -60,6 +89,7 @@ main > section[id] {
   --site-text: #000000;
   --brand-blue: #4763FF;
   --brand-blue-rgb: 71, 99, 255;
+  --grid-box: #F2F4F8;
 }
 
 html {
@@ -93,7 +123,7 @@ body {
 .custom-cursor {
   --cursor-black: #000000;
   position: fixed;
-  display: flex;
+  display: none; /* custom cursor disabled — change to flex when re-enabling */
   align-items: center;
   justify-content: center;
   gap: 0;
@@ -1501,36 +1531,84 @@ body {
   gap: 30px;
 }
 
-/* ── Work grid — 1×4 stacked cards ── */
+/* ── Work grid — 2×2 bento ── */
 .work-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 35px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
 }
 
 .work-card {
   display: flex;
+  flex-direction: column;
   align-items: stretch;
-  background: #F5F5F5;
+  background: var(--grid-box);
   border-radius: 20px;
-  overflow: visible;
+  overflow: hidden;
   text-decoration: none;
   color: #000000;
   font-family: inherit;
   border: none;
-  padding: 10px;
-  gap: 30px;
+  padding: 20px;
+  gap: 18px;
   cursor: none;
-  min-height: 440px;
+  min-height: 0;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  height: auto;
   transition: transform 0.15s ease-out;
   position: relative;
-  width: 100%;
   text-align: left;
   box-sizing: border-box;
 }
 
 .work-card:hover {
-  transform: translateY(-1px);
+  transform: scale(1.02);
+}
+
+.work-card-corner {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  transform: translateY(calc(-100% - 20px));
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.work-card:hover .work-card-corner,
+.work-card:focus-within .work-card-corner {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.work-card-corner-arrow {
+  width: 18px;
+  height: 18px;
+  display: block;
+  /* SVG is already a 45° up-right arrow */
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-card-corner {
+    transition: opacity 0.15s ease;
+    transform: none;
+  }
+
+  .work-card:hover .work-card-corner,
+  .work-card:focus-within .work-card-corner {
+    transform: none;
+  }
 }
 
 .work-card[data-disabled="true"] {
@@ -1539,17 +1617,15 @@ body {
 
 .work-card[data-disabled="true"]:hover {
   transform: none;
-  box-shadow: none;
 }
 
 .work-card-text {
-  flex: 0 0 38%;
-  padding: 24px 12px 24px 16px;
-  padding-left: 40px;
+  flex: none;
+  padding: 4px 8px 0 10px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  justify-content: center;
+  gap: 10px;
+  justify-content: flex-start;
 }
 
 .about-hero-title,
@@ -1564,10 +1640,10 @@ body {
 }
 
 .work-card-title {
-  font-size: clamp(32px, 3.5vw, 52px);
+  font-size: clamp(24px, 2.6vw, 36px);
   font-weight: 500;
   letter-spacing: -0.03em;
-  line-height: 1.05;
+  line-height: 1.1;
   margin: 0;
   color: #000000;
 }
@@ -1577,7 +1653,7 @@ body {
   line-height: 1.6;
   color: rgba(0, 0, 0, 0.55);
   margin: 0;
-  max-width: 340px;
+  max-width: none;
 }
 
 .work-card-tags {
@@ -1592,19 +1668,99 @@ body {
   font-weight: 500;
   color: rgba(0, 0, 0, 0.55);
   background: rgba(0, 0, 0, 0.07);
-  border-radius: 999px;
-  padding: 5px 14px;
+  border-radius: 8px;
+  padding: 8px 20px;
   white-space: nowrap;
 }
 
 .work-card-image-wrap {
-  flex: 1 1 0;
-  min-width: 0;
+  flex: 1 1 auto;
+  width: 100%;
+  margin-top: auto;
   min-height: 0;
   position: relative;
-  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
   overflow: hidden;
   isolation: isolate;
+}
+
+.work-card-image-wrap--media {
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  aspect-ratio: auto;
+  align-self: stretch;
+  margin-top: 0;
+  border-radius: 0;
+}
+
+.work-card--media {
+  padding: 0;
+  gap: 0;
+}
+
+.work-card--media .work-card-image {
+  border-radius: 0;
+}
+
+.work-card-hover-bar {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 16px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(calc(100% + 24px));
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+  white-space: nowrap;
+}
+
+.work-card--media:hover .work-card-hover-bar,
+.work-card-image-wrap--media:hover .work-card-hover-bar,
+.work-card--media:focus-within .work-card-hover-bar {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.work-card-hover-title {
+  font-size: 24px;
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #000000;
+  flex-shrink: 0;
+}
+
+.work-card-tags--inline {
+  margin-top: 0;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-card-hover-bar {
+    transition: opacity 0.15s ease;
+    transform: none;
+  }
+
+  .work-card--media:hover .work-card-hover-bar,
+  .work-card-image-wrap--media:hover .work-card-hover-bar,
+  .work-card--media:focus-within .work-card-hover-bar {
+    transform: none;
+  }
 }
 
 .work-card-image {
@@ -1615,30 +1771,41 @@ body {
   object-fit: cover;
   object-position: center;
   display: block;
-  border-radius: 10px;
+  border-radius: 12px;
   transition: transform 0.3s cubic-bezier(0.45, 0, 0.55, 1);
   will-change: transform;
-}
-
-.work-card:not([data-disabled="true"]):hover .work-card-image {
-  transform: scale(1.03);
+  pointer-events: none;
 }
 
 @media (max-width: 700px) {
+  .work-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
   .work-card {
-    flex-direction: column;
-    min-height: unset;
-    padding: 20px;
-    gap: 16px;
+    padding: 16px;
+    gap: 14px;
   }
+
+  .work-card--media {
+    padding: 0;
+    gap: 0;
+  }
+
   .work-card-text {
-    flex: none;
-    padding: 8px 4px 0;
+    padding: 4px 4px 0;
   }
+
   .work-card-image-wrap {
+    min-height: 0;
+  }
+
+  .work-card-image-wrap--media {
     width: 100%;
-    aspect-ratio: 821 / 508;
-    flex: none;
+    height: 100%;
+    min-height: 0;
+    aspect-ratio: auto;
   }
 }
 
@@ -2628,11 +2795,7 @@ button.case-card {
 .mac-canvas-area {
   min-height: 500px;
   padding: 32px;
-  background-color: #f5f5f5;
-  overflow: hidden;
-}
-
-.mac-photo-grid {
+  background-color: var(--grid-box);
   position: relative;
   min-height: 500px;
 }
@@ -4427,7 +4590,7 @@ body:has(.case-layout) .site-footer-new :is(h3, p, span, a) {
   max-width: 900px;
   margin: 80px auto;
   padding: 60px 40px;
-  background: #f5f5f5;
+  background: var(--grid-box);
   border-radius: 16px;
 }
 
@@ -4725,7 +4888,7 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label),
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 40px;
-  background: #f5f5f5;
+  background: var(--grid-box);
   border-radius: 16px;
   padding: 40px;
   margin-bottom: 50px;
@@ -5122,7 +5285,6 @@ body :where(
   /* Work / case cards */
   .work-card:hover {
     transform: none;
-    box-shadow: none;
   }
   .work-card:not([data-disabled="true"]):hover .work-card-image {
     transform: none;

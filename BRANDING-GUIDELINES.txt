@@ -45,6 +45,7 @@ Primary text:
 Backgrounds:
 - Page: #FFFFFF
 - Subtle sections: #F5F5F5 — footer, some case UI
+- Grid / card boxes: #E4E8F2 — work grid cards, case info cards, logo breakdown, Mac photo canvas
 - Floating nav glass: rgba(245, 245, 245, 0.7) with blur
 
 Accent / interactive:
@@ -57,8 +58,9 @@ Hero only:
 - Monitor "gm design" label: #FFFFFF (lottie-label on hero screen)
 
 Custom cursor:
-- Dot and pill fill: #000000 (100% opacity) — CSS variable --cursor-black
-- Expanded pill label and arrow: #FFFFFF
+- Currently DISABLED (native pointer). Code kept for easy re-enable.
+- To turn on: CUSTOM_CURSOR_ENABLED = true in main.js + restore CSS toggle in global.css
+- Dot / expanded styles remain in css/global.css when disabled
 
 
 UI COMPONENTS
@@ -67,7 +69,7 @@ UI COMPONENTS
 2. Case study cards (home page) — white pill bottom-left; project name black; tag at 40% opacity. Cursor pill shows white text (e.g. "View Project" or custom data-cursor-label).
 3. Case study section headers — section label at 40% opacity; heading and intro full black.
 4. Buttons — rounded about 10px; primary blue (#4763FF) with white text; secondary white pill with black text; do not add random new colors.
-5. Custom cursor — site-wide cursor:none; use main.js; do not restore native pointer.
+5. Custom cursor — currently DISABLED (native pointer). Re-enable via CUSTOM_CURSOR_ENABLED in main.js + CSS toggle in global.css.
 6. Motion — scroll fade, nav marker; honor reduced-motion in CSS.
 
 

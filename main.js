@@ -53,7 +53,10 @@ if (window.location.pathname === '/' || window.location.pathname === '/index.htm
   }
 }
 
-const cursor = document.querySelector('.custom-cursor');
+/* CUSTOM CURSOR — set to true to turn back on (also restore CSS in global.css) */
+const CUSTOM_CURSOR_ENABLED = false;
+
+const cursor = CUSTOM_CURSOR_ENABLED ? document.querySelector('.custom-cursor') : null;
 let cursorLabelEl = null;
 
 // Build the pill interior (hidden until expanded)
@@ -75,25 +78,29 @@ if (cursor) {
 let mouseX = 0, mouseY = 0;
 let cursorX = 0, cursorY = 0;
 
-document.addEventListener('mousemove', (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
+if (CUSTOM_CURSOR_ENABLED) {
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+}
 
 function animateCursor() {
+  if (!CUSTOM_CURSOR_ENABLED || !cursor) return;
+
   const speed = 0.26;
   cursorX += (mouseX - cursorX) * speed;
   cursorY += (mouseY - cursorY) * speed;
-  
-  if (cursor) {
-    cursor.style.left = cursorX + 'px';
-    cursor.style.top = cursorY + 'px';
-  }
-  
+
+  cursor.style.left = cursorX + 'px';
+  cursor.style.top = cursorY + 'px';
+
   requestAnimationFrame(animateCursor);
 }
 
-animateCursor();
+if (CUSTOM_CURSOR_ENABLED) {
+  animateCursor();
+}
 
 // ==========================================
 // HERO ENTRANCE ANIMATION
