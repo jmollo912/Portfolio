@@ -3,10 +3,48 @@ if ('scrollRestoration' in history) {
   history.scrollRestoration = 'manual';
 }
 
+// ==========================================
+// LENIS SMOOTH SCROLL (site-wide)
+// ==========================================
+let lenis = null;
+
+function initLenis() {
+  if (typeof Lenis === 'undefined') return null;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null;
+
+  const instance = new Lenis({
+    autoRaf: true,
+    lerp: 0.1,
+    smoothWheel: true,
+    anchors: false,
+    syncTouch: false,
+  });
+
+  // Prefer Lenis for programmatic scrolls; keep native as fallback.
+  window.lenis = instance;
+  return instance;
+}
+
+lenis = initLenis();
+
+/** Smooth or instant scroll helper — uses Lenis when available */
+function smoothScrollTo(top, { immediate = false, duration } = {}) {
+  const y = Math.max(0, top);
+  if (lenis) {
+    lenis.scrollTo(y, immediate ? { immediate: true } : { duration });
+    return;
+  }
+  window.scrollTo({ top: y, behavior: immediate ? 'auto' : 'smooth' });
+}
+
 function ensurePageStartsAtTop() {
   const hash = window.location.hash;
   if (hash && hash !== '#hero') return;
-  window.scrollTo(0, 0);
+  if (lenis) {
+    lenis.scrollTo(0, { immediate: true });
+  } else {
+    window.scrollTo(0, 0);
+  }
 }
 
 ensurePageStartsAtTop();
@@ -44,7 +82,7 @@ if (window.location.pathname === '/' || window.location.pathname === '/index.htm
           const header = document.querySelector('.site-header');
           const headerOffset = header ? header.offsetHeight : 0;
           const targetTop = target.getBoundingClientRect().top + window.pageYOffset - Math.round(headerOffset * 0.9);
-          window.scrollTo({ top: targetTop, behavior: 'smooth' });
+          smoothScrollTo(targetTop);
           // Clean up URL after scrolling
           history.replaceState(null, '', window.location.pathname.replace('index.html', '') || '/');
         }, 100);
@@ -1075,7 +1113,7 @@ function jumpToHash(hash, behavior = 'auto') {
   const header = document.querySelector('.site-header');
   const offset = header ? header.offsetHeight : 0;
   const top = Math.max(0, target.getBoundingClientRect().top + window.pageYOffset - Math.round(offset * 0.9));
-  window.scrollTo({ top, behavior });
+  smoothScrollTo(top, { immediate: behavior === 'auto' });
 }
 
 function restoreSmoothScroll() {
@@ -1126,7 +1164,7 @@ document.addEventListener('click', function(e) {
     const header = document.querySelector('.site-header');
     const offset = header ? header.offsetHeight : 0;
     const top = target.getBoundingClientRect().top + window.pageYOffset - Math.round(offset * 0.9);
-    window.scrollTo({ top, behavior: 'smooth' });
+    smoothScrollTo(top);
   } else {
     setActiveNav(href);
     window.location.href = a.href;
@@ -1164,7 +1202,7 @@ document.addEventListener('click', function(e) {
   const headerOffset = header ? header.offsetHeight : 0;
   const targetTop = target.getBoundingClientRect().top + window.pageYOffset - Math.round(headerOffset * 0.9);
 
-  window.scrollTo({ top: targetTop, behavior: 'smooth' });
+  smoothScrollTo(targetTop);
 });
 
 
@@ -1378,6 +1416,18 @@ function initCaseStudyScrollSpy() {
     if (!a) return;
     const href = a.getAttribute('href');
     if (!href || !href.startsWith('#')) return;
+
+    const target = document.querySelector(href);
+    if (target) {
+      e.preventDefault();
+      const header = document.querySelector('.site-header');
+      const headerOffset = header ? header.offsetHeight : 0;
+      const top = target.getBoundingClientRect().top + window.pageYOffset - Math.round(headerOffset * 0.9);
+      setActiveCaseLink(a);
+      lockUntilScrollSettles();
+      smoothScrollTo(top);
+      return;
+    }
 
     setActiveCaseLink(a);
     lockUntilScrollSettles();
