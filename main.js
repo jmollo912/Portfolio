@@ -304,7 +304,7 @@ function initHeroCursorAnimation() {
   };
 
   const FIRST_TEXT = "Hey, I’m Giuseppe";
-  const FINAL_TEXT = "Welcome to my portfolio";
+  const FINAL_TEXT = "Welcome to my portfolio!";
   const TYPE_CHAR_MS = 72;
   const DELETE_CHAR_MS = 48;
   const CURSOR_ENTRANCE_MS = 520;
@@ -422,7 +422,8 @@ function initHeroCursorAnimation() {
     handles.br.style.top  = `${top  + h - ho}px`;
     if (hint) {
       hint.style.left = `${left}px`;
-      hint.style.top = `${top + h + 10}px`;
+      // Sit just under the typed line (centered in the box), not the full highlight frame
+      hint.style.top = `${top + h / 2 + fontSize * 0.55 + 2}px`;
       hint.style.width = `${w}px`;
     }
   }
@@ -431,6 +432,15 @@ function initHeroCursorAnimation() {
     const op = show ? '1' : '0';
     textbox.style.opacity = op;
     Object.values(handles).forEach(h => h.style.opacity = op);
+  }
+
+  function setHighlightOpacity(op) {
+    const clamped = Math.max(0, Math.min(1, op));
+    textbox.style.borderColor = `rgba(var(--brand-blue-rgb), ${clamped})`;
+    textbox.style.background = `rgba(var(--brand-blue-rgb), ${0.3 * clamped})`;
+    Object.values(handles).forEach(h => {
+      h.style.opacity = String(clamped);
+    });
   }
 
   function hideHint() {
@@ -446,7 +456,8 @@ function initHeroCursorAnimation() {
     if (!m) return;
     typed.textContent = FINAL_TEXT;
     applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
-    showBox(true);
+    textbox.style.opacity = '1';
+    setHighlightOpacity(0);
     setCursorOpacity(0);
     showHint();
   }
@@ -470,6 +481,7 @@ function initHeroCursorAnimation() {
     //  9 expand animation (cursor follows top-right handle)
     // 10 hold after expand
     // 11 cursor fade out
+    // 12 highlight box + handles fade out (text remains)
     const TYPE_FIRST_MS = FIRST_TEXT.length * TYPE_CHAR_MS;
     const DELETE_MS = FIRST_TEXT.length * DELETE_CHAR_MS;
     const TYPE_SECOND_MS = FINAL_TEXT.length * TYPE_CHAR_MS;
@@ -486,6 +498,7 @@ function initHeroCursorAnimation() {
       720,
       400,
       400,
+      550,
     ];
     const ends   = [];
     let acc = 0;
@@ -495,6 +508,7 @@ function initHeroCursorAnimation() {
     hideHint();
     typed.textContent = '';
     setCursorOpacity(0);
+    setHighlightOpacity(1);
     setCursor(m0.cursorEntranceX, m0.cursorEntranceY);
 
     let start = null;
@@ -598,8 +612,16 @@ function initHeroCursorAnimation() {
         typed.textContent = FINAL_TEXT;
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         showBox(true);
+        setHighlightOpacity(1);
         setCursor(m.finalTrX, m.finalTrY);
         setCursorOpacity(1 - pT(11, el));
+      } else if (el < ends[12]) {
+        // 12. Highlight fade out — leave title text only
+        typed.textContent = FINAL_TEXT;
+        applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
+        textbox.style.opacity = '1';
+        setCursorOpacity(0);
+        setHighlightOpacity(1 - easeOut(pT(12, el)));
       } else {
         animationComplete = true;
         applyFinalState();
@@ -738,6 +760,7 @@ function initScrollFadeAnimations() {
     '.about-page .about-body-text, ' +
     '.about-page .about-contact-cta, ' +
     '.about-page .about-hero .profile-card, ' +
+    '.about-apps-grid .skill-item, ' +
     '.mac-window, ' +
     '.mac-photo-card, ' +
     '.resume-row, ' +
@@ -1191,6 +1214,13 @@ function setActiveNav(href, { force = false } = {}) {
 
   let activeLink = null;
   navLinks.forEach((a) => {
+    // Lab is never an active destination.
+    if (a.classList.contains('nav-icon-link--lab') || a.getAttribute('data-nav-label') === 'Lab') {
+      a.classList.remove('active');
+      a.removeAttribute('aria-current');
+      return;
+    }
+
     const match = a.getAttribute('href') === href;
     a.classList.toggle('active', match);
     if (match) {
@@ -1277,6 +1307,7 @@ function initMainNavMarker() {
       showNavLabel(link);
     });
     mainFloatingNav.addEventListener('pointerleave', hideNavLabel);
+    initLabComingSoonTip();
   }
 
   // Keyboard: show label while a nav link is focused.
@@ -1286,6 +1317,39 @@ function initMainNavMarker() {
       if (!mainFloatingNav?.matches(':hover')) hideNavLabel();
     });
   });
+}
+
+function initLabComingSoonTip() {
+  const labLink = mainFloatingNav?.querySelector('.nav-icon-link--lab, a[data-nav-label="Lab"]');
+  if (!labLink || !mainFloatingNav) return;
+
+  let tip = document.querySelector('.nav-lab-tip');
+  if (!tip) {
+    tip = document.createElement('div');
+    tip.className = 'nav-lab-tip';
+    tip.setAttribute('aria-hidden', 'true');
+    tip.textContent = 'Coming soon!';
+    document.body.appendChild(tip);
+  }
+
+  const moveTip = (e) => {
+    tip.style.left = `${e.clientX}px`;
+    tip.style.top = `${e.clientY}px`;
+  };
+
+  const showTip = (e) => {
+    moveTip(e);
+    tip.classList.add('is-visible');
+  };
+
+  const hideTip = () => {
+    tip.classList.remove('is-visible');
+  };
+
+  labLink.addEventListener('pointerenter', showTip);
+  labLink.addEventListener('pointermove', moveTip);
+  labLink.addEventListener('pointerleave', hideTip);
+  labLink.addEventListener('blur', hideTip);
 }
 
 function lockMainNavUntilScrollSettles() {
@@ -1353,6 +1417,13 @@ document.addEventListener('click', function(e) {
   const a = e.target.closest('.floating-nav a');
   if (!a || a.target === '_blank') return;
   if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+  // Lab is a placeholder — show coming-soon tip behavior only, no navigation.
+  if (a.classList.contains('nav-icon-link--lab') || a.getAttribute('data-nav-label') === 'Lab') {
+    e.preventDefault();
+    e.stopPropagation();
+    return;
+  }
 
   const href = a.getAttribute('href');
   if (!href || href === '#') return;
