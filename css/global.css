@@ -458,11 +458,6 @@ body {
   top: 12px;
 }
 
-/* Scroll down: slide nav up out of view. Scroll up: ease back in. */
-.nav-group.nav-scroll-hidden {
-  transform: translateX(-50%) translateY(calc(-100% - 24px));
-}
-
 /* Nav slide up animation (case study exit) */
 .nav-group.slide-up {
   top: -80px !important;
@@ -563,13 +558,9 @@ body {
   top: 20px;
 }
 
-.nav-brand.nav-scroll-hidden {
-  transform: translateY(calc(-100% - 28px));
-}
-
 .nav-brand-logo {
   display: block;
-  height: 17px;
+  height: 23px;
   width: auto;
 }
 
@@ -606,10 +597,6 @@ body {
 .nav-resume.animate-in,
 .site-header .nav-resume {
   top: 20px;
-}
-
-.nav-resume.nav-scroll-hidden {
-  transform: translateY(calc(-100% - 28px));
 }
 
 .nav-resume:hover {
@@ -855,8 +842,8 @@ body {
 }
 
 .nav-resume-icon {
-  width: 14px;
-  height: 14px;
+  width: 20px;
+  height: 20px;
   display: inline-block;
   flex-shrink: 0;
   margin-left: 2px;

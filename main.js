@@ -1317,50 +1317,6 @@ function updateActiveSection() {
 
 window.addEventListener('scroll', updateActiveSection, { passive: true });
 
-function initNavScrollHide() {
-  if (!mainNavGroup || prefersReducedMotion) return;
-
-  const navBrand = document.querySelector('.nav-brand');
-  const navResume = document.querySelector('.nav-resume');
-  let lastY = window.scrollY || 0;
-  let ticking = false;
-  const deltaThreshold = 6;
-  const topRevealY = 48;
-
-  const setHidden = (hidden) => {
-    mainNavGroup.classList.toggle('nav-scroll-hidden', hidden);
-    navBrand?.classList.toggle('nav-scroll-hidden', hidden);
-    navResume?.classList.toggle('nav-scroll-hidden', hidden);
-    if (hidden) hideNavLabel();
-  };
-
-  const onScroll = () => {
-    if (mainNavAutoScrolling || mainNavGroup.classList.contains('slide-up')) {
-      lastY = window.scrollY || 0;
-      return;
-    }
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      ticking = false;
-      const y = window.scrollY || 0;
-      const delta = y - lastY;
-
-      if (y <= topRevealY) {
-        setHidden(false);
-      } else if (delta > deltaThreshold) {
-        setHidden(true);
-      } else if (delta < -deltaThreshold) {
-        setHidden(false);
-      }
-
-      lastY = y;
-    });
-  };
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-}
-
 function jumpToHash(hash, behavior = 'auto') {
   if (!hash || hash === '#' || hash === '#hero') return;
   const target = document.querySelector(hash);
@@ -1384,7 +1340,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   initMainNavMarker();
-  initNavScrollHide();
 });
 
 // Re-snap after layout settles (images/fonts) so cross-page hash links land correctly.

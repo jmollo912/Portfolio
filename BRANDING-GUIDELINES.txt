@@ -72,7 +72,7 @@ UI COMPONENTS
 3. Case study section headers — section label at 40% opacity; heading and intro full black.
 4. Buttons — rounded about 10px; primary charcoal (#2B2B2B) with white text; hover keeps charcoal, scales to 1.12, and rotates 2deg; secondary white pill with black text; do not add random new colors.
 5. Custom cursor — currently DISABLED (native pointer). Re-enable via CUSTOM_CURSOR_ENABLED in main.js + CSS toggle in global.css.
-6. Motion — scroll fade, nav marker, nav hide-on-scroll-down / show-on-scroll-up (ease-in-out); honor reduced-motion in CSS.
+6. Motion — scroll fade, nav marker; honor reduced-motion in CSS. Floating nav, gm logo, and Resume stay fixed while scrolling.
 
 
 LOGO AND IDENTITY
