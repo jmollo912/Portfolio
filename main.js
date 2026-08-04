@@ -760,7 +760,6 @@ function initScrollFadeAnimations() {
     '.about-page .about-body-text, ' +
     '.about-page .about-contact-cta, ' +
     '.about-page .about-hero .profile-card, ' +
-    '.about-apps-grid .skill-item, ' +
     '.mac-window, ' +
     '.mac-photo-card, ' +
     '.resume-row, ' +
@@ -880,6 +879,70 @@ function initSkillsCarousel() {
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', initScrollFadeAnimations);
+
+// Staggered reveal for About “Apps I can't live without” icons.
+function initAboutAppsStagger() {
+  const grid = document.querySelector('.about-apps-grid');
+  if (!grid || grid.classList.contains('is-revealed')) return;
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) {
+    grid.classList.add('is-revealed');
+    return;
+  }
+
+  let revealed = false;
+  const reveal = () => {
+    if (revealed) return;
+    revealed = true;
+    grid.classList.add('is-revealed');
+    window.removeEventListener('scroll', onScroll, true);
+    if (lenis && typeof lenis.off === 'function') {
+      try { lenis.off('scroll', onScroll); } catch (_) { /* ignore */ }
+    }
+  };
+
+  const isVisible = () => {
+    const rect = grid.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    return rect.top < vh - 48 && rect.bottom > 48;
+  };
+
+  const onScroll = () => {
+    if (isVisible()) reveal();
+  };
+
+  // Give the page a beat to paint the hidden state, then reveal if already on screen
+  // (apps sit in the about hero, so this is the common case).
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (isVisible()) {
+        setTimeout(reveal, 280);
+        return;
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true, capture: true });
+      if (lenis && typeof lenis.on === 'function') {
+        try { lenis.on('scroll', onScroll); } catch (_) { /* ignore */ }
+      }
+
+      if (typeof IntersectionObserver !== 'undefined') {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            if (entries.some((entry) => entry.isIntersecting)) {
+              reveal();
+              observer.disconnect();
+            }
+          },
+          { root: null, rootMargin: '0px 0px -8% 0px', threshold: 0.2 }
+        );
+        observer.observe(grid);
+      }
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initAboutAppsStagger);
 document.addEventListener('DOMContentLoaded', initSkillsCarousel);
 
 // ==========================================

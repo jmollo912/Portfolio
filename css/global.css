@@ -2663,7 +2663,8 @@ button.case-card {
   justify-content: flex-start;
   align-items: stretch;
   gap: clamp(8px, 1.6vw, 14px);
-  width: 100%;
+  width: 88%;
+  max-width: 480px;
 }
 
 .about-apps-grid .skill-item {
@@ -2671,6 +2672,10 @@ button.case-card {
   min-width: 0;
   width: auto;
   max-width: none;
+  opacity: 0;
+  transform: translateY(18px);
+  filter: blur(4px);
+  will-change: opacity, transform, filter;
 }
 
 .about-apps-grid .skill-icon {
@@ -2685,25 +2690,39 @@ button.case-card {
   border-radius: inherit;
 }
 
-.about-apps-grid .skill-item.scroll-fade {
-  transition:
-    opacity 0.45s ease-out,
-    transform 0.45s ease-out,
-    filter 0.45s ease-out !important;
+@keyframes about-app-icon-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
 }
 
-.about-apps-grid .skill-item:nth-child(1) { transition-delay: 0ms !important; }
-.about-apps-grid .skill-item:nth-child(2) { transition-delay: 90ms !important; }
-.about-apps-grid .skill-item:nth-child(3) { transition-delay: 180ms !important; }
-.about-apps-grid .skill-item:nth-child(4) { transition-delay: 270ms !important; }
-.about-apps-grid .skill-item:nth-child(5) { transition-delay: 360ms !important; }
-.about-apps-grid .skill-item:nth-child(6) { transition-delay: 450ms !important; }
-.about-apps-grid .skill-item:nth-child(7) { transition-delay: 540ms !important; }
-.about-apps-grid .skill-item:nth-child(8) { transition-delay: 630ms !important; }
+.about-apps-grid.is-revealed .skill-item {
+  animation: about-app-icon-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.about-apps-grid.is-revealed .skill-item:nth-child(1) { animation-delay: 0ms; }
+.about-apps-grid.is-revealed .skill-item:nth-child(2) { animation-delay: 90ms; }
+.about-apps-grid.is-revealed .skill-item:nth-child(3) { animation-delay: 180ms; }
+.about-apps-grid.is-revealed .skill-item:nth-child(4) { animation-delay: 270ms; }
+.about-apps-grid.is-revealed .skill-item:nth-child(5) { animation-delay: 360ms; }
+.about-apps-grid.is-revealed .skill-item:nth-child(6) { animation-delay: 450ms; }
+.about-apps-grid.is-revealed .skill-item:nth-child(7) { animation-delay: 540ms; }
+.about-apps-grid.is-revealed .skill-item:nth-child(8) { animation-delay: 630ms; }
 
 @media (prefers-reduced-motion: reduce) {
-  .about-apps-grid .skill-item {
-    transition-delay: 0ms !important;
+  .about-apps-grid .skill-item,
+  .about-apps-grid.is-revealed .skill-item {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    animation: none !important;
   }
 }
 
