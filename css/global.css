@@ -54,14 +54,53 @@ html *::after {
   cursor: auto !important;
 }
 
+/* Hand cursor on pressable controls (include descendants — global * otherwise wins) */
 html a,
+html a *,
+html a *::before,
+html a *::after,
 html button,
+html button *,
+html button *::before,
+html button *::after,
 html [role="button"],
+html [role="button"] *,
+html [role="button"] *::before,
+html [role="button"] *::after,
 html label,
+html label *,
 html summary,
+html summary *,
 html .work-card,
-html .case-card {
+html .work-card *,
+html .work-card *::before,
+html .work-card *::after,
+html .case-card,
+html .case-card *,
+html .case-card *::before,
+html .case-card *::after,
+html .nav-icon-link,
+html .nav-icon-link *,
+html .nav-brand,
+html .nav-brand *,
+html .nav-resume,
+html .nav-resume *,
+html .about-cta-btn,
+html .about-cta-btn *,
+html .profile-card-connect,
+html .profile-card-connect *,
+html .resume-download-btn,
+html .footer-pill-link,
+html .footer-pill-link *,
+html .case-nav-link,
+html .case-hamburger,
+html .case-hamburger * {
   cursor: pointer !important;
+}
+
+html .work-card[data-disabled="true"],
+html .work-card[data-disabled="true"] * {
+  cursor: auto !important;
 }
 
 .svg-defs {
@@ -247,7 +286,7 @@ body {
 .case-card,
 .case-body,
 .case-figure {
-  cursor: none;
+  cursor: pointer;
 }
 
 /* Keep custom cursor everywhere — no native arrow fallback */
@@ -1632,7 +1671,7 @@ body {
   border: none;
   padding: 20px;
   gap: 18px;
-  cursor: none;
+  cursor: pointer;
   min-height: 0;
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -5348,13 +5387,35 @@ body :where(
   }
 
   html a,
+  html a *,
+  html a *::before,
+  html a *::after,
   html button,
+  html button *,
+  html button *::before,
+  html button *::after,
   html [role="button"],
+  html [role="button"] *,
+  html [role="button"] *::before,
+  html [role="button"] *::after,
   html label,
+  html label *,
   html summary,
+  html summary *,
   html .work-card,
-  html .case-card {
+  html .work-card *,
+  html .work-card *::before,
+  html .work-card *::after,
+  html .case-card,
+  html .case-card *,
+  html .case-card *::before,
+  html .case-card *::after {
     cursor: pointer !important;
+  }
+
+  html .work-card[data-disabled="true"],
+  html .work-card[data-disabled="true"] * {
+    cursor: auto !important;
   }
 
   /* 2) Neutralize hover states — reset each to its resting style */
