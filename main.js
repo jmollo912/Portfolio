@@ -2206,6 +2206,72 @@ window.addEventListener('load', function() {
 });
 
 // ==========================================
+// WORK CARD COVER VIDEOS (ensure autoplay on first load)
+// ==========================================
+function initWorkCardVideos() {
+  const videos = document.querySelectorAll('.work-card video.work-card-image');
+  if (!videos.length) return;
+
+  const tryPlay = (video) => {
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+    const playPromise = video.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {});
+    }
+  };
+
+  videos.forEach((video) => {
+    video.preload = 'auto';
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
+    const kickoff = () => tryPlay(video);
+
+    if (video.readyState >= 2) {
+      kickoff();
+    } else {
+      video.addEventListener('loadeddata', kickoff, { once: true });
+      video.addEventListener('canplay', kickoff, { once: true });
+      // Force a fetch even if the browser deferred autoplay preload.
+      try {
+        video.load();
+      } catch (_) {
+        /* ignore */
+      }
+    }
+
+    // Re-attempt when the card scrolls into view (covers late decode / tab restore).
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) tryPlay(video);
+          });
+        },
+        { rootMargin: '120px 0px', threshold: 0.01 }
+      );
+      observer.observe(video);
+    }
+  });
+
+  // One more attempt after full page load (images/fonts finished competing).
+  window.addEventListener(
+    'load',
+    () => {
+      videos.forEach(tryPlay);
+    },
+    { once: true }
+  );
+}
+
+document.addEventListener('DOMContentLoaded', initWorkCardVideos);
+
+// ==========================================
 // LOADING COMPLETION EVENT
 // ==========================================
 window.loadingComplete = true;
