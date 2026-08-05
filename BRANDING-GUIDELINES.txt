@@ -73,6 +73,7 @@ UI COMPONENTS
 4. Buttons — rounded about 10px; primary charcoal (#2B2B2B) with white text; hover keeps charcoal, scales to 1.12, and rotates 2deg; secondary white pill with black text; do not add random new colors.
 5. Custom cursor — currently DISABLED (native pointer). Re-enable via CUSTOM_CURSOR_ENABLED in main.js + CSS toggle in global.css.
 6. Motion — scroll fade, nav marker; honor reduced-motion in CSS. Floating nav, gm logo, and Resume stay fixed while scrolling.
+7. Case-study section navigation — left-side white rounded stack (~17px type). Active text charcoal #2B2B2B, inactive #B8B8B8. Matching-width “Back” is always pinned near the top (including the hero). Section names ride up with Overview, then stick just under Back. Back: grey at rest, charcoal + left arrow reveal + scale 1.12 on hover (no rotate). Case content uses equal side gutters (~168–240px desktop, tighter ≤900px) so the nav stays in the left margin; below 600px gutters drop to 0 and container padding is 12px. Uses scroll spy.
 
 
 LOGO AND IDENTITY
@@ -123,3 +124,7 @@ CHANGELOG (edit when brand changes)
 2026-08-03 — Cross-page nav continuity: marker handoff + view transitions (index ↔ about).
 
 2026-08-04 — Floating nav: Lab icon between Work and About; hover label “The Lab” + cursor-following “Coming soon” tip (not navigable).
+2026-08-05 — Case-study section nav moved to a white rounded vertical stack on the left; active text charcoal, inactive text grey.
+2026-08-05 — Case-study left nav enlarged; matching-width Back button with left arrow reveal hover.
+2026-08-05 — Case-study left nav rides up with Overview, then sticks at the top.
+2026-08-05 — Case-study Back always visible; section nav sticks under Back.

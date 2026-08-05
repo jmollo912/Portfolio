@@ -1672,6 +1672,7 @@ document.addEventListener('DOMContentLoaded', initCaseStudyHeaderBehavior);
 // ==========================================
 function initCaseStudyScrollSpy() {
   const caseNav = document.querySelector('.case-floating-nav');
+  const caseNavGroup = document.querySelector('.case-nav-group');
   if (!caseNav) return;
 
   const caseNavLinks = caseNav.querySelectorAll('.case-nav-link');
@@ -1761,6 +1762,46 @@ function initCaseStudyScrollSpy() {
     }
   }
 
+  // Back stays pinned at the sticky top for the whole page (including hero).
+  // Section nav rides up with Overview, then sticks just under Back.
+  function getCaseBackStickyTop() {
+    return Math.min(96, Math.max(64, window.innerHeight * 0.1));
+  }
+
+  function updateCaseNavPosition() {
+    if (!caseNavGroup || !firstSection) return;
+
+    const backEl = caseNavGroup.querySelector('.case-back-container');
+    const sectionNav = caseNav;
+    const stackGap = 12;
+    const backTop = getCaseBackStickyTop();
+
+    if (backEl) {
+      backEl.style.top = `${backTop}px`;
+    }
+
+    const backHeight = backEl ? backEl.offsetHeight : 56;
+    const stuckNavTop = backTop + backHeight + stackGap;
+    const overviewTop = firstSection.getBoundingClientRect().top;
+
+    // Still in the hero (Overview below the fold) — keep section nav hidden.
+    if (overviewTop >= window.innerHeight - 8) {
+      sectionNav.classList.remove('is-visible', 'is-stuck');
+      sectionNav.style.top = `${stuckNavTop}px`;
+      return;
+    }
+
+    sectionNav.classList.add('is-visible');
+
+    if (overviewTop > stuckNavTop) {
+      sectionNav.classList.remove('is-stuck');
+      sectionNav.style.top = `${Math.round(overviewTop)}px`;
+    } else {
+      sectionNav.classList.add('is-stuck');
+      sectionNav.style.top = `${stuckNavTop}px`;
+    }
+  }
+
   function updateActiveCaseSection() {
     if (isAutoScrolling) return;
 
@@ -1811,12 +1852,23 @@ function initCaseStudyScrollSpy() {
     lockUntilScrollSettles();
   });
 
-  window.addEventListener('scroll', updateActiveCaseSection, { passive: true });
-  window.addEventListener('resize', () => {
-    const active = caseNav.querySelector('.case-nav-link.active');
-    if (active) positionCaseMarker(active);
-  });
+  let navPosTicking = false;
+  function onCaseNavScrollOrResize() {
+    if (navPosTicking) return;
+    navPosTicking = true;
+    requestAnimationFrame(() => {
+      navPosTicking = false;
+      updateCaseNavPosition();
+      updateActiveCaseSection();
+      const active = caseNav.querySelector('.case-nav-link.active');
+      if (active) positionCaseMarker(active);
+    });
+  }
 
+  window.addEventListener('scroll', onCaseNavScrollOrResize, { passive: true });
+  window.addEventListener('resize', onCaseNavScrollOrResize);
+
+  updateCaseNavPosition();
   updateActiveCaseSection();
   requestAnimationFrame(() => {
     if (caseMarker) caseMarker.classList.add('ready');
@@ -2113,25 +2165,12 @@ function initCaseStudyNavTransition() {
 // Initialize on index page
 document.addEventListener('DOMContentLoaded', initCaseStudyNavTransition);
 
-// Slide down nav on case study pages
+// Case study left nav — no longer auto-shown on load (reveals at Overview).
 function initCaseStudyNavSlideDown() {
-  // Only run on case study pages
   const caseNavGroup = document.querySelector('.case-nav-group');
   if (!caseNavGroup) return;
-
-  // Check if we came from index with transition
-  const shouldAnimate = sessionStorage.getItem('navTransition') === 'true';
-  
-  if (shouldAnimate) {
-    // Slide down after a brief delay
-    setTimeout(() => {
-      caseNavGroup.classList.add('slide-down');
-      sessionStorage.removeItem('navTransition');
-    }, 100);
-  } else {
-    // Normal load - show immediately
-    caseNavGroup.classList.add('slide-down');
-  }
+  caseNavGroup.classList.add('slide-down');
+  sessionStorage.removeItem('navTransition');
 }
 
 // Initialize on case study pages
