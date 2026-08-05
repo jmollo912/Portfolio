@@ -2525,7 +2525,7 @@ button.case-card {
 .profile-card-connect:hover {
   background: var(--cta);
   color: #FFFFFF;
-  transform: scale(1.12) rotate(2deg);
+  transform: scale(1.12);
   box-shadow:
     0 1px 2px rgba(var(--cta-rgb), 0.25),
     0 4px 12px rgba(var(--cta-rgb), 0.2);
@@ -2834,7 +2834,7 @@ button.case-card {
 .about-cta-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 0;
   margin-top: 28px;
   padding: 14px 28px;
   background: var(--cta);
@@ -2846,7 +2846,7 @@ button.case-card {
   box-shadow:
     0 1px 2px rgba(var(--cta-rgb), 0.25),
     0 4px 12px rgba(var(--cta-rgb), 0.2);
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.12s ease-out, box-shadow 0.2s ease;
 }
 
 .about-cta-btn--secondary {
@@ -2872,7 +2872,7 @@ button.case-card {
 .about-cta-btn:not(.about-cta-btn--secondary):hover {
   background: var(--cta);
   color: #FFFFFF;
-  transform: scale(1.12) rotate(2deg);
+  transform: scale(1.12);
   box-shadow:
     0 1px 2px rgba(var(--cta-rgb), 0.25),
     0 4px 12px rgba(var(--cta-rgb), 0.2);
@@ -2881,7 +2881,7 @@ button.case-card {
 .about-cta-btn--secondary:hover {
   background: #fff;
   color: #000000;
-  transform: scale(1.12) rotate(2deg);
+  transform: scale(1.12);
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.05),
     0 4px 12px rgba(0, 0, 0, 0.06);
@@ -2896,7 +2896,10 @@ button.case-card {
 }
 
 .about-cta-btn:not(.about-cta-btn--secondary):hover .about-cta-btn-arrow {
-  transform: translateX(4px);
+  max-width: 1.25em;
+  opacity: 1;
+  transform: translateX(0);
+  margin-left: 10px;
 }
 
 .about-cta-btn:not(.about-cta-btn--secondary):hover .about-cta-btn-mail {
@@ -2908,7 +2911,19 @@ button.case-card {
 
 .about-cta-btn-arrow {
   display: inline-block;
-  transition: transform 0.2s ease;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 1;
+  margin-left: 0;
+  flex-shrink: 0;
+  transform: translateX(-12px);
+  transition:
+    max-width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.25s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-left 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .about-cta-btn-mail {
@@ -3505,7 +3520,7 @@ button.case-card {
 .resume-download-btn:hover {
   background: var(--cta);
   color: #FFFFFF;
-  transform: scale(1.12) rotate(2deg);
+  transform: scale(1.12);
   box-shadow:
     0 1px 2px rgba(var(--cta-rgb), 0.25),
     0 4px 12px rgba(var(--cta-rgb), 0.2);
@@ -5791,7 +5806,10 @@ body :where(
       0 4px 12px rgba(var(--cta-rgb), 0.2);
   }
   .about-cta-btn:not(.about-cta-btn--secondary):hover .about-cta-btn-arrow {
-    transform: none;
+    max-width: 0;
+    opacity: 0;
+    transform: translateX(-12px);
+    margin-left: 0;
   }
   .about-cta-btn--secondary:hover {
     background: #fff;

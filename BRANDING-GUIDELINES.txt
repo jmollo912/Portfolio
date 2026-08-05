@@ -49,11 +49,12 @@ Backgrounds:
 - Floating nav: solid #FFFFFF pill (no glass)
 
 Accent / interactive:
-- Primary CTA: #2B2B2B (--cta) resting and hover, text #FFFFFF — about-cta-btn (primary), profile-card-connect, resume-download-btn; hover scales to 1.12 and rotates 2deg (touch: no transform)
+- Primary CTA: #2B2B2B (--cta) resting and hover, text #FFFFFF — about-cta-btn (primary), profile-card-connect, resume-download-btn; hover scales to 1.12 with no rotate (touch: no transform)
 - Profile card: rests tilted; hover straightens (0deg) and scales to 1.05 (touch: no expand)
 - Brand blue accent: #4763FF (rgb(71, 99, 255)) — hero animation lines/fill (not primary CTAs or footer pills)
-- CTA secondary: white pill, #000000 text (about-cta-btn--secondary, Contact links)
-- Footer pill: charcoal #2B2B2B (--cta), text #FFFFFF; hover keeps charcoal (no color change), scale 1.12 + rotate(2deg); email reveals mail icon, Resume reveals download icon (same pattern as about CTAs)
+- CTA secondary: white pill, #000000 text (about-cta-btn--secondary, Contact links); hover scales to 1.12 with no rotate
+- Footer pill: charcoal #2B2B2B (--cta), text #FFFFFF; hover keeps charcoal (no color change), scale 1.12 + rotate(2deg); email reveals mail icon, social reveals brand icons (same pattern as about CTAs)
+- Nav Resume: charcoal pill; hover scale 1.12 + rotate(2deg), download icon reveals — only CTAs with rotation besides footer pills
 - Pill separator dot: #C7C7C7 (before case pill tag)
 
 Hero only:
@@ -70,7 +71,7 @@ UI COMPONENTS
 1. Floating navigation — white pill with Home / Work / Lab / About icons (media/NavBar); charcoal (#2B2B2B) rounded square marker slides to active item; white active icon / grey inactive icon; grey Home/Work/The Lab/About label appears under the hovered icon only (hidden otherwise). Lab is placeholder (not navigable): hover shows grey “The Lab” under the icon plus a charcoal “Coming soon” tip next to the cursor. Top-left gmdesign.svg wordmark (17px tall, left: 28px) links home; top-right Resume charcoal pill (same as footer Resume — white text, hover keeps charcoal + scale 1.12 / rotate 2deg, download icon reveals). Cross-page (index ↔ about): ?navFrom= handoff slides marker from previous tab. Resume also in mobile menu.
 2. Case study cards (home page) — white pill bottom-left; project name black; tag at 40% opacity. Cursor pill shows white text (e.g. "View Project" or custom data-cursor-label).
 3. Case study section headers — section label at 40% opacity; heading and intro full black.
-4. Buttons — rounded about 10px; primary charcoal (#2B2B2B) with white text; hover keeps charcoal, scales to 1.12, and rotates 2deg; secondary white pill with black text; do not add random new colors.
+4. Buttons — rounded about 10px; primary charcoal (#2B2B2B) with white text; hover keeps charcoal and scales to 1.12 (no rotate). Secondary white pill with black text, same scale-only hover. Rotate(2deg) is reserved for nav Resume and footer pills only.
 5. Custom cursor — currently DISABLED (native pointer). Re-enable via CUSTOM_CURSOR_ENABLED in main.js + CSS toggle in global.css.
 6. Motion — scroll fade, nav marker; honor reduced-motion in CSS. Floating nav, gm logo, and Resume stay fixed while scrolling.
 7. Case-study section navigation — left-side white rounded stack (~17px type). Active text charcoal #2B2B2B, inactive #B8B8B8. Matching-width “Back” is always pinned near the top (including the hero). Section names ride up with Overview, then stick just under Back. Back: grey at rest, charcoal + left arrow reveal + scale 1.12 on hover (no rotate). Case content uses equal side gutters (~168–240px desktop, tighter ≤900px) so the nav stays in the left margin; below 600px gutters drop to 0 and container padding is 12px. Uses scroll spy.
@@ -127,4 +128,4 @@ CHANGELOG (edit when brand changes)
 2026-08-05 — Case-study section nav moved to a white rounded vertical stack on the left; active text charcoal, inactive text grey.
 2026-08-05 — Case-study left nav enlarged; matching-width Back button with left arrow reveal hover.
 2026-08-05 — Case-study left nav rides up with Overview, then sticks at the top.
-2026-08-05 — Case-study Back always visible; section nav sticks under Back.
+2026-08-05 — CTA hover rotate reserved for nav Resume + footer pills only; about Contact/Resume and other CTAs are scale-only.

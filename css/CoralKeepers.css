@@ -379,7 +379,7 @@
 .coral-solution-cta {
   margin-top: 3rem;
   margin-bottom: 2rem;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .coral-solution-cta .about-cta-btn {
