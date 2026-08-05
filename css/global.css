@@ -632,7 +632,7 @@ body {
   transform: translateY(0);
   transition:
     top 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.2s ease,
+    transform 0.1s cubic-bezier(0.4, 0, 1, 1),
     background-color 0.2s ease,
     color 0.2s ease,
     box-shadow 0.2s ease;
@@ -1692,7 +1692,7 @@ body {
   width: 100%;
   aspect-ratio: 1 / 1;
   height: auto;
-  transition: transform 0.15s ease-out;
+  transition: transform 0.2s ease;
   position: relative;
   text-align: left;
   box-sizing: border-box;
@@ -2849,6 +2849,15 @@ button.case-card {
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.12s ease-out, box-shadow 0.2s ease;
 }
 
+/* Primary CTAs — match nav Resume hover snap (no ease-out drag) */
+.about-cta-btn:not(.about-cta-btn--secondary) {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.1s cubic-bezier(0.4, 0, 1, 1),
+    box-shadow 0.2s ease;
+}
+
 .about-cta-btn--secondary {
   background: #fff;
   color: #000000;
@@ -3655,7 +3664,7 @@ button.case-card {
   color: #FFFFFF;
 }
 
-.site-footer-new .footer-pill-link:hover {
+.footer-pill-link:hover {
   background: var(--cta);
   color: #FFFFFF;
   transform: scale(1.12) rotate(2deg);
@@ -3664,15 +3673,15 @@ button.case-card {
     0 4px 12px rgba(var(--cta-rgb), 0.2);
 }
 
-.site-footer-new .footer-pill-link:hover :is(span, .footer-pill-icon) {
+.footer-pill-link:hover :is(span, .footer-pill-icon) {
   color: #FFFFFF;
 }
 
-.site-footer-new .footer-pill-link:hover .about-cta-btn-mail,
-.site-footer-new .footer-pill-link:hover .about-cta-btn-download,
-.site-footer-new .footer-pill-link:hover .about-cta-btn-ext-arrow,
-.site-footer-new .footer-pill-link:hover .about-cta-btn-instagram,
-.site-footer-new .footer-pill-link:hover .about-cta-btn-linkedin {
+.footer-pill-link:hover .about-cta-btn-mail,
+.footer-pill-link:hover .about-cta-btn-download,
+.footer-pill-link:hover .about-cta-btn-ext-arrow,
+.footer-pill-link:hover .about-cta-btn-instagram,
+.footer-pill-link:hover .about-cta-btn-linkedin {
   max-width: 18px;
   opacity: 1;
   transform: translateX(0);
@@ -4431,7 +4440,9 @@ body:has(.case-layout) .site-footer-new :is(h3, p, span, a) {
 }
 
 body:has(.case-layout) .site-footer-new .footer-pill-link,
-body:has(.case-layout) .site-footer-new .footer-pill-link :is(span, .footer-pill-icon, .about-cta-btn-mail, .about-cta-btn-download, .about-cta-btn-ext-arrow, .about-cta-btn-instagram, .about-cta-btn-linkedin) {
+body:has(.case-layout) .site-footer-new .footer-pill-link :is(span, .footer-pill-icon, .about-cta-btn-mail, .about-cta-btn-download, .about-cta-btn-ext-arrow, .about-cta-btn-instagram, .about-cta-btn-linkedin),
+body:has(.case-layout) .case-main .footer-pill-link,
+body:has(.case-layout) .case-main .footer-pill-link :is(span, .footer-pill-icon, .about-cta-btn-mail, .about-cta-btn-download, .about-cta-btn-ext-arrow, .about-cta-btn-instagram, .about-cta-btn-linkedin) {
   color: #FFFFFF;
 }
 
@@ -4451,10 +4462,19 @@ body:has(.case-layout) .site-footer-new .footer-pill-link :is(span, .footer-pill
 }
 
 .case-study .site-header.case-intro-nav-visible .nav-profile,
-.case-study .site-header.case-intro-nav-visible .floating-nav,
-.case-study .site-header.case-intro-nav-visible .nav-resume {
+.case-study .site-header.case-intro-nav-visible .floating-nav {
   top: 12px !important;
   transition: top 0.4s ease-out !important;
+}
+
+.case-study .site-header.case-intro-nav-visible .nav-resume {
+  top: 12px !important;
+  transition:
+    top 0.4s ease-out,
+    transform 0.1s cubic-bezier(0.4, 0, 1, 1),
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease !important;
 }
 
 /* Top blur visible on case study pages */
@@ -4681,6 +4701,10 @@ body:has(.case-layout) .site-footer-new .footer-pill-link :is(span, .footer-pill
 /* Section header: category label + main heading + intro (image reference style) */
 .section-header {
   margin-bottom: 40px;
+}
+
+.section-header .footer-pill-link {
+  margin-top: 28px;
 }
 
 .section-label {
@@ -5641,10 +5665,10 @@ body :where(
 .nav-resume,
 .nav-resume:hover,
 .nav-resume :is(span, .about-cta-btn-download),
-.site-footer-new .footer-pill-link,
-.site-footer-new .footer-pill-link:hover,
-.site-footer-new .footer-pill-link :is(span, .footer-pill-icon, .about-cta-btn-mail, .about-cta-btn-download, .about-cta-btn-ext-arrow, .about-cta-btn-instagram, .about-cta-btn-linkedin),
-.site-footer-new .footer-pill-link:hover :is(span, .footer-pill-icon, .about-cta-btn-mail, .about-cta-btn-download, .about-cta-btn-ext-arrow, .about-cta-btn-instagram, .about-cta-btn-linkedin) {
+.footer-pill-link,
+.footer-pill-link:hover,
+.footer-pill-link :is(span, .footer-pill-icon, .about-cta-btn-mail, .about-cta-btn-download, .about-cta-btn-ext-arrow, .about-cta-btn-instagram, .about-cta-btn-linkedin),
+.footer-pill-link:hover :is(span, .footer-pill-icon, .about-cta-btn-mail, .about-cta-btn-download, .about-cta-btn-ext-arrow, .about-cta-btn-instagram, .about-cta-btn-linkedin) {
   color: #FFFFFF;
 }
 
@@ -5840,8 +5864,8 @@ body :where(
       0 4px 12px rgba(var(--cta-rgb), 0.2);
   }
 
-  /* Footer pill links */
-  .site-footer-new .footer-pill-link:hover {
+  /* Footer pill links (also used as CTAs outside footer) */
+  .footer-pill-link:hover {
     background: var(--cta);
     color: #FFFFFF;
     transform: none;
@@ -5850,15 +5874,15 @@ body :where(
       0 4px 12px rgba(var(--cta-rgb), 0.2);
   }
 
-  .site-footer-new .footer-pill-link:hover :is(span, .footer-pill-icon) {
+  .footer-pill-link:hover :is(span, .footer-pill-icon) {
     color: #FFFFFF;
   }
 
-  .site-footer-new .footer-pill-link:hover .about-cta-btn-mail,
-  .site-footer-new .footer-pill-link:hover .about-cta-btn-download,
-  .site-footer-new .footer-pill-link:hover .about-cta-btn-ext-arrow,
-  .site-footer-new .footer-pill-link:hover .about-cta-btn-instagram,
-  .site-footer-new .footer-pill-link:hover .about-cta-btn-linkedin {
+  .footer-pill-link:hover .about-cta-btn-mail,
+  .footer-pill-link:hover .about-cta-btn-download,
+  .footer-pill-link:hover .about-cta-btn-ext-arrow,
+  .footer-pill-link:hover .about-cta-btn-instagram,
+  .footer-pill-link:hover .about-cta-btn-linkedin {
     max-width: 0;
     opacity: 0;
     margin-left: 0;
