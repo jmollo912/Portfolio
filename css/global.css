@@ -4149,11 +4149,6 @@ body:has(.case-layout) {
   pointer-events: none;
 }
 
-/* Retained for the existing page-entry script. */
-.case-nav-group.slide-down {
-  /* no-op; Back is always shown and section nav is JS-positioned */
-}
-
 /* Back control — always visible, including the hero */
 .case-back-container {
   position: absolute;
