@@ -1110,6 +1110,7 @@ const mainNavMarker = mainFloatingNav?.querySelector('.nav-marker');
 const mainNavGroup = document.querySelector('.nav-group');
 const mainNavLabel = document.querySelector('.nav-active-label');
 const isAboutPage = window.location.pathname.includes('about.html');
+const isLabPage = window.location.pathname.includes('lab.html');
 const NAV_HANDOFF_KEY = 'floatingNavHandoff';
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let activeNavHref = '';
@@ -1253,6 +1254,14 @@ function resolveInitialNavHref() {
     return about?.getAttribute('href') || '#';
   }
 
+  if (isLabPage) {
+    const lab = navLinkList.find((a) => {
+      const label = a.getAttribute('data-nav-label');
+      return a.classList.contains('nav-icon-link--lab') || label === 'The Lab' || label === 'Lab';
+    });
+    return lab?.getAttribute('href') || '#lab';
+  }
+
   const hash = window.location.hash;
   if (hash && hash !== '#hero' && navLinkList.some((a) => a.getAttribute('href') === hash)) {
     return hash;
@@ -1277,8 +1286,12 @@ function setActiveNav(href, { force = false } = {}) {
 
   let activeLink = null;
   navLinks.forEach((a) => {
-    // Lab is never an active destination.
-    if (a.classList.contains('nav-icon-link--lab') || a.getAttribute('data-nav-label') === 'Lab') {
+    // Lab is not an active destination until the page is linked from the nav —
+    // except when viewing lab.html directly while building it.
+    const navLabel = a.getAttribute('data-nav-label');
+    const isLabLink =
+      a.classList.contains('nav-icon-link--lab') || navLabel === 'The Lab' || navLabel === 'Lab';
+    if (isLabLink && !isLabPage) {
       a.classList.remove('active');
       a.removeAttribute('aria-current');
       return;
@@ -1383,7 +1396,10 @@ function initMainNavMarker() {
 }
 
 function initLabComingSoonTip() {
-  const labLink = mainFloatingNav?.querySelector('.nav-icon-link--lab, a[data-nav-label="Lab"]');
+  if (isLabPage) return;
+  const labLink = mainFloatingNav?.querySelector(
+    '.nav-icon-link--lab, a[data-nav-label="The Lab"], a[data-nav-label="Lab"]'
+  );
   if (!labLink || !mainFloatingNav) return;
 
   let tip = document.querySelector('.nav-lab-tip');
@@ -1425,7 +1441,7 @@ function lockMainNavUntilScrollSettles() {
 }
 
 function updateActiveSection() {
-  if (isAboutPage || !navSections.length || mainNavAutoScrolling) return;
+  if (isAboutPage || isLabPage || !navSections.length || mainNavAutoScrolling) return;
 
   // Section whose top has crossed this line (just below the nav) is "current".
   const line = Math.max(120, window.innerHeight * 0.25);
@@ -1459,7 +1475,7 @@ function restoreSmoothScroll() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!isAboutPage) {
+  if (!isAboutPage && !isLabPage) {
     const hash = window.location.hash;
     if (hash && hash !== '#hero') {
       jumpToHash(hash);
@@ -1471,7 +1487,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Re-snap after layout settles (images/fonts) so cross-page hash links land correctly.
 window.addEventListener('load', () => {
-  if (isAboutPage) return;
+  if (isAboutPage || isLabPage) return;
   const hash = window.location.hash;
   if (hash && hash !== '#hero') jumpToHash(hash);
 }, { once: true });
@@ -1482,7 +1498,12 @@ document.addEventListener('click', function(e) {
   if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
   // Lab is a placeholder — show coming-soon tip behavior only, no navigation.
-  if (a.classList.contains('nav-icon-link--lab') || a.getAttribute('data-nav-label') === 'Lab') {
+  const navLabel = a.getAttribute('data-nav-label');
+  if (
+    a.classList.contains('nav-icon-link--lab') ||
+    navLabel === 'The Lab' ||
+    navLabel === 'Lab'
+  ) {
     e.preventDefault();
     e.stopPropagation();
     return;

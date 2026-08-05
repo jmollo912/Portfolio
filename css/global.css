@@ -2800,6 +2800,11 @@ button.case-card {
   margin: 0 0 44px;
 }
 
+.about-apps-title {
+  font-size: clamp(20px, 2.3vw, 20px);
+  margin: 0 0 28px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nav-marker.ready,
   .nav-active-label.ready,
@@ -3327,7 +3332,7 @@ button.case-card {
   font-size: 15px;
   line-height: 1.6;
   color: rgba(0, 0, 0, 0.55);
-  margin: 0 0 14px;
+  margin: 0 0 10px;
 }
 
 .about-early-life-image {

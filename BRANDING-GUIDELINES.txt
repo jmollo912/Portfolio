@@ -67,7 +67,7 @@ Custom cursor:
 
 UI COMPONENTS
 -------------
-1. Floating navigation — white pill with Home / Work / Lab / About icons (media/NavBar); charcoal (#2B2B2B) rounded square marker slides to active item; white active icon / grey inactive icon; grey Home/Work/Lab/About label appears under the hovered icon only (hidden otherwise). Lab is placeholder (not navigable): hover shows grey “Lab” under the icon plus a charcoal “Coming soon” tip next to the cursor. Top-left gmdesign.svg wordmark (17px tall, left: 28px) links home; top-right Resume charcoal pill (same as footer Resume — white text, hover keeps charcoal + scale 1.12 / rotate 2deg, download icon reveals). Cross-page (index ↔ about): ?navFrom= handoff slides marker from previous tab. Resume also in mobile menu.
+1. Floating navigation — white pill with Home / Work / Lab / About icons (media/NavBar); charcoal (#2B2B2B) rounded square marker slides to active item; white active icon / grey inactive icon; grey Home/Work/The Lab/About label appears under the hovered icon only (hidden otherwise). Lab is placeholder (not navigable): hover shows grey “The Lab” under the icon plus a charcoal “Coming soon” tip next to the cursor. Top-left gmdesign.svg wordmark (17px tall, left: 28px) links home; top-right Resume charcoal pill (same as footer Resume — white text, hover keeps charcoal + scale 1.12 / rotate 2deg, download icon reveals). Cross-page (index ↔ about): ?navFrom= handoff slides marker from previous tab. Resume also in mobile menu.
 2. Case study cards (home page) — white pill bottom-left; project name black; tag at 40% opacity. Cursor pill shows white text (e.g. "View Project" or custom data-cursor-label).
 3. Case study section headers — section label at 40% opacity; heading and intro full black.
 4. Buttons — rounded about 10px; primary charcoal (#2B2B2B) with white text; hover keeps charcoal, scales to 1.12, and rotates 2deg; secondary white pill with black text; do not add random new colors.
@@ -95,8 +95,9 @@ WHERE STYLES LIVE
 -----------------
 Global: css/global.css
 Case-specific: css/Convoy.css, css/FlockSports.css, css/CBSSports.css
+Lab: css/lab.css (html/lab.html — not linked from nav yet)
 JavaScript: main.js
-Pages: index.html, html/about.html, html/case-study-*.html
+Pages: index.html, html/about.html, html/lab.html, html/case-study-*.html
 
 
 RULES FOR AI
@@ -121,4 +122,4 @@ CHANGELOG (edit when brand changes)
 2026-08-03 — Floating nav redesigned to icon pill (Home/Work/About) with charcoal active marker + under-label.
 2026-08-03 — Cross-page nav continuity: marker handoff + view transitions (index ↔ about).
 
-2026-08-04 — Floating nav: Lab icon between Work and About; hover label “Lab” + cursor-following “Coming soon” tip (not navigable).
+2026-08-04 — Floating nav: Lab icon between Work and About; hover label “The Lab” + cursor-following “Coming soon” tip (not navigable).

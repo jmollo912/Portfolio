@@ -3,31 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me — Giuseppe Mollo</title>
-    <meta name="description" content="Learn more about Giuseppe Mollo, a UX designer focused on making products simple, intuitive, and human-centered.">
+    <title>Lab — Giuseppe Mollo</title>
+    <meta name="description" content="Experiments and side projects from Giuseppe Mollo.">
     <link rel="icon" href="../media/Icons/gmWebLogo.jpg" type="image/jpeg">
-    <link rel="canonical" href="/html/about.html">
+    <link rel="canonical" href="/html/lab.html">
     <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/lab.css">
     <link rel="stylesheet" href="../vendor/lenis/lenis.css">
     <script src="../vendor/lenis/lenis.min.js" defer></script>
     <script defer src="../main.js"></script>
 </head>
+<!--
+  Lab page scaffold (not linked from the site nav yet).
+
+  When ready to ship:
+  1. On index.html, about.html, case studies, and this file — change the Lab nav item from:
+       href="#lab" class="nav-icon-link nav-icon-link--lab" … aria-disabled="true"
+     to:
+       href="html/lab.html" (or "lab.html" from /html/) class="nav-icon-link" data-nav-label="The Lab"
+     and update the sr-only text to "Lab".
+  2. Optionally add Lab to each page’s mobile menu.
+  3. Update BRANDING-GUIDELINES.txt (Lab is navigable).
+-->
 <body>
     <div class="custom-cursor" aria-hidden="true"></div>
-    
-    <!-- Mobile Hamburger Button -->
+
     <button class="case-hamburger" aria-label="Toggle navigation menu">
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
     </button>
-    
-    <!-- Mobile Dropdown Menu -->
+
     <nav class="case-mobile-nav">
         <ul>
             <li><a href="../index.html" class="case-nav-link">Home</a></li>
             <li><a href="../index.html#case-studies" class="case-nav-link">Work</a></li>
-            <li><a href="#" class="case-nav-link active">About</a></li>
+            <li><a href="#" class="case-nav-link active">Lab</a></li>
+            <li><a href="about.html" class="case-nav-link">About</a></li>
             <li><a href="../resume.pdf" target="_blank" rel="noopener" class="case-nav-link">Resume</a></li>
         </ul>
     </nav>
@@ -60,16 +72,16 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#lab" class="nav-icon-link nav-icon-link--lab" data-nav-label="The Lab" aria-disabled="true">
+                            <a href="#lab" class="nav-icon-link nav-icon-link--lab" data-nav-label="The Lab" aria-disabled="true" aria-current="page">
                                 <span class="nav-icon-wrap" aria-hidden="true">
                                     <img class="nav-icon nav-icon--inactive" src="../media/NavBar/Inactive%20Icons/lab.png" alt="" width="24" height="24" decoding="async">
                                     <img class="nav-icon nav-icon--active" src="../media/NavBar/Active%20Icons/lab.png" alt="" width="24" height="24" decoding="async">
                                 </span>
-                                <span class="sr-only">Lab (coming soon)</span>
+                                <span class="sr-only">Lab</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="nav-icon-link" data-nav-label="About">
+                            <a href="about.html" class="nav-icon-link" data-nav-label="About">
                                 <span class="nav-icon-wrap" aria-hidden="true">
                                     <img class="nav-icon nav-icon--inactive" src="../media/NavBar/Inactive%20Icons/About.png" alt="" width="24" height="24" decoding="async">
                                     <img class="nav-icon nav-icon--active" src="../media/NavBar/Active%20Icons/About.png" alt="" width="24" height="24" decoding="async">
@@ -79,7 +91,7 @@
                         </li>
                     </ul>
                 </nav>
-                <span class="nav-active-label" aria-hidden="true">About</span>
+                <span class="nav-active-label" aria-hidden="true">The Lab</span>
             </div>
             <a href="../resume.pdf" target="_blank" rel="noopener" class="nav-resume" aria-label="View resume">
                 <span>Resume</span>
@@ -88,95 +100,28 @@
         </div>
     </header>
 
-    <main class="about-page">
-        <!-- Hero Section -->
-        <section class="about-hero">
-            <div class="about-hero-content">
-                <div class="about-hero-text">
-                    <h1 class="about-hero-title">About me</h1>
-                    <p class="about-body-text">Growing up in Philadelphia, sports were a way of life. That fast paced environment shaped how I approach design. At its core, sports are about adapting and solving problems in real time, a mindset I bring to every project. </p>
-                    <p  class="about-body-text">  I originally attended SCAD to pursue graphic design, but one UX course was all it took for me to fall in love with building digital and physical products.</p>
-                    <p class="about-body-text">Today, as a product designer, I have incorporated AI into my design workflow to help me build better products faster.</p>
+    <main class="lab-page" id="lab">
+        <section class="lab-hero">
+            <div class="lab-hero-inner">
+                <h1 class="lab-hero-title">Welcome to The Lab</h1>
+                <p class="lab-body-text">Where I eplore new concepts and build thigns that aren't big enough for a full case study. </p>
 
-                    <div class="about-apps" aria-labelledby="about-apps-title">
-                        <h2 id="about-apps-title" class="about-hero-title about-apps-title">Apps I can't live without:</h2>
-                        <ul class="about-apps-grid">
-                            <li class="skill-item">
-                                <div class="skill-icon">
-                                    <img src="../media/HeroPage/FigmaLogo.jpg" alt="Figma" class="skill-icon-img" width="72" height="72" loading="lazy" decoding="async">
-                                </div>
-                            </li>
-                            <li class="skill-item">
-                                <div class="skill-icon">
-                                    <img src="../media/HeroPage/ClaudeLogo.png" alt="Claude" class="skill-icon-img" width="72" height="72" loading="lazy" decoding="async">
-                                </div>
-                            </li>
-                            <li class="skill-item">
-                                <div class="skill-icon">
-                                    <img src="../media/HeroPage/Cursorlogo.png" alt="Cursor" class="skill-icon-img" width="72" height="72" loading="lazy" decoding="async">
-                                </div>
-                            </li>
-                            <li class="skill-item">
-                                <div class="skill-icon">
-                                    <img src="../media/HeroPage/RhinoLogo.jpg" alt="Rhino" class="skill-icon-img" width="72" height="72" loading="lazy" decoding="async">
-                                </div>
-                            </li>
-                            <li class="skill-item">
-                                <div class="skill-icon">
-                                    <img src="../media/HeroPage/PhotshopLogo.jpg" alt="Photoshop" class="skill-icon-img" width="72" height="72" loading="lazy" decoding="async">
-                                </div>
-                            </li>
-                            <li class="skill-item">
-                                <div class="skill-icon">
-                                    <img src="../media/HeroPage/IllustratorLogo.jpg" alt="Illustrator" class="skill-icon-img" width="72" height="72" loading="lazy" decoding="async">
-                                </div>
-                            </li>
-                            <li class="skill-item">
-                                <div class="skill-icon">
-                                    <img src="../media/HeroPage/BlenderLogo.jpg" alt="Blender" class="skill-icon-img" width="72" height="72" loading="lazy" decoding="async">
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="lab-bento" aria-label="Lab experiments">
+                    <div class="lab-bento-cell" aria-hidden="true"></div>
+                    <div class="lab-bento-cell" aria-hidden="true"></div>
+                    <div class="lab-bento-cell" aria-hidden="true"></div>
+                    <div class="lab-bento-cell" aria-hidden="true"></div>
+                    <div class="lab-bento-cell" aria-hidden="true"></div>
+                    <div class="lab-bento-cell" aria-hidden="true"></div>
+                    <div class="lab-bento-cell" aria-hidden="true"></div>
+                    <div class="lab-bento-cell" aria-hidden="true"></div>
+                    <div class="lab-bento-cell" aria-hidden="true"></div>
+                    <div class="lab-bento-cell" aria-hidden="true"></div>
+                    <div class="lab-bento-cell" aria-hidden="true"></div>
+                    <div class="lab-bento-cell" aria-hidden="true"></div>
                 </div>
-
-                <div class="profile-card">
-                    <div class="profile-card-main">
-                        <h2 class="profile-card-name">Giuseppe Mollo</h2>
-                        <div class="profile-card-image">
-                            <img src="../media/HeroPage/AboutMe/HeadshotAlt.jpg" alt="Profile photo" class="profile-card-img" loading="lazy" decoding="async">
-                        </div>
-                    </div>
-                    <div class="profile-card-footer">
-                        <div class="profile-card-info">
-                            
-                            <div class="profile-card-details">
-                                <span class="profile-card-username">@giuseppe-mollo</span>
-                                <span class="profile-card-platform">LinkedIn</span>
-                            </div>
-                        </div>
-                        <a href="https://www.linkedin.com/in/giuseppe-mollo-898354274" target="_blank" rel="noopener" class="profile-card-connect">
-                            <span class="connect-plus">+</span> Connect
-                        </a>
-                    </div>
-                </div>
-                
             </div>
         </section>
-
-        <div class="about-contact-cta container" aria-label="Contact and resume">
-            <div class="about-cta-actions">
-                <a href="mailto:gmollodesign@gmail.com" class="about-cta-btn">
-                    Contact
-                    <span class="about-cta-btn-mail" aria-hidden="true"></span>
-                </a>
-                <a href="../resume.pdf" target="_blank" rel="noopener" class="about-cta-btn about-cta-btn--secondary">
-                    Resume
-                    <span class="about-cta-btn-download" aria-hidden="true"></span>
-                </a>
-            </div>
-        </div>
-
     </main>
 
     <footer class="site-footer-new">
