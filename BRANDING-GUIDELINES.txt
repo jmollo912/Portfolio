@@ -20,7 +20,7 @@ Layout: Spacious, Main White backgrounds, white floating icon nav, subtle motion
 
 TYPOGRAPHY
 ----------
-Body and UI: Inter, with system-ui fallbacks. All paragraphs, nav, case study body, footer.
+Body and UI: Inter, with system-ui fallbacks. All paragraphs, nav, case study body, footer. Home page loads Inter as a variable font (Google Fonts, 100–900) so hero letter hover can ease weight smoothly.
 Accent / display: Borel (Google Fonts). Use sparingly — e.g. hero caption word "desk".
 Hero screen label: Inter on Lottie overlay — "gm" bold + "design" light on monitor mockup.
 
@@ -59,6 +59,7 @@ Accent / interactive:
 
 Hero only:
 - Monitor "gm design" label: #FFFFFF (lottie-label on hero screen)
+- Hero welcome text (“Welcome to my portfolio!”): after typing animation, each letter is hoverable — hovered letter Inter weight eases 600 → 900 and scale 1 → 1.25 (0.2s); immediate left/right neighbors ease weight 600 → 750 and scale 1 → 1.12 (0.2s); rest of hero stage stays pointer-events none so wall pics still work
 
 Custom cursor:
 - Currently DISABLED (native pointer). Code kept for easy re-enable.
@@ -130,3 +131,4 @@ CHANGELOG (edit when brand changes)
 2026-08-05 — Case-study left nav rides up with Overview, then sticks at the top.
 2026-08-05 — CTA hover rotate reserved for nav Resume + footer pills only; about Contact/Resume and other CTAs are scale-only.
 2026-08-05 — CBS Learn More Contact uses footer-pill-link (same markup/styles as footer CTAs).
+2026-08-06 — Hero “Welcome to my portfolio!” letters thicken 600→900 on hover after animation (Inter variable, 0.2s ease).

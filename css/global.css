@@ -1059,8 +1059,8 @@ body {
 /* 1 — Eagles */
 .wall-pic-group-1 {
   width: 14%;
-  bottom: 66%;
-  left: 17%;
+  bottom: 65%;
+  left: 21%;
   z-index: 11;
 }
 
@@ -1097,7 +1097,7 @@ body {
 .wall-pic-hovertext-2 {
   top: calc(100% + 6px);
   right: -20%;
-  width: 80%;
+  width: 70%;
   height: auto;
   transform: translateY(8px);
 }
@@ -1140,7 +1140,7 @@ body {
 }
 
 .wall-pic-hovertext-4 {
-  right: calc(100% + 8px);
+  right: calc(97% + 1px);
   top: -5%;
   width: min(190px, 130%);
   transform: translateX(-8px);
@@ -1318,10 +1318,52 @@ body {
 
 #hero-typed {
   font-family: Inter, system-ui, -apple-system, sans-serif;
-  font-weight: 500;
+  font-weight: 600;
   color: #111111;
   line-height: 1;
   pointer-events: none;
+}
+
+/* Letter spans match final hover layout during type/expand — avoids a remount jump */
+#hero-typed .hero-typed-letter {
+  display: inline-block;
+  font-weight: 600;
+  font-variation-settings: "wght" 600;
+  transform: scale(1);
+  transform-origin: center bottom;
+  pointer-events: none;
+}
+
+#hero-typed.hero-typed--interactive .hero-typed-letter {
+  pointer-events: auto;
+  transition:
+    font-weight 0.2s ease,
+    font-variation-settings 0.2s ease,
+    transform 0.2s ease;
+}
+
+#hero-typed.hero-typed--interactive .hero-typed-letter:hover {
+  font-weight: 900;
+  font-variation-settings: "wght" 900;
+  transform: scale(1.25);
+}
+
+/* Immediate neighbors ease up to 750 + slight grow */
+#hero-typed.hero-typed--interactive .hero-typed-letter:hover + .hero-typed-letter,
+#hero-typed.hero-typed--interactive .hero-typed-letter:has(+ .hero-typed-letter:hover) {
+  font-weight: 750;
+  font-variation-settings: "wght" 750;
+  transform: scale(1.12);
+}
+
+#hero-textbox:has(#hero-typed.hero-typed--interactive) {
+  overflow: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #hero-typed.hero-typed--interactive .hero-typed-letter {
+    transition: none;
+  }
 }
 
 .hero-textbox-hint {

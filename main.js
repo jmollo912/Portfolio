@@ -305,16 +305,16 @@ function initHeroCursorAnimation() {
 
   const FIRST_TEXT = "Hey, I’m Giuseppe";
   const FINAL_TEXT = "Welcome to my portfolio!";
-  const TYPE_CHAR_MS = 72;
-  const DELETE_CHAR_MS = 48;
-  const CURSOR_ENTRANCE_MS = 520;
+  const TYPE_CHAR_MS = 61;
+  const DELETE_CHAR_MS = 41;
+  const CURSOR_ENTRANCE_MS = 440;
   const BOX_H_PAD = 28;
   let measureCanvas;
 
-  function measureTextWidth(text, fontSize) {
+  function measureTextWidth(text, fontSize, weight = 600) {
     if (!measureCanvas) measureCanvas = document.createElement('canvas');
     const ctx = measureCanvas.getContext('2d');
-    ctx.font = `500 ${fontSize}px Inter, system-ui, -apple-system, sans-serif`;
+    ctx.font = `${weight} ${fontSize}px Inter, system-ui, -apple-system, sans-serif`;
     return ctx.measureText(text).width;
   }
 
@@ -343,16 +343,16 @@ function initHeroCursorAnimation() {
     let finalFS = Math.min(finalH * 0.42, 48);
 
     while (finalFS > 14 && Math.max(
-      measureTextWidth(FIRST_TEXT, finalFS),
-      measureTextWidth(FINAL_TEXT, finalFS)
+      measureTextWidth(FIRST_TEXT, finalFS, 600),
+      measureTextWidth(FINAL_TEXT, finalFS, 900)
     ) + BOX_H_PAD > finalW) {
       finalFS -= 1;
     }
     finalH = Math.min(Math.max(finalFS / 0.42, finalFS + 16), maxH);
 
     const textW = Math.max(
-      measureTextWidth(FIRST_TEXT, finalFS),
-      measureTextWidth(FINAL_TEXT, finalFS)
+      measureTextWidth(FIRST_TEXT, finalFS, 600),
+      measureTextWidth(FINAL_TEXT, finalFS, 900)
     ) + BOX_H_PAD;
     finalW = Math.min(Math.max(finalW, textW), maxW);
 
@@ -451,10 +451,42 @@ function initHeroCursorAnimation() {
     if (hint) hint.classList.add('visible');
   }
 
+  function clearTyped() {
+    delete typed.dataset.letterText;
+    typed.classList.remove('hero-typed--interactive');
+    typed.removeAttribute('aria-label');
+    typed.replaceChildren();
+  }
+
+  function setTypedPlain(text) {
+    delete typed.dataset.letterText;
+    typed.classList.remove('hero-typed--interactive');
+    typed.removeAttribute('aria-label');
+    typed.textContent = text;
+  }
+
+  function setTypedLetters(text, { interactive = false } = {}) {
+    if (typed.dataset.letterText !== text) {
+      typed.dataset.letterText = text;
+      typed.replaceChildren();
+      for (const ch of text) {
+        const span = document.createElement('span');
+        span.className = 'hero-typed-letter';
+        span.textContent = ch === ' ' ? '\u00A0' : ch;
+        span.setAttribute('aria-hidden', 'true');
+        typed.appendChild(span);
+      }
+    }
+
+    typed.classList.toggle('hero-typed--interactive', interactive);
+    if (interactive) typed.setAttribute('aria-label', FINAL_TEXT);
+    else typed.removeAttribute('aria-label');
+  }
+
   function applyFinalState() {
     const m = getMetrics();
     if (!m) return;
-    typed.textContent = FINAL_TEXT;
+    setTypedLetters(FINAL_TEXT, { interactive: true });
     applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
     textbox.style.opacity = '1';
     setHighlightOpacity(0);
@@ -487,18 +519,18 @@ function initHeroCursorAnimation() {
     const TYPE_SECOND_MS = FINAL_TEXT.length * TYPE_CHAR_MS;
     const phases = [
       CURSOR_ENTRANCE_MS,
-      250,
-      640,
+      210,
+      545,
       TYPE_FIRST_MS,
-      280,
+      240,
       DELETE_MS,
       TYPE_SECOND_MS,
-      320,
-      480,
-      720,
-      400,
-      400,
-      550,
+      270,
+      410,
+      610,
+      340,
+      340,
+      470,
     ];
     const ends   = [];
     let acc = 0;
@@ -506,7 +538,7 @@ function initHeroCursorAnimation() {
 
     showBox(false);
     hideHint();
-    typed.textContent = '';
+    clearTyped();
     setCursorOpacity(0);
     setHighlightOpacity(1);
     setCursor(m0.cursorEntranceX, m0.cursorEntranceY);
@@ -576,18 +608,25 @@ function initHeroCursorAnimation() {
         applyBox(m.drawStartX + w/2, m.drawStartY + h/2, w, h, m.targetFS, m.hs);
         showBox(true);
         setCursor(m.drawStartX + w, m.drawStartY + h);
-        typed.textContent = '';
-      } else if (el < ends[7]) {
-        // 3–7. Type first line, delete it, then type welcome message
+        clearTyped();
+      } else if (el < ends[5]) {
+        // 3–5. Type first line, hold, delete
         setCursorOpacity(1);
-        typed.textContent = typedText;
+        setTypedPlain(typedText);
+        applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
+        showBox(true);
+        setCursor(m.drawEndX, m.drawEndY);
+      } else if (el < ends[7]) {
+        // 6–7. Type welcome message + hold (letter spans already match final layout)
+        setCursorOpacity(1);
+        setTypedLetters(typedText, { interactive: false });
         applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
         showBox(true);
         setCursor(m.drawEndX, m.drawEndY);
       } else if (el < ends[8]) {
         // 8. Move from bottom-right corner → top-right handle
         setCursorOpacity(1);
-        typed.textContent = FINAL_TEXT;
+        setTypedLetters(FINAL_TEXT, { interactive: false });
         applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
         showBox(true);
         const p = easeInOut(pT(8, el));
@@ -595,7 +634,7 @@ function initHeroCursorAnimation() {
       } else if (el < ends[9]) {
         // 9. Expand the box (cursor follows top-right handle)
         setCursorOpacity(1);
-        typed.textContent = FINAL_TEXT;
+        setTypedLetters(FINAL_TEXT, { interactive: false });
         const p = easeInOut(pT(9, el));
         applyBox(m.boxCX, m.boxCY, lerp(m.targetW, m.finalW, p), lerp(m.targetH, m.finalH, p), lerp(m.targetFS, m.finalFS, p), m.hs);
         showBox(true);
@@ -603,13 +642,13 @@ function initHeroCursorAnimation() {
       } else if (el < ends[10]) {
         // 10. Hold after expand
         setCursorOpacity(1);
-        typed.textContent = FINAL_TEXT;
+        setTypedLetters(FINAL_TEXT, { interactive: false });
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         showBox(true);
         setCursor(m.finalTrX, m.finalTrY);
       } else if (el < ends[11]) {
         // 11. Cursor fade out
-        typed.textContent = FINAL_TEXT;
+        setTypedLetters(FINAL_TEXT, { interactive: false });
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         showBox(true);
         setHighlightOpacity(1);
@@ -617,7 +656,7 @@ function initHeroCursorAnimation() {
         setCursorOpacity(1 - pT(11, el));
       } else if (el < ends[12]) {
         // 12. Highlight fade out — leave title text only
-        typed.textContent = FINAL_TEXT;
+        setTypedLetters(FINAL_TEXT, { interactive: false });
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         textbox.style.opacity = '1';
         setCursorOpacity(0);
