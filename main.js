@@ -2367,6 +2367,10 @@ function initLabPanels() {
           video.currentTime = 0;
         }
       });
+
+      if (!match) {
+        panel.querySelectorAll('[data-lab-youtube]').forEach(resetLabYoutube);
+      }
     });
   }
 
@@ -2396,7 +2400,54 @@ function initLabPanels() {
   selectPanel(selectedId);
 
   initLabCarousels(workspace);
+  initLabYoutube(workspace);
   initLabSideNavComingSoon(workspace);
+}
+
+function resetLabYoutube(container) {
+  if (!container || !container.classList.contains('is-playing')) return;
+  const title = container.getAttribute('data-lab-youtube-title') || 'Video';
+  container.classList.remove('is-playing');
+  container.innerHTML = `
+    <button type="button" class="lab-youtube-facade" aria-label="Play ${title}">
+      <img
+        src="https://i.ytimg.com/vi/${container.getAttribute('data-lab-youtube')}/hqdefault.jpg"
+        alt=""
+        class="lab-panel-image"
+        width="1200"
+        height="800"
+        decoding="async"
+      >
+      <span class="lab-youtube-play" aria-hidden="true"></span>
+    </button>
+  `.trim();
+}
+
+function initLabYoutube(root = document) {
+  root.addEventListener('click', (e) => {
+    const facade = e.target.closest('.lab-youtube-facade');
+    if (!facade || !root.contains(facade)) return;
+
+    const container = facade.closest('[data-lab-youtube]');
+    if (!container || container.classList.contains('is-playing')) return;
+
+    const id = container.getAttribute('data-lab-youtube');
+    if (!id) return;
+
+    e.preventDefault();
+    const title = container.getAttribute('data-lab-youtube-title') || 'YouTube video';
+    const iframe = document.createElement('iframe');
+    iframe.className = 'lab-youtube-embed';
+    iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+    iframe.title = title;
+    iframe.allow =
+      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+    iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+
+    container.classList.add('is-playing');
+    container.replaceChildren(iframe);
+  });
 }
 
 function initLabSideNavComingSoon(root = document) {
@@ -2472,6 +2523,10 @@ function initLabCarousels(root = document) {
         slide.classList.toggle('is-active', active);
         if (active) slide.removeAttribute('hidden');
         else slide.setAttribute('hidden', '');
+
+        if (!active) {
+          slide.querySelectorAll('[data-lab-youtube]').forEach(resetLabYoutube);
+        }
 
         const video = slide.querySelector('video');
         if (!video) return;
