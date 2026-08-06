@@ -173,44 +173,63 @@
   transform: translateX(100%);
 }
 
-/* Navigation Buttons */
+/* Navigation Buttons — match Lab carousel */
 .carousel-nav {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.3);
-  color: #000000;
-  border: none;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  cursor: none !important;
-  display: flex;
+  z-index: 10;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  z-index: 10;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #2B2B2B;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
 }
 
-.carousel-nav img {
-  width: 20px;
-  height: 20px;
-  filter: brightness(0) invert(1);
-  z-index: 11;
-  pointer-events: none;
+.carousel-nav span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+}
+
+.carousel-nav--prev span {
+  transform: rotate(135deg);
+  margin-left: 3px;
+}
+
+.carousel-nav--next span {
+  transform: rotate(-45deg);
+  margin-right: 3px;
 }
 
 .carousel-nav:hover {
-  background: rgba(0, 0, 0, 0.3);
-  transform: translateY(-50%) scale(1.1);
+  background: #ffffff;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.carousel-nav:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 2px;
 }
 
 .carousel-nav--prev {
-  left: 20px;
+  left: 14px;
 }
 
 .carousel-nav--next {
-  right: 20px;
+  right: 14px;
 }
 
 .carousel-nav.is-hidden {
@@ -218,32 +237,54 @@
   pointer-events: none;
 }
 
-/* Indicators */
+/* Indicators — white pill + charcoal dots, inside image */
 .carousel-indicators {
   position: absolute;
-  bottom: 20px;
+  bottom: 16px;
   left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
   z-index: 10;
-  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transform: translateX(-50%);
   padding: 8px 12px;
-  border-radius: 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .carousel-indicator {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.31);
-  border: none;
-  cursor: none !important;
-  transition: all 0.3s;
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .carousel-indicator.current-slide {
-  background: white;
+  background: #2B2B2B;
+  transform: scale(1.15);
+}
+
+.carousel-indicator:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.carousel-indicator.current-slide:hover {
+  background: #2B2B2B;
+}
+
+.carousel-indicator:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 3px;
 }
 
 /* Robot comparison layout */
@@ -291,9 +332,8 @@
   }
   
   .carousel-nav {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
+    width: 36px;
+    height: 36px;
   }
   
   .carousel-nav--prev {
@@ -302,6 +342,12 @@
   
   .carousel-nav--next {
     right: 10px;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .carousel-nav:hover {
+    transform: translateY(-50%);
   }
 }
 

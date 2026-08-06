@@ -13,18 +13,6 @@
     <script src="../vendor/lenis/lenis.min.js" defer></script>
     <script defer src="../main.js"></script>
 </head>
-<!--
-  Lab page scaffold (not linked from the site nav yet).
-
-  When ready to ship:
-  1. On index.html, about.html, case studies, and this file — change the Lab nav item from:
-       href="#lab" class="nav-icon-link nav-icon-link--lab" … aria-disabled="true"
-     to:
-       href="html/lab.html" (or "lab.html" from /html/) class="nav-icon-link" data-nav-label="The Lab"
-     and update the sr-only text to "Lab".
-  2. Optionally add Lab to each page’s mobile menu.
-  3. Update BRANDING-GUIDELINES.txt (Lab is navigable).
--->
 <body>
     <div class="custom-cursor" aria-hidden="true"></div>
 
@@ -72,7 +60,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#lab" class="nav-icon-link nav-icon-link--lab" data-nav-label="The Lab" aria-disabled="true" aria-current="page">
+                            <a href="#" class="nav-icon-link" data-nav-label="The Lab" aria-current="page">
                                 <span class="nav-icon-wrap" aria-hidden="true">
                                     <img class="nav-icon nav-icon--inactive" src="../media/NavBar/Inactive%20Icons/lab.png" alt="" width="24" height="24" decoding="async">
                                     <img class="nav-icon nav-icon--active" src="../media/NavBar/Active%20Icons/lab.png" alt="" width="24" height="24" decoding="async">
@@ -103,22 +91,177 @@
     <main class="lab-page" id="lab">
         <section class="lab-hero">
             <div class="lab-hero-inner">
-                <h1 class="lab-hero-title">Welcome to The Lab</h1>
-                <p class="lab-body-text">Where I explore new concepts and build things that aren't big enough for a full case study. </p>
+                <div class="lab-intro">
+                    <h1 class="lab-hero-title">Welcome to The Lab</h1>
+                    <p class="lab-body-text">Where I explore new concepts and build things that aren't big enough for a full case study </p>
+                </div>
 
-                <div class="lab-bento" aria-label="Lab experiments">
-                    <div class="lab-bento-cell" aria-hidden="true"></div>
-                    <div class="lab-bento-cell" aria-hidden="true"></div>
-                    <div class="lab-bento-cell" aria-hidden="true"></div>
-                    <div class="lab-bento-cell" aria-hidden="true"></div>
-                    <div class="lab-bento-cell" aria-hidden="true"></div>
-                    <div class="lab-bento-cell" aria-hidden="true"></div>
-                    <div class="lab-bento-cell" aria-hidden="true"></div>
-                    <div class="lab-bento-cell" aria-hidden="true"></div>
-                    <div class="lab-bento-cell" aria-hidden="true"></div>
-                    <div class="lab-bento-cell" aria-hidden="true"></div>
-                    <div class="lab-bento-cell" aria-hidden="true"></div>
-                    <div class="lab-bento-cell" aria-hidden="true"></div>
+                <div class="lab-workspace">
+                    <nav class="lab-side-nav" aria-label="Lab experiments">
+                        <ul>
+                            <li>
+                                <button type="button" class="lab-side-nav-link active" data-lab-panel="desk" aria-controls="lab-panel-desk" aria-current="true">
+                                    Desk Model
+                                </button>
+                            </li>
+                           
+                            <li>
+                                <button type="button" class="lab-side-nav-link" data-lab-panel="beer" aria-controls="lab-panel-beer">
+                                    Beer Branding
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="lab-side-nav-link" data-lab-panel="arduino" aria-controls="lab-panel-arduino">
+                                    Building with Arduino
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    type="button"
+                                    class="lab-side-nav-link lab-side-nav-link--soon"
+                                    data-lab-coming-soon
+                                    aria-disabled="true"
+                                >
+                                    Pushing AI boundaries
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <div class="lab-panels">
+                        <article class="lab-panel is-active" id="lab-panel-desk" data-lab-panel="desk">
+                            <div class="lab-carousel" data-lab-carousel>
+                                <div class="lab-carousel-stage">
+                                    <div class="lab-carousel-slide is-active" data-slide="0">
+                                        <div class="lab-panel-media">
+                                            <img
+                                                src="../media/TheLab/BlenderDesk.webp"
+                                                alt="Blender desk scene"
+                                                class="lab-panel-image"
+                                                width="1200"
+                                                height="800"
+                                                decoding="async"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="lab-carousel-slide" data-slide="1" hidden>
+                                        <div class="lab-panel-media">
+                                            <img
+                                                src="../media/TheLab/Blender02.webp"
+                                                alt="Blender desk scene alternate view"
+                                                class="lab-panel-image"
+                                                width="1200"
+                                                height="800"
+                                                decoding="async"
+                                            >
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="lab-carousel-arrow lab-carousel-arrow--prev" data-lab-carousel-prev aria-label="Previous desk model page">
+                                        <span aria-hidden="true"></span>
+                                    </button>
+                                    <button type="button" class="lab-carousel-arrow lab-carousel-arrow--next" data-lab-carousel-next aria-label="Next desk model page">
+                                        <span aria-hidden="true"></span>
+                                    </button>
+
+                                    <div class="lab-carousel-dots" role="tablist" aria-label="Desk model pages">
+                                        <button type="button" class="lab-carousel-dot is-active" role="tab" aria-selected="true" aria-label="Page 1" data-lab-carousel-dot="0"></button>
+                                        <button type="button" class="lab-carousel-dot" role="tab" aria-selected="false" aria-label="Page 2" data-lab-carousel-dot="1"></button>
+                                    </div>
+                                </div>
+
+                                <div class="lab-panel-copy">
+                                    <p>I love learning new things and experimenting with new tech, so I've been playing around with Blender to create and render 3d models. This model is what my ideal desk setup would look like!</p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="lab-panel" id="lab-panel-micro" data-lab-panel="micro" hidden>
+                            <div class="lab-panel-media" aria-hidden="true"></div>
+                            <div class="lab-panel-copy">
+                                <p>Place holder text</p>
+                               
+                            </div>
+                        </article>
+
+                        <article class="lab-panel" id="lab-panel-beer" data-lab-panel="beer" hidden>
+                            <div class="lab-panel-media">
+                                <img
+                                    src="../media/TheLab/SaltyCove.webp"
+                                    alt="Salty Cove beer branding"
+                                    class="lab-panel-image"
+                                    width="1200"
+                                    height="800"
+                                    decoding="async"
+                                >
+                            </div>
+                            <div class="lab-panel-copy">
+                                <p>I researched and designed a beer brand trying to encapsulate the vibe of the harsh but beautiful shores of the New England Coast. While Still feeling like a coastal beverage.</p>
+                               
+                            </div>
+                        </article>
+
+                        <article class="lab-panel" id="lab-panel-arduino" data-lab-panel="arduino" hidden>
+                            <div class="lab-carousel" data-lab-carousel>
+                                <div class="lab-carousel-stage">
+                                    <div class="lab-carousel-slide is-active" data-slide="0">
+                                        <div class="lab-panel-media">
+                                            <img
+                                                src="../media/TheLab/Arduino/Arduino01.webp"
+                                                alt="Arduino project photo 1"
+                                                class="lab-panel-image"
+                                                width="1200"
+                                                height="800"
+                                                decoding="async"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="lab-carousel-slide" data-slide="1" hidden>
+                                        <div class="lab-panel-media">
+                                            <img
+                                                src="../media/TheLab/Arduino/Arduino02.webp"
+                                                alt="Arduino project photo 2"
+                                                class="lab-panel-image"
+                                                width="1200"
+                                                height="800"
+                                                decoding="async"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="lab-carousel-slide" data-slide="2" hidden>
+                                        <div class="lab-panel-media">
+                                            <video
+                                                class="lab-panel-image lab-panel-video"
+                                                src="../media/TheLab/Arduino/Arduino03.mp4"
+                                                playsinline
+                                                loop
+                                                preload="metadata"
+                                                aria-label="Arduino project video"
+                                            ></video>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="lab-carousel-arrow lab-carousel-arrow--prev" data-lab-carousel-prev aria-label="Previous Arduino page">
+                                        <span aria-hidden="true"></span>
+                                    </button>
+                                    <button type="button" class="lab-carousel-arrow lab-carousel-arrow--next" data-lab-carousel-next aria-label="Next Arduino page">
+                                        <span aria-hidden="true"></span>
+                                    </button>
+
+                                    <div class="lab-carousel-dots" role="tablist" aria-label="Arduino pages">
+                                        <button type="button" class="lab-carousel-dot is-active" role="tab" aria-selected="true" aria-label="Page 1" data-lab-carousel-dot="0"></button>
+                                        <button type="button" class="lab-carousel-dot" role="tab" aria-selected="false" aria-label="Page 2" data-lab-carousel-dot="1"></button>
+                                        <button type="button" class="lab-carousel-dot" role="tab" aria-selected="false" aria-label="Page 3" data-lab-carousel-dot="2"></button>
+                                    </div>
+                                </div>
+
+                                <div class="lab-panel-copy">
+                                    <p>I tried to work with arduino to build a hermit crab that react to touch and vibrations. There were 2 different reactions from the crab: the first is if you touch the crab without giving it a food offering, give the crab a food offering, and then touching the crab.   </p>
+                                    
+                                </div>
+                            </div>
+                        </article>
+                    </div>
                 </div>
             </div>
         </section>

@@ -741,6 +741,8 @@ function shouldAnimateScrollFade(element) {
   if (element.tagName === 'H3' && element.closest('.case-body')) return false;
   if (element.closest('.skills-carousel')) return false;
   if (element.classList.contains('case-section') && element.closest('.case-layout')) return false;
+  // Lab workspace should be fully visible on load — no late scroll reveals
+  if (element.closest('.lab-page')) return false;
   return true;
 }
 
@@ -1186,6 +1188,15 @@ function positionNavLabel(link) {
   const linkRect = link.getBoundingClientRect();
   const centerX = linkRect.left + linkRect.width / 2 - groupRect.left;
   mainNavLabel.style.left = `${centerX}px`;
+  syncNavLabelActiveStyle(link);
+}
+
+function syncNavLabelActiveStyle(link = navLabelHoverLink) {
+  if (!mainNavLabel || !link) return;
+  const isActiveTarget =
+    link.classList.contains('active') ||
+    link.getAttribute('aria-current') === 'page';
+  mainNavLabel.classList.toggle('is-active-target', isActiveTarget);
 }
 
 function showNavLabel(link) {
@@ -1210,8 +1221,16 @@ function showNavLabel(link) {
 }
 
 function hideNavLabel() {
-  mainNavLabel?.classList.remove('is-visible');
+  if (!mainNavLabel) return;
+  mainNavLabel.classList.remove('is-visible');
   navLabelHoverLink = null;
+
+  // Keep charcoal/white during the exit fade — only clear after it finishes.
+  window.setTimeout(() => {
+    if (!mainNavLabel.classList.contains('is-visible')) {
+      mainNavLabel.classList.remove('is-active-target');
+    }
+  }, 280);
 }
 
 function hideMainNavMarker() {
@@ -1296,9 +1315,9 @@ function resolveInitialNavHref() {
   if (isLabPage) {
     const lab = navLinkList.find((a) => {
       const label = a.getAttribute('data-nav-label');
-      return a.classList.contains('nav-icon-link--lab') || label === 'The Lab' || label === 'Lab';
+      return label === 'The Lab' || label === 'Lab';
     });
-    return lab?.getAttribute('href') || '#lab';
+    return lab?.getAttribute('href') || '#';
   }
 
   const hash = window.location.hash;
@@ -1325,17 +1344,6 @@ function setActiveNav(href, { force = false } = {}) {
 
   let activeLink = null;
   navLinks.forEach((a) => {
-    // Lab is not an active destination until the page is linked from the nav —
-    // except when viewing lab.html directly while building it.
-    const navLabel = a.getAttribute('data-nav-label');
-    const isLabLink =
-      a.classList.contains('nav-icon-link--lab') || navLabel === 'The Lab' || navLabel === 'Lab';
-    if (isLabLink && !isLabPage) {
-      a.classList.remove('active');
-      a.removeAttribute('aria-current');
-      return;
-    }
-
     const match = a.getAttribute('href') === href;
     a.classList.toggle('active', match);
     if (match) {
@@ -1348,6 +1356,9 @@ function setActiveNav(href, { force = false } = {}) {
 
   if (activeLink) positionMainNavMarker(activeLink);
   else hideMainNavMarker();
+
+  // If the user is still hovering a nav icon, refresh charcoal/white vs white/grey.
+  if (navLabelHoverLink) syncNavLabelActiveStyle(navLabelHoverLink);
 }
 
 function initMainNavMarker() {
@@ -1422,7 +1433,6 @@ function initMainNavMarker() {
       showNavLabel(link);
     });
     mainFloatingNav.addEventListener('pointerleave', hideNavLabel);
-    initLabComingSoonTip();
   }
 
   // Keyboard: show label while a nav link is focused.
@@ -1432,42 +1442,6 @@ function initMainNavMarker() {
       if (!mainFloatingNav?.matches(':hover')) hideNavLabel();
     });
   });
-}
-
-function initLabComingSoonTip() {
-  if (isLabPage) return;
-  const labLink = mainFloatingNav?.querySelector(
-    '.nav-icon-link--lab, a[data-nav-label="The Lab"], a[data-nav-label="Lab"]'
-  );
-  if (!labLink || !mainFloatingNav) return;
-
-  let tip = document.querySelector('.nav-lab-tip');
-  if (!tip) {
-    tip = document.createElement('div');
-    tip.className = 'nav-lab-tip';
-    tip.setAttribute('aria-hidden', 'true');
-    tip.textContent = 'Coming soon!';
-    document.body.appendChild(tip);
-  }
-
-  const moveTip = (e) => {
-    tip.style.left = `${e.clientX}px`;
-    tip.style.top = `${e.clientY}px`;
-  };
-
-  const showTip = (e) => {
-    moveTip(e);
-    tip.classList.add('is-visible');
-  };
-
-  const hideTip = () => {
-    tip.classList.remove('is-visible');
-  };
-
-  labLink.addEventListener('pointerenter', showTip);
-  labLink.addEventListener('pointermove', moveTip);
-  labLink.addEventListener('pointerleave', hideTip);
-  labLink.addEventListener('blur', hideTip);
 }
 
 function lockMainNavUntilScrollSettles() {
@@ -1536,18 +1510,6 @@ document.addEventListener('click', function(e) {
   if (!a || a.target === '_blank') return;
   if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
-  // Lab is a placeholder — show coming-soon tip behavior only, no navigation.
-  const navLabel = a.getAttribute('data-nav-label');
-  if (
-    a.classList.contains('nav-icon-link--lab') ||
-    navLabel === 'The Lab' ||
-    navLabel === 'Lab'
-  ) {
-    e.preventDefault();
-    e.stopPropagation();
-    return;
-  }
-
   const href = a.getAttribute('href');
   if (!href || href === '#') return;
 
@@ -1585,7 +1547,7 @@ document.addEventListener('click', function(e) {
     }
   }
 
-  // Mobile / other links between Home and About — keep marker continuity.
+  // Mobile / other links between Home, Lab, and About — keep marker continuity.
   const crossLink = e.target.closest('a[href]');
   if (
     crossLink &&
@@ -1597,8 +1559,11 @@ document.addEventListener('click', function(e) {
   ) {
     const href = crossLink.getAttribute('href') || '';
     const toAbout = href.includes('about.html');
-    const toHomeFromAbout = isAboutPage && (href.includes('index.html') || href === '../' || href === '/');
-    if (toAbout || toHomeFromAbout) {
+    const toLab = href.includes('lab.html');
+    const toHomeFromStandalone =
+      (isAboutPage || isLabPage) &&
+      (href.includes('index.html') || href === '../' || href === '/');
+    if (toAbout || toLab || toHomeFromStandalone) {
       e.preventDefault();
       navigateWithNavHandoff(crossLink.href);
       return;
@@ -2369,6 +2334,180 @@ function initWorkCardVideos() {
 }
 
 document.addEventListener('DOMContentLoaded', initWorkCardVideos);
+
+// ==========================================
+// LAB PAGE — experiment side nav panels
+// ==========================================
+function initLabPanels() {
+  const workspace = document.querySelector('.lab-workspace');
+  if (!workspace) return;
+
+  const links = Array.from(workspace.querySelectorAll('.lab-side-nav-link[data-lab-panel]'));
+  const panels = Array.from(workspace.querySelectorAll('.lab-panel[data-lab-panel]'));
+  if (!links.length || !panels.length) return;
+
+  let selectedId = links[0].getAttribute('data-lab-panel');
+
+  function showPanelContent(id) {
+    panels.forEach((panel) => {
+      const match = panel.getAttribute('data-lab-panel') === id;
+      panel.classList.toggle('is-active', match);
+      if (match) panel.removeAttribute('hidden');
+      else panel.setAttribute('hidden', '');
+
+      panel.querySelectorAll('video').forEach((video) => {
+        if (match && panel.querySelector('.lab-carousel-slide.is-active video') === video) {
+          video.muted = false;
+          const playPromise = video.play();
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+          }
+        } else {
+          video.pause();
+          video.currentTime = 0;
+        }
+      });
+    });
+  }
+
+  function syncSelectedStyles() {
+    links.forEach((link) => {
+      const match = link.getAttribute('data-lab-panel') === selectedId;
+      link.classList.toggle('active', match);
+      if (match) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
+    });
+  }
+
+  function selectPanel(id) {
+    if (!id) return;
+    selectedId = id;
+    syncSelectedStyles();
+    showPanelContent(id);
+  }
+
+  links.forEach((link) => {
+    const id = link.getAttribute('data-lab-panel');
+    if (!id) return;
+    link.addEventListener('click', () => selectPanel(id));
+  });
+
+  // Always land on the first experiment section
+  selectPanel(selectedId);
+
+  initLabCarousels(workspace);
+  initLabSideNavComingSoon(workspace);
+}
+
+function initLabSideNavComingSoon(root = document) {
+  const buttons = Array.from(root.querySelectorAll('.lab-side-nav-link[data-lab-coming-soon]'));
+  if (!buttons.length) return;
+
+  let tip = document.querySelector('.nav-lab-tip');
+  if (!tip) {
+    tip = document.createElement('div');
+    tip.className = 'nav-lab-tip';
+    tip.setAttribute('aria-hidden', 'true');
+    tip.textContent = 'Coming soon!';
+    document.body.appendChild(tip);
+  }
+
+  let hideTimer = null;
+
+  const moveTip = (e) => {
+    tip.style.left = `${e.clientX}px`;
+    tip.style.top = `${e.clientY}px`;
+  };
+
+  const showTip = (e) => {
+    if (hideTimer) {
+      clearTimeout(hideTimer);
+      hideTimer = null;
+    }
+    moveTip(e);
+    tip.classList.add('is-visible');
+  };
+
+  const hideTip = () => {
+    tip.classList.remove('is-visible');
+  };
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('pointerenter', showTip);
+    btn.addEventListener('pointermove', moveTip);
+    btn.addEventListener('pointerleave', hideTip);
+    btn.addEventListener('blur', hideTip);
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const rect = btn.getBoundingClientRect();
+      tip.style.left = `${rect.left + rect.width * 0.65}px`;
+      tip.style.top = `${rect.top + rect.height / 2}px`;
+      tip.classList.add('is-visible');
+      if (hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(hideTip, 1400);
+    });
+  });
+}
+
+function initLabCarousels(root = document) {
+  const carousels = Array.from(root.querySelectorAll('[data-lab-carousel]'));
+  carousels.forEach((carousel) => {
+    const slides = Array.from(carousel.querySelectorAll('.lab-carousel-slide'));
+    const dots = Array.from(carousel.querySelectorAll('[data-lab-carousel-dot]'));
+    const prevBtn = carousel.querySelector('[data-lab-carousel-prev]');
+    const nextBtn = carousel.querySelector('[data-lab-carousel-next]');
+    if (slides.length < 2) return;
+
+    let index = Math.max(
+      0,
+      slides.findIndex((slide) => slide.classList.contains('is-active'))
+    );
+
+    function goTo(nextIndex) {
+      const total = slides.length;
+      index = ((nextIndex % total) + total) % total;
+
+      slides.forEach((slide, i) => {
+        const active = i === index;
+        slide.classList.toggle('is-active', active);
+        if (active) slide.removeAttribute('hidden');
+        else slide.setAttribute('hidden', '');
+
+        const video = slide.querySelector('video');
+        if (!video) return;
+        if (active) {
+          video.muted = false;
+          const playPromise = video.play();
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+          }
+        } else {
+          video.pause();
+          video.currentTime = 0;
+        }
+      });
+
+      dots.forEach((dot, i) => {
+        const active = i === index;
+        dot.classList.toggle('is-active', active);
+        dot.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+    }
+
+    prevBtn?.addEventListener('click', () => goTo(index - 1));
+    nextBtn?.addEventListener('click', () => goTo(index + 1));
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const i = Number(dot.getAttribute('data-lab-carousel-dot'));
+        if (!Number.isNaN(i)) goTo(i);
+      });
+    });
+
+    goTo(index);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initLabPanels);
 
 // ==========================================
 // LOADING COMPLETION EVENT
