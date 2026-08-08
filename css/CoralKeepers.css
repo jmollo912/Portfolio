@@ -374,6 +374,13 @@
   .coral-features-row {
     grid-template-columns: 1fr;
   }
+
+  /* Defensive cap so any unusually tall prototype photo stays within the 35-40vh mobile budget */
+  .coral-prototype-img {
+    max-height: 40vh;
+    width: auto;
+    margin-inline: auto;
+  }
 }
 
 .coral-solution-cta {

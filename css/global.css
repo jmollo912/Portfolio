@@ -2014,13 +2014,14 @@ body {
 
 @media (max-width: 700px) {
   .work-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 
   .work-card {
-    padding: 16px;
-    gap: 14px;
+    padding: 12px;
+    gap: 10px;
+    border-radius: 16px;
   }
 
   .work-card--media {
@@ -2041,6 +2042,45 @@ body {
     height: 100%;
     min-height: 0;
     aspect-ratio: auto;
+  }
+
+  /* Compact corner + info bar so both fit a 2-up mobile grid */
+  .work-card-corner {
+    width: 34px;
+    height: 34px;
+    top: 8px;
+    right: 8px;
+  }
+
+  .work-card-corner-arrow {
+    width: 13px;
+    height: 13px;
+  }
+
+  .work-card-hover-bar {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    white-space: normal;
+  }
+
+  .work-card-hover-title {
+    font-size: 14px;
+  }
+
+  .work-card-tags--inline {
+    flex-wrap: wrap;
+  }
+
+  .work-card-tag {
+    font-size: 11px;
+    padding: 5px 10px;
+    white-space: nowrap;
   }
 }
 
@@ -4907,6 +4947,20 @@ body:has(.case-layout) .case-main .footer-pill-link :is(span, .footer-pill-icon,
   z-index: 2;
 }
 
+@media (max-width: 600px) {
+  /* Keep the tall before/after portrait shots within the 35-40vh mobile budget */
+  .comparison-container {
+    height: 38vh;
+    max-height: 320px;
+  }
+
+  .comparison-image {
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+}
+
 .comparison-before {
   position: absolute;
   top: 0;
@@ -5271,6 +5325,15 @@ body:has(.case-layout) .case-main .footer-pill-link :is(span, .footer-pill-icon,
   height: auto;
   border-radius: 12px;
   margin-top: 24px;
+}
+
+@media (max-width: 600px) {
+  /* Defensive cap so any unusually tall content shot stays within the 35-40vh mobile budget */
+  .case-content-image {
+    max-height: 40vh;
+    width: auto;
+    margin-inline: auto;
+  }
 }
 
 /* More specific rule to override .case-content p */
@@ -5698,12 +5761,19 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
   }
 
   .case-more-work-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
   }
 
   .case-more-work-media {
     border-radius: 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  .case-more-work-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 }
 
@@ -5956,7 +6026,7 @@ body :where(
     margin-left: 0;
   }
 
-  /* Work / case cards */
+  /* Work / case cards — no hover-dependent reveal on touch; info stays on (active), never off (no hover) */
   .work-card:hover {
     transform: none;
   }
@@ -5969,6 +6039,17 @@ body :where(
   }
   .case-more-work-card:hover {
     transform: none;
+  }
+
+  .work-card:not([data-disabled="true"]) .work-card-corner {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .work-card--media .work-card-hover-bar,
+  .work-card-image-wrap--media .work-card-hover-bar {
+    transform: translateY(0);
+    opacity: 1;
   }
 
   /* About CTA link */
@@ -6078,5 +6159,9 @@ body :where(
 
   .case-floating-nav .case-nav-link:hover {
     transform: none;
+  }
+
+  .case-card-flock:hover .case-image {
+    transform: scale(1);
   }
 }

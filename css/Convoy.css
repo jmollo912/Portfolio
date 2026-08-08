@@ -181,8 +181,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 0;
   border-radius: 10px;
@@ -246,9 +246,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 2px;
   transform: translateX(-50%);
-  padding: 8px 12px;
+  padding: 4px 6px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.88);
   box-shadow:
@@ -256,29 +256,42 @@
     0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Button itself is the tap target (32px); visible dot is a smaller centered pseudo-element */
 .carousel-indicator {
-  width: 8px;
-  height: 8px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.2);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+}
+
+.carousel-indicator::after {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.2);
   transition:
     background-color 0.2s ease,
     transform 0.2s ease;
 }
 
-.carousel-indicator.current-slide {
+.carousel-indicator.current-slide::after {
   background: #2B2B2B;
   transform: scale(1.15);
 }
 
-.carousel-indicator:hover {
+.carousel-indicator:hover::after {
   background: rgba(0, 0, 0, 0.4);
 }
 
-.carousel-indicator.current-slide:hover {
+.carousel-indicator.current-slide:hover::after {
   background: #2B2B2B;
 }
 
@@ -325,15 +338,18 @@
   }
 }
 
+@media (max-width: 600px) {
+  /* Keep comparison photos within the 35-40vh mobile image budget */
+  .robot-comparison-image {
+    height: 34vh;
+    max-height: 280px;
+  }
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .carousel-track-container {
     height: 300px;
-  }
-  
-  .carousel-nav {
-    width: 36px;
-    height: 36px;
   }
   
   .carousel-nav--prev {

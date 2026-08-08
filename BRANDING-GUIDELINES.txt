@@ -7,7 +7,7 @@ Read this file before changing design, copy, or styles on this project.
 Giuseppe maintains this file. Edit it anytime in VS Code, Cursor, or any text editor.
 When values here change, update css/global.css (and case-specific CSS) to match.
 
-Last updated: 2026-06-04
+Last updated: 2026-08-08
 
 
 BRAND OVERVIEW
@@ -72,13 +72,13 @@ Custom cursor:
 UI COMPONENTS
 -------------
 1. Floating navigation — white pill with Home / Work / Lab / About icons (media/NavBar); charcoal (#2B2B2B) rounded square marker slides to active item; white active icon / grey inactive icon; grey Home/Work/The Lab/About label appears under the hovered icon only (hidden otherwise) in a small white rounded box with light shadow; when the hovered icon is the active page, that label box is charcoal with white text. Lab navigates to html/lab.html (same marker handoff as About). Top-left gmdesign.svg wordmark (17px tall, left: 28px) links home; top-right Resume charcoal pill (same as footer Resume — white text, hover keeps charcoal + scale 1.12 / rotate 2deg, download icon reveals). Cross-page (index ↔ lab ↔ about): ?navFrom= handoff slides marker from previous tab. Resume also in mobile menu.
-2. Case study cards (home page) — white pill bottom-left; project name black; tag at 40% opacity. Hover scale uses footer CTA timing (transform 0.2s ease). Cursor pill shows white text (e.g. "View Project" or custom data-cursor-label).
+2. Case study cards (home page) — white pill bottom-left; project name black; tag at 40% opacity. Hover scale uses footer CTA timing (transform 0.2s ease). Cursor pill shows white text (e.g. "View Project" or custom data-cursor-label). Mobile (<=700px): grid is 2-up (not 1-up) with a compact 12px gap; corner arrow shrinks to 34px and the project-name/tag pill is always visible (stacked, wraps) instead of only appearing on hover, since hover isn't a reliable mobile input.
 3. Case study section headers — section label at 40% opacity; heading and intro full black.
 4. Buttons — rounded about 10px; primary charcoal (#2B2B2B) with white text; hover keeps charcoal and scales to 1.12 (no rotate by default). Secondary white pill with black text, same scale-only hover. Rotate(2deg) on hover for nav Resume, footer-pill-link (footer bar + CBS Learn More Contact), and profile-card Connect.
 5. Custom cursor — currently DISABLED (native pointer). Re-enable via CUSTOM_CURSOR_ENABLED in main.js + CSS toggle in global.css.
 6. Motion — scroll fade, nav marker; honor reduced-motion in CSS. Floating nav, gm logo, and Resume stay fixed while scrolling.
-7. Case-study section navigation — left-side white rounded stack (~17px type). Active text charcoal #2B2B2B, inactive #B8B8B8. Matching-width “Back” is always pinned near the top (including the hero). Section names ride up with Overview, then stick just under Back. Back: grey at rest, charcoal + left arrow reveal + scale 1.12 on hover (no rotate). Case content uses equal side gutters (~168–240px desktop, tighter ≤900px) so the nav stays in the left margin; below 600px gutters drop to 0 and container padding is 12px. Uses scroll spy. End of each case study: “More work” section label only, then a 3-up thumbnail grid of the other projects (cover image + title; no current project; hover scale 1.02 / touch: no transform) linking to those case studies.
-8. Lab experiments — intro block on top (title + muted body); below it a two-column workspace with a fixed-width left experiment nav (~15rem) and right media + copy so active nav type size doesn’t change image width. Nav is vertically centered to the media/image frame height (not the full panel with copy). Nav: 17px inactive rgba(0,0,0,0.38); active charcoal #2B2B2B at 20px / weight 600; hover charcoal + scale 1.08 (style only — sections change on click, not hover preview). “Building with New AI” is a non-selectable coming-soon item: hover (or tap) shows a charcoal “Coming soon!” tip. Default first section selected on load. Desk Model and Arduino use the same multi-page carousel with in-image prev/next arrows and dots. Arduino page 3 is a YouTube facade (thumbnail + play) that embeds https://youtu.be/dX4d0BOOTt8 inline on click; leaving the slide/panel resets to the thumbnail.
+7. Case-study section navigation — left-side white rounded stack (~17px type). Active text charcoal #2B2B2B, inactive #B8B8B8. Matching-width “Back” is always pinned near the top (including the hero). Section names ride up with Overview, then stick just under Back. Back: grey at rest, charcoal + left arrow reveal + scale 1.12 on hover (no rotate). Case content uses equal side gutters (~168–240px desktop, tighter ≤900px) so the nav stays in the left margin; below 600px gutters drop to 0 and container padding is 12px. Uses scroll spy. Mobile back button, hamburger, mobile dropdown nav, and the desktop floating nav/back group are wrapped in a single `<header class="case-site-header">` landmark (all children keep their existing fixed positioning, so this is a pure a11y/SEO wrapper with no visual change). End of each case study: “More work” section label only, then a thumbnail grid of the other projects (cover image + title; no current project; hover scale 1.02 / touch: no transform) linking to those case studies — 3-up desktop, 2-up mobile (<=700px), 1-up only below 420px.
+8. Lab experiments — intro block on top (title + muted body); below it a two-column workspace with a fixed-width left experiment nav (~15rem) and right media + copy so active nav type size doesn’t change image width. Nav is vertically centered to the media/image frame height (not the full panel with copy). Nav: 17px inactive rgba(0,0,0,0.38); active charcoal #2B2B2B at 20px / weight 600; hover charcoal + scale 1.08 (style only — sections change on click, not hover preview). Each nav link has 12px vertical padding (>=44px tap height) and each panel `<article>` carries a visually-hidden (`sr-only`) `<h2>` matching its nav label, so the page reads h1 → h2 → h3 (footer) with no skipped level. “Building with New AI” is a non-selectable coming-soon item: hover (or tap) shows a charcoal “Coming soon!” tip. Default first section selected on load. Desk Model and Arduino use the same multi-page carousel with in-image prev/next arrows and dots; arrows are 44x44 and dots have a 32x32 invisible tap target around the visible 8px dot (visual size unchanged). Arduino page 3 is a YouTube facade (thumbnail + play) that embeds https://youtu.be/dX4d0BOOTt8 inline on click; leaving the slide/panel resets to the thumbnail.
 
 
 LOGO AND IDENTITY
@@ -95,6 +95,23 @@ Language: English (lang="en")
 Page titles: {Page} — Giuseppe Mollo
 One logical h1 per page; case studies use project title in overview.
 Alt text on meaningful images; decorative hero floats may use empty alt.
+Every page has viewport, canonical, meta description, and a full Open Graph +
+Twitter card set (og:type/title/description/url/image/site_name +
+twitter:card=summary_large_image). Domain is https://gmollodesign.com (from
+CNAME) — keep og:url/og:image absolute against that domain, and give every
+page a distinct og:image (existing cover/hero art, no new assets).
+Mobile image budget: on screens <600px, content images should not exceed
+~35-40vh unless they're a full-bleed hero (case-hero-main-image, case
+heroes) — enforced via vh-capped heights/max-heights on case-content-image,
+coral-prototype-img, comparison-image (FlockSports), and
+robot-comparison-image (Convoy).
+Touch targets: interactive controls target >=44x44px (lab/Convoy carousel
+arrows, lab side-nav links, case-hamburger, nav-icon-link). Carousel page
+dots (lab-carousel-dot, carousel-indicator) keep their small 8px visible
+dot but sit inside a 32x32 invisible button so the tap area is much larger
+without changing the look. Hover-only reveals (index work-card title/tag
+pill and corner arrow) are always-on below 1199px instead of relying on
+:hover, since touch has no reliable hover state.
 
 
 WHERE STYLES LIVE
@@ -138,3 +155,4 @@ CHANGELOG (edit when brand changes)
 2026-08-05 — CBS Learn More Contact uses footer-pill-link (same markup/styles as footer CTAs).
 2026-08-06 — Hero “Welcome to my portfolio!” letters thicken 600→900 on hover after animation (Inter variable, 0.2s ease).
 2026-08-06 — Lab page: left experiment nav + swapping content panel (replaces bento grid).
+2026-08-08 — Mobile SEO/layout pass: added full Open Graph + Twitter card tags to all 7 pages; wrapped case-study mobile/floating nav in a <header> landmark; added sr-only <h2>s to Lab panels (fixes h1→h3 heading skip); home "My Favorite Work" grid and case-study "More work" grid now go 2-up (not 1-up) on phones with tighter gaps; index work-card corner arrow + title/tag pill are always visible below 1199px instead of hover-only; bumped lab/Convoy carousel arrows to 44x44 and carousel dots to a 32x32 tap target (visual dot unchanged); added width/height (or a 35-40vh mobile max-height) to CLS-risk images — case hero images, case-content-image, coral-prototype-img, comparison-image, robot-comparison-image; added loading="lazy" to remaining below-the-fold Coral Keepers Problem/Research images and fixed several copy-pasted duplicate alt texts in that section.
