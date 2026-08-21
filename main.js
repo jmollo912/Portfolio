@@ -303,10 +303,8 @@ function initHeroCursorAnimation() {
     br: document.getElementById('hero-h-br'),
   };
 
-  const FIRST_TEXT = "Hey, I’m Giuseppe";
   const FINAL_TEXT = "Welcome to my portfolio!";
   const TYPE_CHAR_MS = 61;
-  const DELETE_CHAR_MS = 41;
   const CURSOR_ENTRANCE_MS = 440;
   const BOX_H_PAD = 28;
   let measureCanvas;
@@ -342,18 +340,12 @@ function initHeroCursorAnimation() {
     let finalH = Math.min(H * 0.31, 118, maxH);
     let finalFS = Math.min(finalH * 0.42, 48);
 
-    while (finalFS > 14 && Math.max(
-      measureTextWidth(FIRST_TEXT, finalFS, 600),
-      measureTextWidth(FINAL_TEXT, finalFS, 900)
-    ) + BOX_H_PAD > finalW) {
+    while (finalFS > 14 && measureTextWidth(FINAL_TEXT, finalFS, 900) + BOX_H_PAD > finalW) {
       finalFS -= 1;
     }
     finalH = Math.min(Math.max(finalFS / 0.42, finalFS + 16), maxH);
 
-    const textW = Math.max(
-      measureTextWidth(FIRST_TEXT, finalFS, 600),
-      measureTextWidth(FINAL_TEXT, finalFS, 900)
-    ) + BOX_H_PAD;
+    const textW = measureTextWidth(FINAL_TEXT, finalFS, 900) + BOX_H_PAD;
     finalW = Math.min(Math.max(finalW, textW), maxW);
 
     // Initial box — always smaller than final so the expand phase grows the box
@@ -504,27 +496,19 @@ function initHeroCursorAnimation() {
     //  0 cursor enters from bottom-right (move + fade in)
     //  1 hold cursor at draw start
     //  2 drag down-right to draw the box
-    //  3 type "Hey, I’m Giuseppe"
-    //  4 hold after first line
-    //  5 delete first line
-    //  6 type "Welcome to my portfolio"
-    //  7 hold after second line
-    //  8 move cursor to top-right handle
-    //  9 expand animation (cursor follows top-right handle)
-    // 10 hold after expand
-    // 11 cursor fade out
-    // 12 highlight box + handles fade out (text remains)
-    const TYPE_FIRST_MS = FIRST_TEXT.length * TYPE_CHAR_MS;
-    const DELETE_MS = FIRST_TEXT.length * DELETE_CHAR_MS;
-    const TYPE_SECOND_MS = FINAL_TEXT.length * TYPE_CHAR_MS;
+    //  3 type "Welcome to my portfolio"
+    //  4 hold after welcome line
+    //  5 move cursor to top-right handle
+    //  6 expand animation (cursor follows top-right handle)
+    //  7 hold after expand
+    //  8 cursor fade out
+    //  9 highlight box + handles fade out (text remains)
+    const TYPE_MS = FINAL_TEXT.length * TYPE_CHAR_MS;
     const phases = [
       CURSOR_ENTRANCE_MS,
       210,
       545,
-      TYPE_FIRST_MS,
-      240,
-      DELETE_MS,
-      TYPE_SECOND_MS,
+      TYPE_MS,
       270,
       410,
       610,
@@ -555,19 +539,6 @@ function initHeroCursorAnimation() {
 
       if (el < ends[3]) {
         const t = pT(3, el);
-        return FIRST_TEXT.slice(0, Math.floor(t * FIRST_TEXT.length));
-      }
-
-      if (el < ends[4]) return FIRST_TEXT;
-
-      if (el < ends[5]) {
-        const t = pT(5, el);
-        const remaining = Math.ceil((1 - t) * FIRST_TEXT.length);
-        return FIRST_TEXT.slice(0, remaining);
-      }
-
-      if (el < ends[6]) {
-        const t = pT(6, el);
         return FINAL_TEXT.slice(0, Math.floor(t * FINAL_TEXT.length));
       }
 
@@ -609,58 +580,51 @@ function initHeroCursorAnimation() {
         showBox(true);
         setCursor(m.drawStartX + w, m.drawStartY + h);
         clearTyped();
-      } else if (el < ends[5]) {
-        // 3–5. Type first line, hold, delete
-        setCursorOpacity(1);
-        setTypedPlain(typedText);
-        applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
-        showBox(true);
-        setCursor(m.drawEndX, m.drawEndY);
-      } else if (el < ends[7]) {
-        // 6–7. Type welcome message + hold (letter spans already match final layout)
+      } else if (el < ends[4]) {
+        // 3–4. Type welcome message + hold
         setCursorOpacity(1);
         setTypedLetters(typedText, { interactive: false });
         applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
         showBox(true);
         setCursor(m.drawEndX, m.drawEndY);
-      } else if (el < ends[8]) {
-        // 8. Move from bottom-right corner → top-right handle
+      } else if (el < ends[5]) {
+        // 5. Move from bottom-right corner → top-right handle
         setCursorOpacity(1);
         setTypedLetters(FINAL_TEXT, { interactive: false });
         applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
         showBox(true);
-        const p = easeInOut(pT(8, el));
+        const p = easeInOut(pT(5, el));
         setCursor(lerp(m.drawEndX, m.trHandleX, p), lerp(m.drawEndY, m.trHandleY, p));
-      } else if (el < ends[9]) {
-        // 9. Expand the box (cursor follows top-right handle)
+      } else if (el < ends[6]) {
+        // 6. Expand the box (cursor follows top-right handle)
         setCursorOpacity(1);
         setTypedLetters(FINAL_TEXT, { interactive: false });
-        const p = easeInOut(pT(9, el));
+        const p = easeInOut(pT(6, el));
         applyBox(m.boxCX, m.boxCY, lerp(m.targetW, m.finalW, p), lerp(m.targetH, m.finalH, p), lerp(m.targetFS, m.finalFS, p), m.hs);
         showBox(true);
         setCursor(lerp(m.trHandleX, m.finalTrX, p), lerp(m.trHandleY, m.finalTrY, p));
-      } else if (el < ends[10]) {
-        // 10. Hold after expand
+      } else if (el < ends[7]) {
+        // 7. Hold after expand
         setCursorOpacity(1);
         setTypedLetters(FINAL_TEXT, { interactive: false });
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         showBox(true);
         setCursor(m.finalTrX, m.finalTrY);
-      } else if (el < ends[11]) {
-        // 11. Cursor fade out
+      } else if (el < ends[8]) {
+        // 8. Cursor fade out
         setTypedLetters(FINAL_TEXT, { interactive: false });
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         showBox(true);
         setHighlightOpacity(1);
         setCursor(m.finalTrX, m.finalTrY);
-        setCursorOpacity(1 - pT(11, el));
-      } else if (el < ends[12]) {
-        // 12. Highlight fade out — leave title text only
+        setCursorOpacity(1 - pT(8, el));
+      } else if (el < ends[9]) {
+        // 9. Highlight fade out — leave title text only
         setTypedLetters(FINAL_TEXT, { interactive: false });
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         textbox.style.opacity = '1';
         setCursorOpacity(0);
-        setHighlightOpacity(1 - easeOut(pT(12, el)));
+        setHighlightOpacity(1 - easeOut(pT(9, el)));
       } else {
         animationComplete = true;
         applyFinalState();
@@ -743,6 +707,8 @@ function shouldAnimateScrollFade(element) {
   if (element.classList.contains('case-section') && element.closest('.case-layout')) return false;
   // Lab workspace should be fully visible on load — no late scroll reveals
   if (element.closest('.lab-page')) return false;
+  // Favorite Work cards fade as one unit (image + meta text together)
+  if (element.closest('.work-card') && !element.classList.contains('work-card')) return false;
   return true;
 }
 
@@ -1968,48 +1934,49 @@ document.addEventListener('DOMContentLoaded', initLogoBreakdownAnimation);
 // ==========================================
 function initImageComparison() {
   const containers = document.querySelectorAll('.comparison-container');
-  
-  containers.forEach(container => {
+
+  containers.forEach((container) => {
     const slider = container.querySelector('.comparison-slider');
     const beforeWrapper = container.querySelector('.comparison-before-wrapper');
+    if (!slider || !beforeWrapper) return;
+
     let isDragging = false;
-    
+
     function updateSliderPosition(x) {
       const rect = container.getBoundingClientRect();
       let position = (x - rect.left) / rect.width;
       position = Math.max(0, Math.min(1, position));
-      
+
       const percentage = position * 100;
       slider.style.left = percentage + '%';
       beforeWrapper.style.width = percentage + '%';
     }
-    
-    // Mouse events
+
     container.addEventListener('mousedown', (e) => {
       isDragging = true;
       updateSliderPosition(e.clientX);
     });
-    
+
     document.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
       updateSliderPosition(e.clientX);
     });
-    
+
     document.addEventListener('mouseup', () => {
       isDragging = false;
     });
-    
-    // Touch events
+
     container.addEventListener('touchstart', (e) => {
+      if (!e.touches[0]) return;
       isDragging = true;
       updateSliderPosition(e.touches[0].clientX);
     });
-    
+
     document.addEventListener('touchmove', (e) => {
-      if (!isDragging) return;
+      if (!isDragging || !e.touches[0]) return;
       updateSliderPosition(e.touches[0].clientX);
     });
-    
+
     document.addEventListener('touchend', () => {
       isDragging = false;
     });
@@ -2580,4 +2547,33 @@ function dispatchLoadingComplete() {
     window.dispatchEvent(event);
 }
 
+function initCbsPivotFlow() {
+  const flow = document.querySelector('[data-cbs-pivot-flow]');
+  if (!flow) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) {
+    flow.classList.add('is-playing');
+    return;
+  }
+
+  const reveal = () => flow.classList.add('is-playing');
+
+  if (!('IntersectionObserver' in window)) {
+    reveal();
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      reveal();
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.35 });
+
+  observer.observe(flow);
+}
+
+document.addEventListener('DOMContentLoaded', initCbsPivotFlow);
 document.addEventListener('DOMContentLoaded', dispatchLoadingComplete);

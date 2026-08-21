@@ -101,7 +101,8 @@ html .lab-carousel-dot,
 html .lab-youtube-facade,
 html .carousel-nav,
 html .carousel-indicator,
-html .case-more-work-card {
+html .case-more-work-card,
+html .case-more-work-grid .work-card {
   cursor: pointer !important;
 }
 
@@ -1720,9 +1721,8 @@ body {
   padding-inline: 15px;
 }
 
-/* Same display title style as Lab “Welcome to The Lab” */
-.lab-hero-title,
-.work-section-title {
+/* Lab “Welcome to The Lab” display title */
+.lab-hero-title {
   margin: 0 0 12px;
   font-size: clamp(32px, 3.5vw, 52px);
   font-weight: 500;
@@ -1732,29 +1732,33 @@ body {
   white-space: nowrap;
 }
 
-.case-studies .work-section-title {
+.case-studies .work-section-heading {
   max-width: 1000px;
-  margin-inline: auto;
-  margin-bottom: 28px;
+  margin: 0 auto 28px;
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #000000;
+  text-transform: none;
 }
 
 @media (max-width: 900px) {
-  .lab-hero-title,
-  .work-section-title {
+  .lab-hero-title {
     white-space: normal;
   }
 }
 
 @media (max-width: 600px) {
-  .lab-hero-title,
-  .work-section-title {
+  .lab-hero-title {
     margin-bottom: 10px;
     font-size: clamp(28px, 8vw, 36px);
     white-space: normal;
   }
 
-  .case-studies .work-section-title {
+  .case-studies .work-section-heading {
     margin-bottom: 20px;
+    font-size: 14px;
   }
 }
 
@@ -1791,14 +1795,9 @@ body {
   width: 100%;
   aspect-ratio: 1 / 1;
   height: auto;
-  transition: transform 0.2s ease;
   position: relative;
   text-align: left;
   box-sizing: border-box;
-}
-
-.work-card:hover {
-  transform: scale(1.02);
 }
 
 .work-card-corner {
@@ -1848,10 +1847,6 @@ body {
 
 .work-card[data-disabled="true"] {
   cursor: none;
-}
-
-.work-card[data-disabled="true"]:hover {
-  transform: none;
 }
 
 .work-card-text {
@@ -1924,78 +1919,52 @@ body {
 
 .work-card-image-wrap--media {
   width: 100%;
-  height: 100%;
-  flex: 1 1 auto;
+  aspect-ratio: 1 / 1;
+  flex: none;
   min-height: 0;
-  aspect-ratio: auto;
   align-self: stretch;
   margin-top: 0;
-  border-radius: 0;
+  border-radius: 20px;
+  background: var(--grid-box);
 }
 
 .work-card--media {
+  background: transparent;
   padding: 0;
   gap: 0;
+  aspect-ratio: auto;
+  overflow: visible;
+  border-radius: 0;
 }
 
 .work-card--media .work-card-image {
   border-radius: 0;
 }
 
-.work-card-hover-bar {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
-  z-index: 3;
+.work-card-meta {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 16px;
-  background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-  transform: translateY(calc(100% + 24px));
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
-  white-space: nowrap;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 16px 4px 12px;
 }
 
-.work-card--media:hover .work-card-hover-bar,
-.work-card-image-wrap--media:hover .work-card-hover-bar,
-.work-card--media:focus-within .work-card-hover-bar {
-  transform: translateY(0);
-  opacity: 1;
+.work-card-eyebrow {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: rgba(0, 0, 0, 0.45);
 }
 
-.work-card-hover-title {
-  font-size: 20px;
-  font-weight: 450;
+.work-card-headline {
+  margin: 0;
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 500;
+  line-height: 1.25;
   letter-spacing: -0.02em;
-  line-height: 1.2;
   color: #000000;
-  flex-shrink: 0;
-}
-
-.work-card-tags--inline {
-  margin-top: 0;
-  flex-wrap: nowrap;
-  flex-shrink: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .work-card-hover-bar {
-    transition: opacity 0.15s ease;
-    transform: none;
-  }
-
-  .work-card--media:hover .work-card-hover-bar,
-  .work-card-image-wrap--media:hover .work-card-hover-bar,
-  .work-card--media:focus-within .work-card-hover-bar {
-    transform: none;
-  }
 }
 
 .work-card-image {
@@ -2007,8 +1976,6 @@ body {
   object-position: center;
   display: block;
   border-radius: 12px;
-  transition: transform 0.3s cubic-bezier(0.45, 0, 0.55, 1);
-  will-change: transform;
   pointer-events: none;
 }
 
@@ -2027,6 +1994,7 @@ body {
   .work-card--media {
     padding: 0;
     gap: 0;
+    border-radius: 0;
   }
 
   .work-card-text {
@@ -2039,12 +2007,23 @@ body {
 
   .work-card-image-wrap--media {
     width: 100%;
-    height: 100%;
     min-height: 0;
-    aspect-ratio: auto;
+    border-radius: 16px;
   }
 
-  /* Compact corner + info bar so both fit a 2-up mobile grid */
+  .work-card-meta {
+    padding: 12px 2px 10px;
+    gap: 4px;
+  }
+
+  .work-card-eyebrow {
+    font-size: 11px;
+  }
+
+  .work-card-headline {
+    font-size: 14px;
+  }
+
   .work-card-corner {
     width: 34px;
     height: 34px;
@@ -2055,26 +2034,6 @@ body {
   .work-card-corner-arrow {
     width: 13px;
     height: 13px;
-  }
-
-  .work-card-hover-bar {
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    padding: 10px 12px;
-    border-radius: 12px;
-    white-space: normal;
-  }
-
-  .work-card-hover-title {
-    font-size: 14px;
-  }
-
-  .work-card-tags--inline {
-    flex-wrap: wrap;
   }
 
   .work-card-tag {
@@ -3912,6 +3871,11 @@ button.case-card {
   .case-mobile-nav {
     display: block !important;
   }
+
+  /* Skip the full-bleed case hero on phones — open on Overview */
+  .case-hero-centered {
+    display: none;
+  }
 }
 
 /* Narrow tablets / large phones — shrink gutters; other layout tweaks. */
@@ -5344,9 +5308,9 @@ body:has(.case-layout) .case-main .footer-pill-link :is(span, .footer-pill-icon,
   color: #000000;
 }
 
-h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-hero-title):not(.about-apps-title):not(.resume-row-label):not(.work-section-title):not(.lab-hero-title),
-.case-content h2:not(.section-heading):not(.section-label):not(.about-hero-title):not(.work-section-title):not(.lab-hero-title),
-.container > h2:not(.section-heading):not(.section-label):not(.about-hero-title):not(.about-apps-title):not(.resume-row-label):not(.work-section-title):not(.lab-hero-title) {
+h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-hero-title):not(.about-apps-title):not(.resume-row-label):not(.lab-hero-title):not(.work-section-heading),
+.case-content h2:not(.section-heading):not(.section-label):not(.about-hero-title):not(.lab-hero-title):not(.work-section-heading),
+.container > h2:not(.section-heading):not(.section-label):not(.about-hero-title):not(.about-apps-title):not(.resume-row-label):not(.lab-hero-title):not(.work-section-heading) {
   font-size: 50px;
   font-weight: 700;
   margin-bottom: 32px;
@@ -5696,59 +5660,29 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
   color: #000000;
 }
 
-/* Case study — other work picker */
+/* Case study — other work picker (same card pattern as homepage Favorite Work) */
 .case-more-work {
   padding-top: 56px;
   padding-bottom: 72px;
 }
 
-.case-more-work .section-label {
-  margin-bottom: 24px;
+.case-more-work .work-section-heading {
+  margin: 0 0 28px;
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #000000;
+  text-transform: none;
 }
 
 .case-more-work-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 20px;
 }
 
-.case-more-work-card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 0;
-  text-decoration: none;
-  color: #000000;
-  transition: transform 0.2s ease;
-}
-
-.case-more-work-card:hover {
-  transform: scale(1.02);
-}
-
-.case-more-work-media {
-  aspect-ratio: 4 / 3;
-  border-radius: 16px;
-  overflow: hidden;
-  background: var(--grid-box, #E4E8F2);
-}
-
-.case-more-work-media img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-.case-more-work-title {
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-}
-
-.case-more-work-card:focus-visible {
+.case-more-work-grid .work-card:focus-visible {
   outline: 2px solid #333;
   outline-offset: 4px;
   border-radius: 4px;
@@ -5760,13 +5694,14 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
     padding-bottom: 56px;
   }
 
+  .case-more-work .work-section-heading {
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
   .case-more-work-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 14px;
-  }
-
-  .case-more-work-media {
-    border-radius: 14px;
   }
 }
 
@@ -6026,30 +5961,14 @@ body :where(
     margin-left: 0;
   }
 
-  /* Work / case cards — no hover-dependent reveal on touch; info stays on (active), never off (no hover) */
-  .work-card:hover {
-    transform: none;
-  }
-  .work-card:not([data-disabled="true"]):hover .work-card-image {
-    transform: none;
-  }
-  .case-card:hover {
-    transform: none;
-    box-shadow: none;
-  }
-  .case-more-work-card:hover {
-    transform: none;
-  }
-
+  /* Work / case cards — no hover transforms on touch */
   .work-card:not([data-disabled="true"]) .work-card-corner {
     transform: translateY(0);
     opacity: 1;
   }
-
-  .work-card--media .work-card-hover-bar,
-  .work-card-image-wrap--media .work-card-hover-bar {
-    transform: translateY(0);
-    opacity: 1;
+  .case-card:hover {
+    transform: none;
+    box-shadow: none;
   }
 
   /* About CTA link */
