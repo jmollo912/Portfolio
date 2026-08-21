@@ -1281,7 +1281,7 @@ function resolveInitialNavHref() {
   if (isLabPage) {
     const lab = navLinkList.find((a) => {
       const label = a.getAttribute('data-nav-label');
-      return label === 'The Lab' || label === 'Lab';
+      return a.classList.contains('nav-icon-link--lab') || label === 'The Lab' || label === 'Lab';
     });
     return lab?.getAttribute('href') || '#';
   }
@@ -1310,6 +1310,24 @@ function setActiveNav(href, { force = false } = {}) {
 
   let activeLink = null;
   navLinks.forEach((a) => {
+    const isLabLink =
+      a.classList.contains('nav-icon-link--lab') ||
+      a.getAttribute('data-nav-label') === 'The Lab' ||
+      a.getAttribute('data-nav-label') === 'Lab';
+
+    // Lab is not a nav destination (coming soon). Only mark it active when already on lab.html.
+    if (isLabLink) {
+      if (isLabPage) {
+        a.classList.add('active');
+        a.setAttribute('aria-current', 'page');
+        activeLink = a;
+      } else {
+        a.classList.remove('active');
+        a.removeAttribute('aria-current');
+      }
+      return;
+    }
+
     const match = a.getAttribute('href') === href;
     a.classList.toggle('active', match);
     if (match) {
@@ -1475,6 +1493,16 @@ document.addEventListener('click', function(e) {
   const a = e.target.closest('.floating-nav a');
   if (!a || a.target === '_blank') return;
   if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+  // Lab is coming soon — block navigation, keep under-label + cursor tip.
+  if (
+    a.classList.contains('nav-icon-link--lab') ||
+    a.getAttribute('aria-disabled') === 'true'
+  ) {
+    e.preventDefault();
+    e.stopPropagation();
+    return;
+  }
 
   const href = a.getAttribute('href');
   if (!href || href === '#') return;
@@ -2417,10 +2445,7 @@ function initLabYoutube(root = document) {
   });
 }
 
-function initLabSideNavComingSoon(root = document) {
-  const buttons = Array.from(root.querySelectorAll('.lab-side-nav-link[data-lab-coming-soon]'));
-  if (!buttons.length) return;
-
+function ensureNavLabTip() {
   let tip = document.querySelector('.nav-lab-tip');
   if (!tip) {
     tip = document.createElement('div');
@@ -2429,6 +2454,44 @@ function initLabSideNavComingSoon(root = document) {
     tip.textContent = 'Coming soon!';
     document.body.appendChild(tip);
   }
+  return tip;
+}
+
+/** Floating nav Lab: not linked; “Coming soon!” follows the pointer (under-label still shows). */
+function initLabComingSoonTip() {
+  if (isLabPage) return;
+  const labLink = mainFloatingNav?.querySelector(
+    '.nav-icon-link--lab, a[data-nav-label="The Lab"], a[data-nav-label="Lab"]'
+  );
+  if (!labLink) return;
+
+  const tip = ensureNavLabTip();
+
+  const moveTip = (e) => {
+    tip.style.left = `${e.clientX}px`;
+    tip.style.top = `${e.clientY}px`;
+  };
+
+  const showTip = (e) => {
+    moveTip(e);
+    tip.classList.add('is-visible');
+  };
+
+  const hideTip = () => {
+    tip.classList.remove('is-visible');
+  };
+
+  labLink.addEventListener('pointerenter', showTip);
+  labLink.addEventListener('pointermove', moveTip);
+  labLink.addEventListener('pointerleave', hideTip);
+  labLink.addEventListener('blur', hideTip);
+}
+
+function initLabSideNavComingSoon(root = document) {
+  const buttons = Array.from(root.querySelectorAll('.lab-side-nav-link[data-lab-coming-soon]'));
+  if (!buttons.length) return;
+
+  const tip = ensureNavLabTip();
 
   let hideTimer = null;
 
@@ -2529,6 +2592,7 @@ function initLabCarousels(root = document) {
   });
 }
 
+document.addEventListener('DOMContentLoaded', initLabComingSoonTip);
 document.addEventListener('DOMContentLoaded', initLabPanels);
 
 // ==========================================

@@ -72,7 +72,7 @@ Custom cursor:
 
 UI COMPONENTS
 -------------
-1. Floating navigation — white pill with Home / Work / Lab / About icons (media/NavBar); charcoal (#2B2B2B) rounded square marker slides to active item; white active icon / grey inactive icon; grey Home/Work/The Lab/About label appears under the hovered icon only (hidden otherwise) in a small white rounded box with light shadow; when the hovered icon is the active page, that label box is charcoal with white text. Lab navigates to html/lab.html (same marker handoff as About). Top-left gmdesign.svg wordmark (17px tall, left: 28px) links home; top-right Resume charcoal pill (same as footer Resume — white text, hover keeps charcoal + scale 1.12 / rotate 2deg, download icon reveals). Cross-page (index ↔ lab ↔ about): ?navFrom= handoff slides marker from previous tab. Resume also in mobile menu.
+1. Floating navigation — white pill with Home / Work / Lab / About icons (media/NavBar); charcoal (#2B2B2B) rounded square marker slides to active item; white active icon / grey inactive icon; grey Home/Work/The Lab/About label appears under the hovered icon only (hidden otherwise) in a small white rounded box with light shadow; when the hovered icon is the active page, that label box is charcoal with white text. Lab is not navigable: hover still shows the “The Lab” under-label, plus a charcoal “Coming soon!” tip that follows the cursor. Top-left gmdesign.svg wordmark (17px tall, left: 28px) links home; top-right Resume charcoal pill (same as footer Resume — white text, hover keeps charcoal + scale 1.12 / rotate 2deg, download icon reveals). Cross-page (index ↔ about): ?navFrom= handoff slides marker from previous tab. Resume also in mobile menu.
 2. Case study cards (home page + case-study “More work”) — square cover image with rounded corners. Homepage: gray eyebrow (“Project · Discipline”) + bold black headline. Case-study “More work” cards: eyebrow only (no headline). Same `.work-card` markup otherwise. No tag chips, no hover scale, no white overlay bar. Corner arrow still appears on hover/focus. Homepage is 2-up; “More work” is 3-up (2-up ≤700px, 1-up ≤420px).
 3. Case study section headers — section label at 40% opacity; heading and intro full black.
 4. Buttons — rounded about 10px; primary charcoal (#2B2B2B) with white text; hover keeps charcoal and scales to 1.12 (no rotate by default). Secondary white pill with black text, same scale-only hover. Rotate(2deg) on hover for nav Resume, footer-pill-link (footer bar + CBS Learn More Contact), and profile-card Connect.
@@ -119,7 +119,7 @@ WHERE STYLES LIVE
 -----------------
 Global: css/global.css
 Case-specific: css/Convoy.css, css/FlockSports.css, css/CBSSports.css
-Lab: css/lab.css (html/lab.html — not linked from nav yet)
+Lab: css/lab.css (html/lab.html — floating nav Lab is coming-soon / not linked)
 JavaScript: main.js
 Pages: index.html, html/about.html, html/lab.html, html/case-study-*.html
 
@@ -165,3 +165,4 @@ CHANGELOG (edit when brand changes)
 2026-08-21 — Index “My Favorite Work” restyled as `.work-section-heading` (matches work-card headline look, separate CSS) with thin underline.
 2026-08-21 — Case-study “More work” section now uses the same work-card layout as the homepage Favorite Work grid.
 2026-08-21 — Case-study “More work” cards show eyebrow only (no headline) to fit the smaller 3-up layout.
+2026-08-21 — Floating nav Lab unlinked again: under-label “The Lab” stays; cursor tip “Coming soon!” restored.
