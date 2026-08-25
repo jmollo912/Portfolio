@@ -144,6 +144,7 @@ main > section[id] {
   --cta: #2B2B2B;
   --cta-rgb: 43, 43, 43;
   --grid-box: #F2F4F8;
+  --font-heading: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
 }
 
 html {
@@ -1336,6 +1337,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-bottom: 8px;
   overflow: hidden;
   white-space: nowrap;
   box-sizing: border-box;
@@ -1343,7 +1345,7 @@ body {
 }
 
 #hero-typed {
-  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-family: var(--font-heading);
   font-weight: 600;
   color: #111111;
   line-height: 1;
@@ -1396,7 +1398,7 @@ body {
   position: absolute;
   margin: 0;
   font-family: Inter, system-ui, -apple-system, sans-serif;
-  font-size: clamp(14px, 1.2vw, 24px);
+  font-size: clamp(12px, 1vw, 18px);
   font-weight: 400;
   font-style: italic;
   color: rgba(0, 0, 0, 0.4);
@@ -1724,6 +1726,7 @@ body {
 /* Lab “Welcome to The Lab” display title */
 .lab-hero-title {
   margin: 0 0 12px;
+  font-family: var(--font-heading);
   font-size: clamp(32px, 3.5vw, 52px);
   font-weight: 500;
   letter-spacing: -0.03em;
@@ -1735,6 +1738,7 @@ body {
 .case-studies .work-section-heading {
   max-width: 1000px;
   margin: 0 auto 28px;
+  font-family: var(--font-heading);
   font-size: clamp(18px, 2vw, 22px);
   font-weight: 500;
   line-height: 1.25;
@@ -1859,9 +1863,9 @@ body {
 }
 
 .about-hero-title,
-.overview-project-title,
 .section-heading,
 .resume-row-label {
+  font-family: var(--font-heading);
   font-size: clamp(32px, 3.5vw, 52px);
   font-weight: 500;
   letter-spacing: -0.03em;
@@ -1960,6 +1964,7 @@ body {
 
 .work-card-headline {
   margin: 0;
+  font-family: var(--font-heading);
   font-size: clamp(18px, 2vw, 22px);
   font-weight: 500;
   line-height: 1.25;
@@ -4298,10 +4303,16 @@ body:has(.case-layout) {
   text-decoration: none;
   font-size: 17px;
   font-weight: 500;
-  line-height: 1;
+  line-height: 1.2;
   border-radius: 18px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
   transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.case-back-link > span:not(.case-back-arrow) {
+  font-weight: inherit;
 }
 
 .case-back-link:hover {
@@ -4812,9 +4823,10 @@ body:has(.case-layout) .case-main .footer-pill-link :is(span, .footer-pill-icon,
 
 .section-label {
   display: block;
+  font-family: var(--font-heading);
   font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: rgba(0, 0, 0, 0.4);
   margin-bottom: 12px;
@@ -5346,6 +5358,12 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
 
 .overview-project-title {
   margin: 0 0 8px 0;
+  font-family: var(--font-heading);
+  font-size: clamp(36px, 4vw, 58px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: #000000;
 }
 
 .overview-subtitle {
@@ -5668,6 +5686,7 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
 
 .case-more-work .work-section-heading {
   margin: 0 0 28px;
+  font-family: var(--font-heading);
   font-size: clamp(18px, 2vw, 22px);
   font-weight: 500;
   line-height: 1.25;
@@ -5866,9 +5885,10 @@ body :where(
 .case-main .section-label,
 .case-main h3.section-label {
   color: rgba(0, 0, 0, 0.4);
+  font-family: var(--font-heading);
   font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
+  font-weight: 400;
+  letter-spacing: 1px;
   text-transform: uppercase;
   margin-bottom: 12px;
 }

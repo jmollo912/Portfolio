@@ -307,6 +307,7 @@ function initHeroCursorAnimation() {
   const TYPE_CHAR_MS = 61;
   const CURSOR_ENTRANCE_MS = 440;
   const BOX_H_PAD = 28;
+  const BOX_BOTTOM_PAD = 8;
   let measureCanvas;
 
   function measureTextWidth(text, fontSize, weight = 600) {
@@ -343,7 +344,7 @@ function initHeroCursorAnimation() {
     while (finalFS > 14 && measureTextWidth(FINAL_TEXT, finalFS, 900) + BOX_H_PAD > finalW) {
       finalFS -= 1;
     }
-    finalH = Math.min(Math.max(finalFS / 0.42, finalFS + 16), maxH);
+    finalH = Math.min(Math.max(finalFS / 0.42, finalFS + 16 + BOX_BOTTOM_PAD), maxH);
 
     const textW = measureTextWidth(FINAL_TEXT, finalFS, 900) + BOX_H_PAD;
     finalW = Math.min(Math.max(finalW, textW), maxW);
@@ -414,8 +415,8 @@ function initHeroCursorAnimation() {
     handles.br.style.top  = `${top  + h - ho}px`;
     if (hint) {
       hint.style.left = `${left}px`;
-      // Sit just under the typed line (centered in the box), not the full highlight frame
-      hint.style.top = `${top + h / 2 + fontSize * 0.55 + 2}px`;
+      // Sit under the typed line, accounting for textbox bottom padding
+      hint.style.top = `${top + h / 2 + fontSize * 0.55 + BOX_BOTTOM_PAD}px`;
       hint.style.width = `${w}px`;
     }
   }
