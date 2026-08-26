@@ -7,7 +7,7 @@ Read this file before changing design, copy, or styles on this project.
 Giuseppe maintains this file. Edit it anytime in VS Code, Cursor, or any text editor.
 When values here change, update css/global.css (and case-specific CSS) to match.
 
-Last updated: 2026-08-25
+Last updated: 2026-08-26
 
 
 BRAND OVERVIEW
@@ -20,18 +20,17 @@ Layout: Spacious, Main White backgrounds, white floating icon nav, subtle motion
 
 TYPOGRAPHY
 ----------
-Body and UI: Inter, with system-ui fallbacks. All paragraphs, nav, case study body, footer. Home page loads Inter as a variable font (Google Fonts, 100–900) so hero letter hover can ease weight smoothly.
-Headings / display: Source Serif 4 (Google Fonts variable). Used for hero welcome text (“Welcome to my portfolio!”), “My Favorite Work” / “More work” section headings, work-card headlines, Lab title, About titles, case-study project titles, section headings, section labels, and resume-row labels. CSS variable: `--font-heading`.
+Body and UI: Inter, with system-ui fallbacks. All paragraphs, headings, nav, case study body, footer. All pages load Inter as a variable font (Google Fonts, 100–900); home also loads Borel for accent script.
 Accent / display script: Borel (Google Fonts). Use sparingly — e.g. hero caption word "desk".
 Hero screen label: Inter on Lottie overlay — "gm" bold + "design" light on monitor mockup.
 
 Type scale (see css/global.css):
 - Page / section display titles (Lab “Welcome to The Lab” only): clamp(32px, 3.5vw, 52px), weight 500, letter-spacing -0.03em, line-height 1.05, #000000; wraps below 900px; mobile clamp(28px, 8vw, 36px)
 - Index “My Favorite Work” uses `.work-section-heading` — same look as work-card headlines (clamp 18–22px, weight 600, black) but its own CSS class; keeps the thin full-width rule under the label
-- Large case titles (`.overview-project-title`): clamp(36px, 4vw, 58px), weight 600, Source Serif 4
-- Section heading: clamp(32px, 3.5vw, 52px), weight 500, Source Serif 4
+- Large case titles (`.overview-project-title`): clamp(36px, 4vw, 58px), weight 600
+- Section heading: clamp(32px, 3.5vw, 52px), weight 500
 - Body / case content: 18px, line-height about 1.65–1.7
-- Section label: Source Serif 4, 12–13px, uppercase, no letter-spacing, weight 500–700 (case-study section labels)
+- Section label: 12–13px, uppercase, no letter-spacing, weight 500–700 (case-study section labels)
 - Case pill: 15px; title weight 700, tag weight 500
 
 
@@ -63,7 +62,7 @@ Accent / interactive:
 
 Hero only:
 - Monitor "gm design" label: #FFFFFF (lottie-label on hero screen)
-- Hero welcome text (“Welcome to my portfolio!”): Source Serif 4; after typing animation, each letter is hoverable — hovered letter weight eases 600 → 900 and scale 1 → 1.25 (0.2s); immediate left/right neighbors ease weight 600 → 750 and scale 1 → 1.12 (0.2s); rest of hero stage stays pointer-events none so wall pics still work
+- Hero welcome text (“Welcome to my portfolio!”): after typing animation, each letter is hoverable — hovered letter Inter weight eases 600 → 900 and scale 1 → 1.25 (0.2s); immediate left/right neighbors ease weight 600 → 750 and scale 1 → 1.12 (0.2s); rest of hero stage stays pointer-events none so wall pics still work
 
 Custom cursor:
 - Currently DISABLED (native pointer). Code kept for easy re-enable.
@@ -169,3 +168,4 @@ CHANGELOG (edit when brand changes)
 2026-08-21 — Floating nav Lab unlinked again: under-label “The Lab” stays; cursor tip “Coming soon!” restored.
 2026-08-25 — Display headings switch to Source Serif 4 (Lab, About, case project titles, section headings).
 2026-08-25 — Hero welcome text (“Welcome to my portfolio!”) also uses Source Serif 4; letter-weight hover unchanged.
+2026-08-26 — Removed Source Serif 4; all text back to Inter.
