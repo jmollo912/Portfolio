@@ -307,7 +307,6 @@ function initHeroCursorAnimation() {
   const TYPE_CHAR_MS = 61;
   const CURSOR_ENTRANCE_MS = 440;
   const BOX_H_PAD = 28;
-  const BOX_BOTTOM_PAD = 8;
   let measureCanvas;
 
   function measureTextWidth(text, fontSize, weight = 600) {
@@ -344,7 +343,7 @@ function initHeroCursorAnimation() {
     while (finalFS > 14 && measureTextWidth(FINAL_TEXT, finalFS, 900) + BOX_H_PAD > finalW) {
       finalFS -= 1;
     }
-    finalH = Math.min(Math.max(finalFS / 0.42, finalFS + 16 + BOX_BOTTOM_PAD), maxH);
+    finalH = Math.min(Math.max(finalFS / 0.42, finalFS + 16), maxH);
 
     const textW = measureTextWidth(FINAL_TEXT, finalFS, 900) + BOX_H_PAD;
     finalW = Math.min(Math.max(finalW, textW), maxW);
@@ -415,8 +414,8 @@ function initHeroCursorAnimation() {
     handles.br.style.top  = `${top  + h - ho}px`;
     if (hint) {
       hint.style.left = `${left}px`;
-      // Sit under the typed line, accounting for textbox bottom padding
-      hint.style.top = `${top + h / 2 + fontSize * 0.55 + BOX_BOTTOM_PAD}px`;
+      // Sit just under the typed line; gap lives on .hero-textbox-hint padding-top
+      hint.style.top = `${top + h / 2 + fontSize * 0.55 + 2}px`;
       hint.style.width = `${w}px`;
     }
   }
@@ -458,7 +457,7 @@ function initHeroCursorAnimation() {
     typed.textContent = text;
   }
 
-  function setTypedLetters(text, { interactive = false } = {}) {
+  function setTypedLetters(text) {
     if (typed.dataset.letterText !== text) {
       typed.dataset.letterText = text;
       typed.replaceChildren();
@@ -470,16 +469,14 @@ function initHeroCursorAnimation() {
         typed.appendChild(span);
       }
     }
-
-    typed.classList.toggle('hero-typed--interactive', interactive);
-    if (interactive) typed.setAttribute('aria-label', FINAL_TEXT);
-    else typed.removeAttribute('aria-label');
+    typed.classList.remove('hero-typed--interactive');
+    typed.removeAttribute('aria-label');
   }
 
   function applyFinalState() {
     const m = getMetrics();
     if (!m) return;
-    setTypedLetters(FINAL_TEXT, { interactive: true });
+    setTypedPlain(FINAL_TEXT);
     applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
     textbox.style.opacity = '1';
     setHighlightOpacity(0);
@@ -584,14 +581,14 @@ function initHeroCursorAnimation() {
       } else if (el < ends[4]) {
         // 3–4. Type welcome message + hold
         setCursorOpacity(1);
-        setTypedLetters(typedText, { interactive: false });
+        setTypedLetters(typedText);
         applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
         showBox(true);
         setCursor(m.drawEndX, m.drawEndY);
       } else if (el < ends[5]) {
         // 5. Move from bottom-right corner → top-right handle
         setCursorOpacity(1);
-        setTypedLetters(FINAL_TEXT, { interactive: false });
+        setTypedLetters(FINAL_TEXT);
         applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
         showBox(true);
         const p = easeInOut(pT(5, el));
@@ -599,7 +596,7 @@ function initHeroCursorAnimation() {
       } else if (el < ends[6]) {
         // 6. Expand the box (cursor follows top-right handle)
         setCursorOpacity(1);
-        setTypedLetters(FINAL_TEXT, { interactive: false });
+        setTypedLetters(FINAL_TEXT);
         const p = easeInOut(pT(6, el));
         applyBox(m.boxCX, m.boxCY, lerp(m.targetW, m.finalW, p), lerp(m.targetH, m.finalH, p), lerp(m.targetFS, m.finalFS, p), m.hs);
         showBox(true);
@@ -607,13 +604,13 @@ function initHeroCursorAnimation() {
       } else if (el < ends[7]) {
         // 7. Hold after expand
         setCursorOpacity(1);
-        setTypedLetters(FINAL_TEXT, { interactive: false });
+        setTypedLetters(FINAL_TEXT);
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         showBox(true);
         setCursor(m.finalTrX, m.finalTrY);
       } else if (el < ends[8]) {
         // 8. Cursor fade out
-        setTypedLetters(FINAL_TEXT, { interactive: false });
+        setTypedLetters(FINAL_TEXT);
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         showBox(true);
         setHighlightOpacity(1);
@@ -621,7 +618,7 @@ function initHeroCursorAnimation() {
         setCursorOpacity(1 - pT(8, el));
       } else if (el < ends[9]) {
         // 9. Highlight fade out — leave title text only
-        setTypedLetters(FINAL_TEXT, { interactive: false });
+        setTypedLetters(FINAL_TEXT);
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         textbox.style.opacity = '1';
         setCursorOpacity(0);
@@ -1282,7 +1279,7 @@ function resolveInitialNavHref() {
   if (isLabPage) {
     const lab = navLinkList.find((a) => {
       const label = a.getAttribute('data-nav-label');
-      return a.classList.contains('nav-icon-link--lab') || label === 'The Lab' || label === 'Lab';
+      return a.classList.contains('nav-icon-link--lab') || label === 'Sandbox' || label === 'Playground' || label === 'The Lab' || label === 'Lab';
     });
     return lab?.getAttribute('href') || '#';
   }
@@ -1313,6 +1310,8 @@ function setActiveNav(href, { force = false } = {}) {
   navLinks.forEach((a) => {
     const isLabLink =
       a.classList.contains('nav-icon-link--lab') ||
+      a.getAttribute('data-nav-label') === 'Sandbox' ||
+      a.getAttribute('data-nav-label') === 'Playground' ||
       a.getAttribute('data-nav-label') === 'The Lab' ||
       a.getAttribute('data-nav-label') === 'Lab';
 
@@ -2462,7 +2461,7 @@ function ensureNavLabTip() {
 function initLabComingSoonTip() {
   if (isLabPage) return;
   const labLink = mainFloatingNav?.querySelector(
-    '.nav-icon-link--lab, a[data-nav-label="The Lab"], a[data-nav-label="Lab"]'
+    '.nav-icon-link--lab, a[data-nav-label="Sandbox"], a[data-nav-label="Playground"], a[data-nav-label="The Lab"], a[data-nav-label="Lab"]'
   );
   if (!labLink) return;
 

@@ -1336,7 +1336,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: 8px;
   overflow: hidden;
   white-space: nowrap;
   box-sizing: border-box;
@@ -1351,7 +1350,7 @@ body {
   pointer-events: none;
 }
 
-/* Letter spans match final hover layout during type/expand — avoids a remount jump */
+/* Letter spans during type/expand — inline-block avoids layout jump while typing */
 #hero-typed .hero-typed-letter {
   display: inline-block;
   font-weight: 600;
@@ -1361,41 +1360,10 @@ body {
   pointer-events: none;
 }
 
-#hero-typed.hero-typed--interactive .hero-typed-letter {
-  pointer-events: auto;
-  transition:
-    font-weight 0.2s ease,
-    font-variation-settings 0.2s ease,
-    transform 0.2s ease;
-}
-
-#hero-typed.hero-typed--interactive .hero-typed-letter:hover {
-  font-weight: 900;
-  font-variation-settings: "wght" 900;
-  transform: scale(1.25);
-}
-
-/* Immediate neighbors ease up to 750 + slight grow */
-#hero-typed.hero-typed--interactive .hero-typed-letter:hover + .hero-typed-letter,
-#hero-typed.hero-typed--interactive .hero-typed-letter:has(+ .hero-typed-letter:hover) {
-  font-weight: 750;
-  font-variation-settings: "wght" 750;
-  transform: scale(1.12);
-}
-
-#hero-textbox:has(#hero-typed.hero-typed--interactive) {
-  overflow: visible;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  #hero-typed.hero-typed--interactive .hero-typed-letter {
-    transition: none;
-  }
-}
-
 .hero-textbox-hint {
   position: absolute;
   margin: 0;
+  padding-top: 8px;
   font-family: Inter, system-ui, -apple-system, sans-serif;
   font-size: clamp(12px, 1vw, 18px);
   font-weight: 400;
