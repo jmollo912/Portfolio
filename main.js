@@ -738,16 +738,12 @@ function initScrollFadeAnimations() {
     '.case-list li, ' +
     '.about-text p, ' +
     '.about-photo, ' +
-    '.about-cta-link, ' +
-    '.about-cta-text, ' +
     '.about-cta-section .profile-card, ' +
     '.about-cta-section .about-hero-text, ' +
-    '.about-cta-section .about-cta-btn, ' +
-    '.about-page .about-hero-title, ' +
-    '.about-page .about-hero-image, ' +
-    '.about-page .about-body-text, ' +
+    '.about-story-title, ' +
+    '.about-story-text, ' +
+    '.about-story-quote, ' +
     '.about-page .about-contact-cta, ' +
-    '.about-page .about-hero .profile-card, ' +
     '.mac-window, ' +
     '.mac-photo-card, ' +
     '.resume-row, ' +
@@ -867,6 +863,88 @@ function initSkillsCarousel() {
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', initScrollFadeAnimations);
+
+function initAboutStoryFloatAnimations() {
+  const wrap = document.querySelector('.about-story-wrap');
+  if (!wrap) return;
+
+  const floatOrder = ['football', 'scad', 'ai'];
+  const floats = floatOrder
+    .map((name) => wrap.querySelector(`.about-story-float--${name}`))
+    .filter(Boolean);
+
+  if (!floats.length) return;
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const BASE_DELAY = 500;
+  const STAGGER = 200;
+  const VIEWPORT_MARGIN = 80;
+
+  const isInView = (element) => {
+    const rect = element.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    return rect.top < vh - VIEWPORT_MARGIN && rect.bottom > 0;
+  };
+
+  const pendingRevealTimers = new WeakMap();
+
+  const reveal = (element, extraDelay = 0) => {
+    if (element.classList.contains('is-revealed') || pendingRevealTimers.has(element)) return;
+
+    if (prefersReduced) {
+      element.classList.add('is-revealed');
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      pendingRevealTimers.delete(element);
+      element.classList.add('is-revealed');
+    }, BASE_DELAY + extraDelay);
+
+    pendingRevealTimers.set(element, timer);
+  };
+
+  const scheduleVisibleBatch = () => {
+    const pending = floats.filter(
+      (element) => !element.classList.contains('is-revealed') && isInView(element)
+    );
+
+    if (!pending.length) return;
+
+    pending.sort((a, b) => floats.indexOf(a) - floats.indexOf(b));
+
+    pending.forEach((element, batchIndex) => {
+      reveal(element, batchIndex * STAGGER);
+      observer.unobserve(element);
+    });
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    const hasIntersecting = entries.some((entry) => entry.isIntersecting);
+    if (!hasIntersecting) return;
+    scheduleVisibleBatch();
+  }, {
+    root: null,
+    rootMargin: `0px 0px -${VIEWPORT_MARGIN}px 0px`,
+    threshold: 0.15,
+  });
+
+  const revealInitialBatch = () => {
+    scheduleVisibleBatch();
+
+    floats.forEach((element) => {
+      if (!element.classList.contains('is-revealed') && !pendingRevealTimers.has(element)) {
+        observer.observe(element);
+      }
+    });
+  };
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(revealInitialBatch);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initAboutStoryFloatAnimations);
 
 // Staggered reveal for About “Apps I can't live without” icons.
 function initAboutAppsStagger() {

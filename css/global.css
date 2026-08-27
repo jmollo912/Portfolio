@@ -51,7 +51,7 @@ body,
 html *,
 html *::before,
 html *::after {
-  cursor: auto !important;
+  cursor: default !important;
 }
 
 /* Hand cursor on pressable controls (include descendants — global * otherwise wins) */
@@ -112,7 +112,7 @@ html .lab-side-nav-link--soon {
 
 html .work-card[data-disabled="true"],
 html .work-card[data-disabled="true"] * {
-  cursor: auto !important;
+  cursor: default !important;
 }
 
 .svg-defs {
@@ -356,7 +356,29 @@ body {
   .profile-card.scroll-fade-in {
     opacity: 1;
     filter: none;
-    transform: rotate(4deg);
+    transform: rotate(-5deg);
+  }
+
+  .about-story-float,
+  .about-story-float.is-revealed {
+    opacity: 1;
+    filter: none;
+    animation: none !important;
+  }
+
+  .about-story-float--football,
+  .about-story-float--football.is-revealed {
+    transform: rotate(2deg);
+  }
+
+  .about-story-float--scad,
+  .about-story-float--scad.is-revealed {
+    transform: rotate(-4deg);
+  }
+
+  .about-story-float--ai,
+  .about-story-float--ai.is-revealed {
+    transform: rotate(3deg);
   }
 
   .work-card:not([data-disabled="true"]):hover .work-card-image,
@@ -372,7 +394,7 @@ body {
   html,
   body,
   html * {
-    cursor: auto !important;
+    cursor: default !important;
   }
 }
 
@@ -688,7 +710,8 @@ body {
   top: 20px;
 }
 
-.nav-resume:hover {
+.nav-resume:hover,
+.about-cta-section .about-cta-btn:hover {
   color: #FFFFFF;
   background: var(--cta, #2B2B2B);
   transform: scale(1.12) rotate(2deg);
@@ -704,7 +727,18 @@ body {
   margin-left: 10px;
 }
 
+.about-cta-section .about-cta-btn:hover .about-cta-btn-ext-arrow {
+  max-width: 18px;
+  opacity: 1;
+  transform: translateX(0);
+  margin-left: 10px;
+}
+
 .nav-resume :is(span, .about-cta-btn-download) {
+  color: #FFFFFF;
+}
+
+.about-cta-section .about-cta-btn :is(span, .about-cta-btn-ext-arrow) {
   color: #FFFFFF;
 }
 
@@ -2382,71 +2416,71 @@ button.case-card {
 }
 
 /* ── About CTA (index page) ── */
-/* Slide in from the left instead of the default bottom-up scroll-fade */
-.about-cta-text.scroll-fade {
-  transform: translateX(-40px);
-}
-
-.about-cta-text.scroll-fade-in {
-  transform: translateX(0);
-}
 .about-cta-section {
   padding: 140px 0 220px;
-  display: flex;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
 }
 
-
-.about-cta-link {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+.about-cta-section .about-hero-content {
+  max-width: 100%;
   padding: 0;
-  background: transparent;
-  border: none;
-  text-decoration: none;
-  position: relative;
-  z-index: 1;
+  grid-template-columns: auto auto;
+  gap: clamp(48px, 8vw, 100px);
+  align-items: center;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: clamp(24px, 5vw, 72px);
 }
 
-.about-cta-link:hover .about-cta-text {
-  color: rgba(0, 0, 0, 0.4);
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
-  text-decoration-color: rgba(0, 0, 0, 0.4);
+.about-cta-section .about-hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
 }
 
-.about-cta-avatar {
-  width: 68px;
-  height: 68px;
-  min-width: 68px;
-  min-height: 68px;
-  border-radius: 10px;
-  overflow: hidden;
-  flex-shrink: 0;
-  position: relative;
+.about-cta-section .about-hero-text > .work-card-title {
+  font-size: clamp(32px, 3.2vw, 42px);
+  font-weight: 600;
+  margin-bottom: 16px;
 }
 
-.about-cta-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 20%;
-  display: block;
+.about-cta-section .about-hero-text > .work-card-desc {
+  font-size: clamp(16px, 1.8vw, 20px);
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.55);
+  padding-bottom: 32px;
+  max-width: 36ch;
 }
 
-.about-cta-text {
-  display: inline-block;
-  font-size: clamp(18px, 2.5vw, 24px);
-  font-weight: 400;
-  color: #000000;
-  letter-spacing: -0.01em;
-  line-height: 1.4;
-  text-decoration: none;
+.about-cta-section .about-cta-actions {
+  margin-top: 0;
+}
+
+.about-cta-section .about-cta-btn {
+  margin-top: 0;
+  line-height: 1;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.1s cubic-bezier(0.4, 0, 1, 1),
+    box-shadow 0.2s ease;
+}
+
+/* Scroll-fade must not slow hover snap (JS no longer tags this button; guard anyway) */
+.about-cta-section .about-cta-btn.scroll-fade,
+.about-cta-section .about-cta-btn.scroll-fade-in {
+  opacity: 1;
+  filter: none;
+  transform: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.1s cubic-bezier(0.4, 0, 1, 1),
+    box-shadow 0.2s ease !important;
+}
+
+.about-cta-section .profile-card {
+  justify-self: center;
 }
 
 .about-inner {
@@ -2477,20 +2511,20 @@ button.case-card {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
   overflow: hidden;
   flex-shrink: 0;
-  transform: rotate(4deg);
+  transform: rotate(-5deg);
   transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
 .profile-card.scroll-fade {
   opacity: 0;
-  transform: translateY(20px) rotate(4deg);
+  transform: translateY(20px) rotate(-5deg);
   filter: blur(4px);
 }
 
 .profile-card.scroll-fade-in {
   opacity: 1;
-  transform: translateY(0) rotate(4deg);
+  transform: translateY(0) rotate(-5deg);
   filter: blur(0);
 }
 
@@ -2529,7 +2563,7 @@ button.case-card {
 .profile-card-image {
   width: 100%;
   height: 350px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #000000;
   border-radius: 16px;
   margin-top: 2px;
   position: relative;
@@ -2590,7 +2624,7 @@ button.case-card {
 .profile-card-platform {
   font-size: 13px;
   font-weight: 400;
-  color: #000000;
+  color: rgba(0, 0, 0, 0.45);
 }
 
 .profile-card-connect {
@@ -2735,7 +2769,173 @@ button.case-card {
   padding-top: 120px;
 }
 
-/* About Hero Section */
+/* About — My Story layout */
+.about-story {
+  padding: 48px 0 80px;
+}
+
+.about-story-wrap {
+  position: relative;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.about-story-content {
+  position: relative;
+  z-index: 2;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.about-story-title {
+  font-size: clamp(32px, 3.5vw, 52px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: #000000;
+  margin: 0 0 38px;
+}
+
+.about-story-text,
+.about-story-quote {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.55);
+  margin: 0 0 38px;
+  text-wrap: pretty;
+}
+
+.about-story-text:last-child {
+  margin-bottom: 0;
+}
+
+.about-story-text em {
+  font-style: italic;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.about-story-text strong {
+  font-weight: 600;
+  color: #000000;
+}
+
+.about-story-quote {
+  text-align: center;
+  font-style: italic;
+}
+
+.about-story-float {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: none;
+  border-radius: 20px;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  will-change: opacity, transform, filter;
+}
+
+.about-story-float--football {
+  width: clamp(240px, 26vw, 330px);
+  top: 2%;
+  right: 0;
+  --about-float-rotate: 2deg;
+  transform: rotate(2deg);
+}
+
+.about-story-float--scad {
+  width: clamp(240px, 26vw, 330px);
+  top: 28%;
+  left: -48px;
+  --about-float-rotate: -4deg;
+  transform: rotate(-4deg);
+}
+
+.about-story-float--ai {
+  width: clamp(160px, 18vw, 220px);
+  top: 70%;
+  right: 2%;
+  --about-float-rotate: 3deg;
+  transform: rotate(3deg);
+}
+
+@keyframes about-story-float-in-right {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateX(120px) rotate(var(--about-float-rotate, 0deg)) scale(0.82);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0) rotate(var(--about-float-rotate, 0deg)) scale(1);
+  }
+}
+
+@keyframes about-story-float-in-left {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateX(-120px) rotate(var(--about-float-rotate, 0deg)) scale(0.82);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0) rotate(var(--about-float-rotate, 0deg)) scale(1);
+  }
+}
+
+.about-story-float--football.is-revealed {
+  animation: about-story-float-in-right 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.about-story-float--scad.is-revealed {
+  animation: about-story-float-in-left 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.about-story-float--ai.is-revealed {
+  animation: about-story-float-in-right 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (max-width: 1024px) {
+  .about-story-float {
+    width: clamp(190px, 23vw, 260px) !important;
+  }
+
+  .about-story-float--football {
+    right: -12px;
+  }
+
+  .about-story-float--scad {
+    left: -28px;
+  }
+
+  .about-story-float--ai {
+    width: clamp(150px, 17vw, 200px) !important;
+    right: -8px;
+  }
+}
+
+@media (max-width: 860px) {
+  .about-story {
+    padding-bottom: 48px;
+  }
+
+  .about-story-float {
+    display: none;
+  }
+
+  .about-story-content {
+    max-width: 400px;
+  }
+}
+
+/* About Hero Section (legacy — kept for shared title tokens) */
 .about-hero {
   padding: 60px 0 40px;
   background: #fff;
@@ -2868,22 +3068,9 @@ button.case-card {
   align-items: start;
 }
 
-.about-cta-section .about-hero-content {
-  max-width: 1200px;
-  grid-template-columns: 1fr 1fr;
-  gap: 100px;
-}
-
-.about-cta-section .about-hero-text > .work-card-title {
-  margin-bottom: 14px;
-}
-
-.about-cta-section .about-hero-text > .work-card-desc {
-  padding-bottom: 24px;
-}
-
-.about-cta-section .about-cta-actions {
-  margin-top: 0;
+.about-page .about-hero-content {
+  grid-template-columns: 1fr;
+  max-width: 720px;
 }
 
 .about-hero-title {
@@ -2975,6 +3162,10 @@ button.case-card {
   box-shadow:
     0 1px 2px rgba(var(--cta-rgb), 0.25),
     0 4px 12px rgba(var(--cta-rgb), 0.2);
+}
+
+.about-cta-section .about-cta-btn:hover {
+  transform: scale(1.12) rotate(2deg);
 }
 
 .about-cta-btn--secondary:hover {
@@ -3631,6 +3822,31 @@ button.case-card {
     grid-template-columns: 1fr;
     gap: 40px;
     text-align: center;
+  }
+
+  .about-page .about-hero-content {
+    text-align: left;
+  }
+
+  .about-cta-section .about-hero-content {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .about-cta-section .about-hero-text {
+    align-items: center;
+    text-align: center;
+  }
+
+  .about-cta-section .about-hero-text > .work-card-desc {
+    max-width: none;
+  }
+
+  .about-cta-section .profile-card {
+    justify-self: center;
   }
   
   .about-early-life-grid {
@@ -5898,7 +6114,7 @@ body :where(
   html *,
   html *::before,
   html *::after {
-    cursor: auto !important;
+    cursor: default !important;
   }
 
   html a,
@@ -5930,7 +6146,7 @@ body :where(
 
   html .work-card[data-disabled="true"],
   html .work-card[data-disabled="true"] * {
-    cursor: auto !important;
+    cursor: default !important;
   }
 
   /* 2) Neutralize hover states — reset each to its resting style */
@@ -5946,12 +6162,19 @@ body :where(
     transform: none;
   }
 
-  /* Resume nav — match footer CTA hover (no transform on touch) */
-  .nav-resume:hover {
+  /* Resume nav + index About Me — no transform on touch */
+  .nav-resume:hover,
+  .about-cta-section .about-cta-btn:hover {
     transform: none;
   }
 
   .nav-resume:hover .about-cta-btn-download {
+    max-width: 0;
+    opacity: 0;
+    margin-left: 0;
+  }
+
+  .about-cta-section .about-cta-btn:hover .about-cta-btn-ext-arrow {
     max-width: 0;
     opacity: 0;
     margin-left: 0;
@@ -5968,15 +6191,10 @@ body :where(
   }
 
   /* About CTA link */
-  .about-cta-link:hover .about-cta-text {
-    color: #000000;
-    text-decoration: none;
-  }
-
   /* Profile card + connect button — keep resting tilt on touch */
   .profile-card:hover,
   .profile-card.scroll-fade-in:hover {
-    transform: rotate(4deg);
+    transform: rotate(-5deg);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
   }
   .profile-card-connect:hover {
