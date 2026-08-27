@@ -178,3 +178,4 @@ CHANGELOG (edit when brand changes)
 2026-08-27 — Hero welcome text uses plain text through the full animation (no letter-span remount) to prevent kerning snap when the highlight fades.
 2026-08-27 — Added top viewport blur behind floating nav (index, about, lab).
 2026-08-27 — Viewport top blur shortened (clamp 80px–130px, ~16vh).
+2026-08-27 — Viewport top blur strength reduced (2px backdrop-filter).

@@ -410,8 +410,8 @@ body {
   /* Above wall pics (5), below hero welcome text (#hero-stage 10) and nav (999) */
   z-index: 7;
   pointer-events: none;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   background: transparent;
   mask-image: linear-gradient(
     180deg,
