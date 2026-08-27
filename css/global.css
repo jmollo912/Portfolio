@@ -406,7 +406,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: clamp(80px, 16vh, 130px);
+  height: clamp(100px, 20vh, 160px);
   /* Above wall pics (5), below hero welcome text (#hero-stage 10) and nav (999) */
   z-index: 7;
   pointer-events: none;
