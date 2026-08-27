@@ -400,6 +400,39 @@ body {
   /* Allow clicks through the header */
 }
 
+/* Soft blur at top of viewport — separate from nav + hero text (see z-index stack) */
+.viewport-top-blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: clamp(80px, 16vh, 130px);
+  /* Above wall pics (5), below hero welcome text (#hero-stage 10) and nav (999) */
+  z-index: 7;
+  pointer-events: none;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  background: transparent;
+  mask-image: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 12%,
+    rgba(0, 0, 0, 0.85) 35%,
+    rgba(0, 0, 0, 0.45) 60%,
+    rgba(0, 0, 0, 0.15) 82%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 12%,
+    rgba(0, 0, 0, 0.85) 35%,
+    rgba(0, 0, 0, 0.45) 60%,
+    rgba(0, 0, 0, 0.15) 82%,
+    transparent 100%
+  );
+}
+
 .nav-wrapper {
   position: fixed;
   top: 12px;
@@ -761,21 +794,10 @@ body {
   border-radius: 14px;
   position: relative;
   z-index: 1;
-  transition: transform 0.2s ease;
 }
 
-.floating-nav a.nav-icon-link:hover:not(.active):not([aria-current="page"]) {
-  transform: scale(1.08);
-}
-
-.floating-nav a.nav-icon-link.active:hover,
-.floating-nav a.nav-icon-link[aria-current="page"]:hover {
-  transform: scale(1.08);
-}
-
-.floating-nav:has(a.nav-icon-link.active:hover) .nav-marker,
-.floating-nav:has(a.nav-icon-link[aria-current="page"]:hover) .nav-marker {
-  transform: scale(1.08);
+.floating-nav a.nav-icon-link:hover .nav-icon-wrap {
+  transform: scale(1.2);
 }
 
 .nav-icon-wrap {
@@ -783,6 +805,8 @@ body {
   width: 22px;
   height: 22px;
   display: block;
+  transform-origin: center center;
+  transition: transform 0.2s ease;
 }
 
 .nav-icon {
@@ -1316,6 +1340,15 @@ body {
   z-index: 10;
   overflow: visible;
   pointer-events: none;
+  isolation: isolate;
+}
+
+#hero-textbox,
+#hero-typed,
+.hero-textbox-hint {
+  filter: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 #hero-cursor {
@@ -1345,18 +1378,9 @@ body {
 #hero-typed {
   font-family: Inter, system-ui, -apple-system, sans-serif;
   font-weight: 600;
+  font-variation-settings: "wght" 600;
   color: #111111;
   line-height: 1;
-  pointer-events: none;
-}
-
-/* Letter spans during type/expand — inline-block avoids layout jump while typing */
-#hero-typed .hero-typed-letter {
-  display: inline-block;
-  font-weight: 600;
-  font-variation-settings: "wght" 600;
-  transform: scale(1);
-  transform-origin: center bottom;
   pointer-events: none;
 }
 
@@ -5917,15 +5941,8 @@ body :where(
     filter: brightness(0) saturate(100%) invert(45%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(90%);
   }
 
-  /* Floating nav icon hover */
-  .floating-nav a.nav-icon-link:hover:not(.active):not([aria-current="page"]),
-  .floating-nav a.nav-icon-link.active:hover,
-  .floating-nav a.nav-icon-link[aria-current="page"]:hover {
-    transform: none;
-  }
-
-  .floating-nav:has(a.nav-icon-link.active:hover) .nav-marker,
-  .floating-nav:has(a.nav-icon-link[aria-current="page"]:hover) .nav-marker {
+  /* Floating nav icon hover — icon only, not marker pill */
+  .floating-nav a.nav-icon-link:hover .nav-icon-wrap {
     transform: none;
   }
 

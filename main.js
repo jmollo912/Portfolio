@@ -336,16 +336,16 @@ function initHeroCursorAnimation() {
     const maxH = H - edge * 2;
 
     // Final box — scales with viewport, capped on large screens
-    let finalW = Math.min(W * 0.78, 580, maxW);
-    let finalH = Math.min(H * 0.31, 118, maxH);
-    let finalFS = Math.min(finalH * 0.42, 48);
+    let finalW = Math.min(W * 0.82, 640, maxW);
+    let finalH = Math.min(H * 0.36, 140, maxH);
+    let finalFS = Math.min(finalH * 0.42, 58);
 
-    while (finalFS > 14 && measureTextWidth(FINAL_TEXT, finalFS, 900) + BOX_H_PAD > finalW) {
+    while (finalFS > 14 && measureTextWidth(FINAL_TEXT, finalFS, 600) + BOX_H_PAD > finalW) {
       finalFS -= 1;
     }
     finalH = Math.min(Math.max(finalFS / 0.42, finalFS + 16), maxH);
 
-    const textW = measureTextWidth(FINAL_TEXT, finalFS, 900) + BOX_H_PAD;
+    const textW = measureTextWidth(FINAL_TEXT, finalFS, 600) + BOX_H_PAD;
     finalW = Math.min(Math.max(finalW, textW), maxW);
 
     // Initial box — always smaller than final so the expand phase grows the box
@@ -444,31 +444,14 @@ function initHeroCursorAnimation() {
   }
 
   function clearTyped() {
-    delete typed.dataset.letterText;
+    typed.textContent = '';
     typed.classList.remove('hero-typed--interactive');
     typed.removeAttribute('aria-label');
-    typed.replaceChildren();
   }
 
-  function setTypedPlain(text) {
-    delete typed.dataset.letterText;
-    typed.classList.remove('hero-typed--interactive');
-    typed.removeAttribute('aria-label');
-    typed.textContent = text;
-  }
-
-  function setTypedLetters(text) {
-    if (typed.dataset.letterText !== text) {
-      typed.dataset.letterText = text;
-      typed.replaceChildren();
-      for (const ch of text) {
-        const span = document.createElement('span');
-        span.className = 'hero-typed-letter';
-        span.textContent = ch === ' ' ? '\u00A0' : ch;
-        span.setAttribute('aria-hidden', 'true');
-        typed.appendChild(span);
-      }
-    }
+  /** Plain text node — keeps Inter kerning consistent through type, expand, and highlight fade. */
+  function setTypedText(text) {
+    if (typed.textContent !== text) typed.textContent = text;
     typed.classList.remove('hero-typed--interactive');
     typed.removeAttribute('aria-label');
   }
@@ -476,7 +459,7 @@ function initHeroCursorAnimation() {
   function applyFinalState() {
     const m = getMetrics();
     if (!m) return;
-    setTypedPlain(FINAL_TEXT);
+    setTypedText(FINAL_TEXT);
     applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
     textbox.style.opacity = '1';
     setHighlightOpacity(0);
@@ -581,14 +564,14 @@ function initHeroCursorAnimation() {
       } else if (el < ends[4]) {
         // 3–4. Type welcome message + hold
         setCursorOpacity(1);
-        setTypedLetters(typedText);
+        setTypedText(typedText);
         applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
         showBox(true);
         setCursor(m.drawEndX, m.drawEndY);
       } else if (el < ends[5]) {
         // 5. Move from bottom-right corner → top-right handle
         setCursorOpacity(1);
-        setTypedLetters(FINAL_TEXT);
+        setTypedText(FINAL_TEXT);
         applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
         showBox(true);
         const p = easeInOut(pT(5, el));
@@ -596,7 +579,7 @@ function initHeroCursorAnimation() {
       } else if (el < ends[6]) {
         // 6. Expand the box (cursor follows top-right handle)
         setCursorOpacity(1);
-        setTypedLetters(FINAL_TEXT);
+        setTypedText(FINAL_TEXT);
         const p = easeInOut(pT(6, el));
         applyBox(m.boxCX, m.boxCY, lerp(m.targetW, m.finalW, p), lerp(m.targetH, m.finalH, p), lerp(m.targetFS, m.finalFS, p), m.hs);
         showBox(true);
@@ -604,13 +587,13 @@ function initHeroCursorAnimation() {
       } else if (el < ends[7]) {
         // 7. Hold after expand
         setCursorOpacity(1);
-        setTypedLetters(FINAL_TEXT);
+        setTypedText(FINAL_TEXT);
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         showBox(true);
         setCursor(m.finalTrX, m.finalTrY);
       } else if (el < ends[8]) {
         // 8. Cursor fade out
-        setTypedLetters(FINAL_TEXT);
+        setTypedText(FINAL_TEXT);
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         showBox(true);
         setHighlightOpacity(1);
@@ -618,7 +601,7 @@ function initHeroCursorAnimation() {
         setCursorOpacity(1 - pT(8, el));
       } else if (el < ends[9]) {
         // 9. Highlight fade out — leave title text only
-        setTypedLetters(FINAL_TEXT);
+        setTypedText(FINAL_TEXT);
         applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
         textbox.style.opacity = '1';
         setCursorOpacity(0);
