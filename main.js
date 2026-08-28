@@ -2701,4 +2701,133 @@ function initCbsPivotFlow() {
 }
 
 document.addEventListener('DOMContentLoaded', initCbsPivotFlow);
+
+// ==========================================
+// FLOCK SPORTS — DESIGNS GALLERY
+// ==========================================
+const FLOCK_DESIGN_IMAGES = [
+  'Clinched.webp',
+  'Hurdle.webp',
+  'Captains.webp',
+  'WhiteKelly.webp',
+  'Steelers.webp',
+  'CommandersConfChamp.webp',
+  'Cowboys.webp',
+  'GeauxBirds.webp',
+  'AJBrown.webp',
+  'Madden.webp',
+  'Packers.webp',
+  'PackersWildcard.webp',
+  'QbRoom.webp',
+  'Ramsey.webp',
+  'SaquonRecord.webp',
+  '200Games.webp',
+  'Tampa.webp',
+  'Tanner.webp',
+  'TheWarden.webp',
+  'Week2Final.webp',
+];
+
+const FLOCK_DESIGN_IMAGE_BASE = '../media/FlockSports/MoreImages/';
+
+function flockDesignAlt(filename) {
+  const label = filename
+    .replace(/\.webp$/i, '')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/([A-Za-z])(\d)/g, '$1 $2');
+  return `Flock Sports ${label} social graphic`;
+}
+
+function buildFlockDesignsGrid(grid) {
+  const fragment = document.createDocumentFragment();
+
+  FLOCK_DESIGN_IMAGES.forEach((file) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'flock-designs-item';
+
+    const img = document.createElement('img');
+    img.className = 'flock-designs-image';
+    img.src = `${FLOCK_DESIGN_IMAGE_BASE}${file}`;
+    img.alt = flockDesignAlt(file);
+    img.width = 1080;
+    img.height = 1350;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+
+    button.appendChild(img);
+    button.setAttribute('aria-label', `View ${img.alt}`);
+    fragment.appendChild(button);
+  });
+
+  grid.replaceChildren(fragment);
+}
+
+function initFlockDesignsGallery() {
+  const grid = document.getElementById('flock-designs-grid');
+  const lightbox = document.getElementById('flock-designs-lightbox');
+  if (!grid || !lightbox) return;
+
+  buildFlockDesignsGrid(grid);
+
+  const items = Array.from(grid.querySelectorAll('.flock-designs-item'));
+  const counter = document.getElementById('flock-designs-lightbox-counter');
+  const slide = document.getElementById('flock-designs-lightbox-slide');
+  const prevBtn = lightbox.querySelector('[data-flock-lightbox-prev]');
+  const nextBtn = lightbox.querySelector('[data-flock-lightbox-next]');
+  const closeBtn = lightbox.querySelector('.flock-designs-lightbox-close');
+  const closeTargets = lightbox.querySelectorAll('[data-flock-lightbox-close]');
+
+  let currentIndex = 0;
+  let previousFocus = null;
+
+  function updateSlide() {
+    const sourceImg = items[currentIndex]?.querySelector('img');
+    if (counter) counter.textContent = `${currentIndex + 1} / ${items.length}`;
+    if (slide && sourceImg) {
+      slide.src = sourceImg.currentSrc || sourceImg.src;
+      slide.alt = sourceImg.alt;
+    }
+  }
+
+  function openLightbox(index) {
+    currentIndex = index;
+    previousFocus = document.activeElement;
+    updateSlide();
+    lightbox.hidden = false;
+    document.documentElement.classList.add('flock-designs-lightbox-open');
+    if (window.lenis?.stop) window.lenis.stop();
+    closeBtn?.focus();
+  }
+
+  function closeLightbox() {
+    lightbox.hidden = true;
+    document.documentElement.classList.remove('flock-designs-lightbox-open');
+    if (window.lenis?.start) window.lenis.start();
+    previousFocus?.focus?.();
+  }
+
+  function goTo(index) {
+    const total = items.length;
+    currentIndex = ((index % total) + total) % total;
+    updateSlide();
+  }
+
+  items.forEach((item, index) => {
+    item.addEventListener('click', () => openLightbox(index));
+  });
+
+  prevBtn?.addEventListener('click', () => goTo(currentIndex - 1));
+  nextBtn?.addEventListener('click', () => goTo(currentIndex + 1));
+  closeTargets.forEach((target) => target.addEventListener('click', closeLightbox));
+
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.hidden) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') goTo(currentIndex - 1);
+    if (e.key === 'ArrowRight') goTo(currentIndex + 1);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initFlockDesignsGallery);
 document.addEventListener('DOMContentLoaded', dispatchLoadingComplete);
