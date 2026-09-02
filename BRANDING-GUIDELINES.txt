@@ -100,7 +100,8 @@ Every page has viewport, canonical, meta description, and a full Open Graph +
 Twitter card set (og:type/title/description/url/image/site_name +
 twitter:card=summary_large_image). Domain is https://gmollodesign.com (from
 CNAME) — keep og:url/og:image absolute against that domain, and give every
-page a distinct og:image (existing cover/hero art, no new assets).
+page a distinct og:image (existing cover/hero art, no new assets). Homepage
+(index) uses media/CoverIMG/Hero.png for og:image / twitter:image.
 Mobile image budget: on screens <600px, content images should not exceed
 ~35-40vh unless they're a full-bleed hero (case-hero-main-image, case
 heroes) — enforced via vh-capped heights/max-heights on case-content-image,
