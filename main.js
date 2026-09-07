@@ -213,16 +213,27 @@ function initWallPicsSpread(onComplete) {
   function runSpread() {
     const cx = container.clientWidth / 2;
     const cy = container.clientHeight / 2;
-    const order = [2, 3, 4, 5, 6, 1];
+    // Peel from the top of the visual stack: whichever pic is showing leaves first.
+    const order = wallPics
+      .map((pic, domIndex) => {
+        const group = pic.closest('.wall-pic-group');
+        const z = group ? (parseInt(getComputedStyle(group).zIndex, 10) || 0) : 0;
+        const match = pic.className.match(/wall-pic-(\d+)/);
+        const n = match ? parseInt(match[1], 10) : 0;
+        return { n, z, domIndex };
+      })
+      .sort((a, b) => b.z - a.z || b.domIndex - a.domIndex)
+      .map((item) => item.n);
     const PAUSE = 280;    // hold stacked in the center before spreading
     const STEP = 50;      // gap between each picture releasing
     const DURATION = 240; // travel time per picture
     const EASING = 'ease-out';
-    const STACK_SCALE = 1.0;
-    const STACK_SCALE_LANDSCAPE = 0.72;
+    // Start small in the center stack; scale up to 1 as each pic lands.
+    const STACK_SCALE = 0.52;
+    const STACK_SCALE_LANDSCAPE = 0.4;
 
     function stackScaleFor(pic) {
-      // Eagles stays full size on top of the stack.
+      // Eagles stays slightly larger on top of the stack, still undersized.
       if (pic.classList.contains('wall-pic-1')) return STACK_SCALE;
       const w = pic.naturalWidth;
       const h = pic.naturalHeight;

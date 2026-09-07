@@ -649,10 +649,11 @@ body {
   top: -80px;
   display: inline-flex;
   align-items: center;
+  height: 62px; /* match .floating-nav (7px pad + 48px icons + 7px pad) */
   z-index: 1201;
   text-decoration: none;
   line-height: 0;
-  padding: 14px 0;
+  padding: 0;
   transform: translateY(0);
   transition:
     top 0.6s cubic-bezier(0.22, 1, 0.36, 1),
@@ -666,7 +667,7 @@ body {
 
 .nav-brand-logo {
   display: block;
-  height: 23px;
+  height: 45px;
   width: auto;
 }
 
