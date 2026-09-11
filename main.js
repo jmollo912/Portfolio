@@ -227,7 +227,7 @@ function initWallPicsSpread(onComplete) {
     const PAUSE = 280;    // hold stacked in the center before spreading
     const STEP = 50;      // gap between each picture releasing
     const DURATION = 240; // travel time per picture
-    const EASING = 'ease-out';
+    const EASING = 'ease-in-out';
     // Start small in the center stack; scale up to 1 as each pic lands.
     const STACK_SCALE = 0.52;
     const STACK_SCALE_LANDSCAPE = 0.4;
