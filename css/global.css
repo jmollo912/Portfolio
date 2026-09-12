@@ -1745,7 +1745,7 @@ body {
 }
 
 .case-studies.container {
-  max-width: 1200px;
+  max-width: 1257px;
   padding-inline: 15px;
 }
 
@@ -1761,7 +1761,7 @@ body {
 }
 
 .case-studies .work-section-heading {
-  max-width: 1000px;
+  max-width: 1217px;
   margin: 0 auto 28px;
   font-size: clamp(18px, 2vw, 22px);
   font-weight: 500;
@@ -1799,10 +1799,11 @@ body {
 /* ── Work grid — 2×2 bento ── */
 .work-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 596px);
   gap: 25px;
-  max-width: 1000px;
+  max-width: 1217px; /* 596 + 25 + 596 */
   margin-inline: auto;
+  justify-content: center;
 }
 
 .work-card {
@@ -1955,6 +1956,14 @@ body {
   background: var(--grid-box);
 }
 
+/* Index Favorite Work covers — fixed 596×596 hero boxes */
+.work-grid .work-card-image-wrap--media {
+  width: 596px;
+  height: 596px;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
 .work-card--media {
   background: transparent;
   padding: 0;
@@ -2006,6 +2015,22 @@ body {
   pointer-events: none;
 }
 
+@media (max-width: 1240px) {
+  .work-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 1000px;
+  }
+
+  .case-studies .work-section-heading {
+    max-width: 1000px;
+  }
+
+  .work-grid .work-card-image-wrap--media {
+    width: 100%;
+    height: auto;
+  }
+}
+
 @media (max-width: 700px) {
   .work-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -2036,6 +2061,11 @@ body {
     width: 100%;
     min-height: 0;
     border-radius: 16px;
+  }
+
+  .work-grid .work-card-image-wrap--media {
+    width: 100%;
+    height: auto;
   }
 
   .work-card-meta {
