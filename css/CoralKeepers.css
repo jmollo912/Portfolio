@@ -247,7 +247,6 @@
 }
 
 /* Research images — translate up + scale in (staggered) */
-.coral-research-img.scroll-fade,
 .coral-research-img.scroll-fade-in {
   transition:
     opacity 0.9s ease-out,
@@ -263,17 +262,14 @@
   transform: translateY(0) scale(1);
 }
 
-.coral-research-item:nth-child(1) .coral-research-img.scroll-fade,
 .coral-research-item:nth-child(1) .coral-research-img.scroll-fade-in {
   transition-delay: 0s !important;
 }
 
-.coral-research-item:nth-child(2) .coral-research-img.scroll-fade,
 .coral-research-item:nth-child(2) .coral-research-img.scroll-fade-in {
   transition-delay: 0.25s !important;
 }
 
-.coral-research-item:nth-child(3) .coral-research-img.scroll-fade,
 .coral-research-item:nth-child(3) .coral-research-img.scroll-fade-in {
   transition-delay: 0.5s !important;
 }
@@ -406,7 +402,6 @@
   transform: translateY(0) scale(1);
 }
 
-.coral-features-img.scroll-fade,
 .coral-features-img.scroll-fade-in {
   transition:
     opacity 0.9s ease-out,
@@ -414,17 +409,14 @@
     filter 0.9s ease-out !important;
 }
 
-.coral-features-item:nth-child(1) .coral-features-img.scroll-fade,
 .coral-features-item:nth-child(1) .coral-features-img.scroll-fade-in {
   transition-delay: 0s !important;
 }
 
-.coral-features-item:nth-child(2) .coral-features-img.scroll-fade,
 .coral-features-item:nth-child(2) .coral-features-img.scroll-fade-in {
   transition-delay: 0.25s !important;
 }
 
-.coral-features-item:nth-child(3) .coral-features-img.scroll-fade,
 .coral-features-item:nth-child(3) .coral-features-img.scroll-fade-in {
   transition-delay: 0.5s !important;
 }

@@ -312,18 +312,20 @@ body {
   cursor: none;
 }
 
-/* SCROLL FADE IN ANIMATIONS */
+/* SCROLL FADE IN ANIMATIONS
+   Initial state has no transition — avoids a reverse “jump” when JS
+   attaches .scroll-fade after first paint. Motion only runs on reveal. */
 .scroll-fade {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(20px) scale(0.96);
   filter: blur(4px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out, filter 0.6s ease-out !important;
 }
 
 .scroll-fade-in {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
   filter: blur(0);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out, filter 0.6s ease-out !important;
 }
 
 .work-card.scroll-fade {
@@ -334,17 +336,84 @@ body {
   transform: translateY(0) scale(1);
 }
 
+/* Pre-hide fade targets before JS attaches .scroll-fade (no flash on load) */
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not(.scroll-fade-ready) .work-card,
+  html.js:not(.scroll-fade-ready) section:not(#hero) :is(h1, h2, h3, h4, h5, h6),
+  html.js:not(.scroll-fade-ready) section:not(#hero) p:not(.case-meta),
+  html.js:not(.scroll-fade-ready) .section-title,
+  html.js:not(.scroll-fade-ready) .card:not(.case-card),
+  html.js:not(.scroll-fade-ready) .case-card,
+  html.js:not(.scroll-fade-ready) .case-content p,
+  html.js:not(.scroll-fade-ready) .case-content h3,
+  html.js:not(.scroll-fade-ready) .case-image-grid img,
+  html.js:not(.scroll-fade-ready) .case-template-grid img,
+  html.js:not(.scroll-fade-ready) .case-info-card,
+  html.js:not(.scroll-fade-ready) .result-item,
+  html.js:not(.scroll-fade-ready) .info-card-item,
+  html.js:not(.scroll-fade-ready) .case-list li,
+  html.js:not(.scroll-fade-ready) .about-text p,
+  html.js:not(.scroll-fade-ready) .about-photo,
+  html.js:not(.scroll-fade-ready) .about-cta-section .profile-card,
+  html.js:not(.scroll-fade-ready) .about-cta-section .about-hero-text,
+  html.js:not(.scroll-fade-ready) .about-story-title,
+  html.js:not(.scroll-fade-ready) .about-story-text,
+  html.js:not(.scroll-fade-ready) .about-story-quote,
+  html.js:not(.scroll-fade-ready) .about-page .about-contact-cta,
+  html.js:not(.scroll-fade-ready) .mac-window,
+  html.js:not(.scroll-fade-ready) .mac-photo-card,
+  html.js:not(.scroll-fade-ready) .resume-row,
+  html.js:not(.scroll-fade-ready) .resume-download,
+  html.js:not(.scroll-fade-ready) .case-image,
+  html.js:not(.scroll-fade-ready) .section-label,
+  html.js:not(.scroll-fade-ready) .overview-header,
+  html.js:not(.scroll-fade-ready) .overview-metadata,
+  html.js:not(.scroll-fade-ready) .overview-separator,
+  html.js:not(.scroll-fade-ready) .overview-project-title,
+  html.js:not(.scroll-fade-ready) .overview-meta-item,
+  html.js:not(.scroll-fade-ready) .case-content-image,
+  html.js:not(.scroll-fade-ready) .problem-corey-meet,
+  html.js:not(.scroll-fade-ready) .problem-corey-dead,
+  html.js:not(.scroll-fade-ready) .problem-corey-health,
+  html.js:not(.scroll-fade-ready) .coral-research-img,
+  html.js:not(.scroll-fade-ready) .coral-features-img,
+  html.js:not(.scroll-fade-ready) .coral-prototype-img,
+  html.js:not(.scroll-fade-ready) .case-main .about-cta-btn,
+  html.js:not(.scroll-fade-ready) .case-hero-main-image--convoy img,
+  html.js:not(.scroll-fade-ready) .case-hero-main-image--coral img,
+  html.js:not(.scroll-fade-ready) .case-hero-main-image--flock img,
+  html.js:not(.scroll-fade-ready) [class*="floating-img-"],
+  html.js:not(.scroll-fade-ready) .case-hero-title,
+  html.js:not(.scroll-fade-ready) .case-hero-subtitle,
+  html.js:not(.scroll-fade-ready) .case-hero-description {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+    filter: blur(4px);
+  }
+
+  /* Lab stays fully visible on load */
+  html.js:not(.scroll-fade-ready) .lab-page :is(h1, h2, h3, h4, h5, h6, p, .card, .section-title, .section-label),
+  html.js:not(.scroll-fade-ready) .skills-carousel .skill-item {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .scroll-fade {
     opacity: 1;
     transform: none;
+    filter: none;
     transition: none;
   }
   
   .scroll-fade-in {
     opacity: 1;
     transform: none;
+    filter: none;
+    transition: none;
   }
 
   .work-card.scroll-fade,
@@ -2549,18 +2618,15 @@ button.case-card {
 
 .profile-card.scroll-fade {
   opacity: 0;
-  transform: translateY(20px) rotate(-5deg);
+  transform: translateY(20px) scale(0.96) rotate(-5deg);
   filter: blur(4px);
+  transition: none !important;
 }
 
 .profile-card.scroll-fade-in {
   opacity: 1;
-  transform: translateY(0) rotate(-5deg);
+  transform: translateY(0) scale(1) rotate(-5deg);
   filter: blur(0);
-}
-
-.profile-card.scroll-fade,
-.profile-card.scroll-fade-in {
   transition: opacity 0.6s ease-out,
     transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     filter 0.6s ease-out,

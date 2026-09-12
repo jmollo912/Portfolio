@@ -809,8 +809,9 @@ function initScrollFadeAnimations() {
     element.classList.add('scroll-fade');
   });
 
-  // Force a synchronous reflow to ensure the initial state is rendered
+  // Commit hidden state, then allow page to leave the pre-hide CSS phase
   void document.body.offsetHeight;
+  document.documentElement.classList.add('scroll-fade-ready');
 
   // Wait for next frame to ensure CSS has been applied
   requestAnimationFrame(() => {
@@ -821,10 +822,7 @@ function initScrollFadeAnimations() {
         if (!element.classList.contains('scroll-fade')) return;
 
         if (isInScrollFadeViewport(element, viewportBottomMargin)) {
-          // Add a delay to ensure the initial opacity: 0 state is visible first
-          setTimeout(() => {
-            revealScrollFadeElement(element);
-          }, 150);
+          revealScrollFadeElement(element);
         } else {
           observer.observe(element);
         }
@@ -874,6 +872,8 @@ function initSkillsCarousel() {
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', initScrollFadeAnimations);
+// Safety net so pre-hide CSS never leaves content invisible if init fails
+setTimeout(() => document.documentElement.classList.add('scroll-fade-ready'), 2500);
 
 function initAboutStoryFloatAnimations() {
   const wrap = document.querySelector('.about-story-wrap');
