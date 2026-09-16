@@ -323,7 +323,7 @@ function initHeroCursorAnimation() {
   function measureTextWidth(text, fontSize, weight = 600) {
     if (!measureCanvas) measureCanvas = document.createElement('canvas');
     const ctx = measureCanvas.getContext('2d');
-    ctx.font = `${weight} ${fontSize}px Inter, system-ui, -apple-system, sans-serif`;
+    ctx.font = `${weight} ${fontSize}px "Plus Jakarta Sans", system-ui, -apple-system, sans-serif`;
     return ctx.measureText(text).width;
   }
 
@@ -460,7 +460,7 @@ function initHeroCursorAnimation() {
     typed.removeAttribute('aria-label');
   }
 
-  /** Plain text node — keeps Inter kerning consistent through type, expand, and highlight fade. */
+  /** Plain text node — keeps Plus Jakarta Sans kerning consistent through type, expand, and highlight fade. */
   function setTypedText(text) {
     if (typed.textContent !== text) typed.textContent = text;
     typed.classList.remove('hero-typed--interactive');
@@ -763,10 +763,8 @@ function initScrollFadeAnimations() {
     'section:not(#hero) h1, ' +
     '.section-label, ' +
     '.overview-header, ' +
-    '.overview-metadata, ' +
-    '.overview-separator, ' +
+    '.overview-row, ' +
     '.overview-project-title, ' +
-    '.overview-meta-item, ' +
     '.case-content-image, ' +
     '.problem-corey-meet, ' +
     '.problem-corey-dead, ' +

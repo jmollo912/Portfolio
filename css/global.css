@@ -152,7 +152,7 @@ html {
 }
 
 body {
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.5;
   color: #000000;
   background: transparent;
@@ -232,7 +232,7 @@ body {
     transform 0.12s ease 0s;
   pointer-events: none;
   white-space: nowrap;
-  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
 }
 
 /* Expand: fade in only after the pill is mostly open */
@@ -367,10 +367,8 @@ body {
   html.js:not(.scroll-fade-ready) .case-image,
   html.js:not(.scroll-fade-ready) .section-label,
   html.js:not(.scroll-fade-ready) .overview-header,
-  html.js:not(.scroll-fade-ready) .overview-metadata,
-  html.js:not(.scroll-fade-ready) .overview-separator,
+  html.js:not(.scroll-fade-ready) .overview-row,
   html.js:not(.scroll-fade-ready) .overview-project-title,
-  html.js:not(.scroll-fade-ready) .overview-meta-item,
   html.js:not(.scroll-fade-ready) .case-content-image,
   html.js:not(.scroll-fade-ready) .problem-corey-meet,
   html.js:not(.scroll-fade-ready) .problem-corey-dead,
@@ -998,7 +996,7 @@ body {
   padding: 6px 10px;
   background: var(--cta, #2B2B2B);
   color: #ffffff;
-  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   font-size: 12px;
   font-weight: 500;
   line-height: 1;
@@ -1480,7 +1478,7 @@ body {
 }
 
 #hero-typed {
-  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   font-weight: 600;
   font-variation-settings: "wght" 600;
   color: #111111;
@@ -1492,7 +1490,7 @@ body {
   position: absolute;
   margin: 0;
   padding-top: 8px;
-  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   font-size: clamp(12px, 1vw, 18px);
   font-weight: 400;
   font-style: italic;
@@ -2070,6 +2068,7 @@ body {
   line-height: 1.25;
   letter-spacing: -0.02em;
   color: #000000;
+  text-wrap: pretty;
 }
 
 .work-card-image {
@@ -3439,7 +3438,7 @@ button.case-card {
     0 0 0 1px rgba(0, 0, 0, 0.18),
     0 22px 70px rgba(0, 0, 0, 0.18),
     0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Plus Jakarta Sans", sans-serif;
 }
 
 .mac-title-bar {
@@ -4646,7 +4645,7 @@ body:has(.case-layout) {
   color: #B8B8B8;
   text-decoration: none;
   font-size: 17px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.2;
   border-radius: 2px;
   -webkit-font-smoothing: antialiased;
@@ -4856,6 +4855,8 @@ body:has(.case-layout) .site-footer-new > .container {
 .case-main .section-intro,
 .case-main .case-content p:not(.disclaimer),
 .case-main .overview-text p:not(.disclaimer),
+.case-main .overview-row-body,
+.case-main .overview-row-body p:not(.disclaimer),
 .case-main .overview-role-description,
 .case-main .case-list li {
   font-size: 15px;
@@ -5158,12 +5159,14 @@ body:has(.case-layout) .case-main .footer-pill-link :is(span, .footer-pill-icon,
   max-width: 620px;
 }
 
-.section-intro {
+.section-intro,
+.overview-row-body {
   margin: 0;
   max-width: 640px;
 }
 
-.section-intro strong {
+.section-intro strong,
+.overview-row-body strong {
   font-weight: 600;
 }
 
@@ -5640,9 +5643,9 @@ body:has(.case-layout) .case-main .footer-pill-link :is(span, .footer-pill-icon,
   color: #000000;
 }
 
-h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-hero-title):not(.about-apps-title):not(.resume-row-label):not(.lab-hero-title):not(.work-section-heading),
-.case-content h2:not(.section-heading):not(.section-label):not(.about-hero-title):not(.lab-hero-title):not(.work-section-heading),
-.container > h2:not(.section-heading):not(.section-label):not(.about-hero-title):not(.about-apps-title):not(.resume-row-label):not(.lab-hero-title):not(.work-section-heading) {
+h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-hero-title):not(.about-apps-title):not(.resume-row-label):not(.lab-hero-title):not(.work-section-heading):not(.overview-row-label),
+.case-content h2:not(.section-heading):not(.section-label):not(.about-hero-title):not(.lab-hero-title):not(.work-section-heading):not(.overview-row-label),
+.container > h2:not(.section-heading):not(.section-label):not(.about-hero-title):not(.about-apps-title):not(.resume-row-label):not(.lab-hero-title):not(.work-section-heading):not(.overview-row-label) {
   font-size: 50px;
   font-weight: 700;
   margin-bottom: 32px;
@@ -5664,12 +5667,12 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
   margin-top: 0;
 }
 
-/* Overview Section - New Layout */
+/* Overview Section — title + Context / My Role / Timeline rows */
 .overview-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 24px;
+  margin-bottom: clamp(40px, 5vw, 64px);
 }
 
 .overview-title-group {
@@ -5692,59 +5695,59 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
   margin: 0;
 }
 
-.overview-metadata {
+/* Label | content rows (Context, My Role, Timeline) */
+.overview-rows {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  align-items: flex-end;
+  gap: clamp(36px, 4.5vw, 56px);
 }
 
-.overview-meta-item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-}
-
-.overview-meta-label {
-  font-size: 14px;
-  font-weight: 400;
-  color: #000000;
-}
-
-.overview-meta-value {
-  font-size: 18px;
-  font-weight: 400;
-  color: #000000;
-}
-
-.overview-separator {
-  width: 100%;
-  height: 1px;
-  background: #ddd;
-  margin: 32px 0 48px 0;
-}
-
-.overview-content-grid {
+.overview-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: flex-start;
+  grid-template-columns: minmax(110px, 160px) minmax(0, 1fr);
+  column-gap: clamp(40px, 8vw, 96px);
+  align-items: start;
 }
 
-.overview-column-left,
-.overview-column-right {
-  display: flex;
-  flex-direction: column;
+.overview-row-label {
+  margin: 0;
 }
 
-.overview-column-heading {
-  font-size: 24px;
-  font-weight: 700;
+.overview-row .section-label {
+  margin-bottom: 0;
+}
+
+.overview-row-body {
+  min-width: 0;
+}
+
+.overview-row-body p {
+  margin: 0 0 1em;
+}
+
+.overview-row-body p:last-child {
+  margin-bottom: 0;
+}
+
+.overview-row-body p.disclaimer {
+  font-size: 14px;
+  line-height: 1.4;
+  font-style: italic;
   color: #000000;
-  margin: 0 0 24px 0;
 }
 
+.overview-media {
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+@media (max-width: 700px) {
+  .overview-row {
+    grid-template-columns: 1fr;
+    row-gap: 8px;
+  }
+}
+
+/* Legacy overview helpers still used by older markup / CBS image block spacing */
 .overview-text {
   display: flex;
   flex-direction: column;
@@ -5755,60 +5758,12 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
   margin: 0;
 }
 
-.overview-text strong {
-  font-weight: 500;
-}
-
-.overview-text p.disclaimer {
-  font-size: 14px;
-  line-height: 1.4;
-  font-style: italic;
-  color: #000000;
-}
-
-.overview-roles {
+.overview-single-column {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-.overview-role-item {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.overview-role-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: #000000;
-}
-
-.overview-role-description {
-  margin: 0;
-}
-
-@media (max-width: 900px) {
-  .overview-content-grid {
-    grid-template-columns: 1fr;
-    gap: 48px;
-  }
-
-  .overview-header {
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .overview-metadata {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 40px;
-  }
-
-  .overview-meta-item {
-    align-items: flex-start;
-  }
-}
 
 /* Project Info Card */
 .case-info-card {
@@ -5933,6 +5888,7 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
   grid-template-columns: repeat(4, 1fr);
   gap: 32px;
   margin: 40px 0;
+  padding-top: 48px;
 }
 
 .result-item {
@@ -6201,13 +6157,18 @@ body :where(
 /* Section labels (case studies) — 40% opacity */
 .section-label,
 .case-main .section-label,
-.case-main h3.section-label {
+.case-main h3.section-label,
+.case-main h2.section-label {
   color: rgba(0, 0, 0, 0.4);
   font-size: 13px;
   font-weight: 400;
   letter-spacing: 1px;
   text-transform: uppercase;
   margin-bottom: 12px;
+}
+
+.case-main .overview-row .section-label {
+  margin-bottom: 0;
 }
 
 /* ===========================================
