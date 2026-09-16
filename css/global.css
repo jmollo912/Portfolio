@@ -4145,8 +4145,7 @@ button.case-card {
   .nav-brand,
   .nav-resume,
   .case-nav-group,
-  .case-floating-nav,
-  .case-back-container {
+  .case-floating-nav {
     display: none !important;
   }
 
@@ -4560,11 +4559,10 @@ body:has(.case-layout) {
   --case-side-gutter: clamp(168px, 15vw, 240px);
   --case-nav-gap: 16px;
   --case-nav-width: min(160px, calc(var(--case-side-gutter) - (2 * var(--case-nav-gap))));
-  --case-nav-stack-gap: 12px;
   --case-back-sticky-top: clamp(64px, 10vh, 96px);
 }
 
-/* Fixed left rail: Back is always pinned; section nav rides/sticks under it. */
+/* Fixed left rail for the unified case section nav (Back + sections). */
 .case-nav-group {
   position: fixed;
   top: 0;
@@ -4581,77 +4579,11 @@ body:has(.case-layout) {
   pointer-events: none;
 }
 
-/* Back control — always visible, including the hero */
-.case-back-container {
-  position: absolute;
-  top: var(--case-back-sticky-top);
-  left: 0;
-  width: 100%;
-  z-index: 2;
-  pointer-events: auto;
-}
-
-.case-back-link {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 16px 20px 16px 30px;
-  background: #FFFFFF;
-  color: #B8B8B8;
-  text-decoration: none;
-  font-size: 17px;
-  font-weight: 500;
-  line-height: 1.2;
-  border-radius: 18px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: geometricPrecision;
-  transition: color 0.2s ease, transform 0.2s ease;
-}
-
-.case-back-link > span:not(.case-back-arrow) {
-  font-weight: inherit;
-}
-
-.case-back-link:hover {
-  color: #2B2B2B;
-  transform: scale(1.12);
-}
-
-.case-back-arrow {
-  display: inline-block;
-  width: 18px;
-  max-width: 0;
-  height: 18px;
-  flex-shrink: 0;
-  margin-right: 0;
-  opacity: 0;
-  overflow: hidden;
-  transform: translateX(12px);
-  background-color: currentColor;
-  -webkit-mask: url("../media/Convoy/Solution/Features/ArrowLeft.svg") center / contain no-repeat;
-  mask: url("../media/Convoy/Solution/Features/ArrowLeft.svg") center / contain no-repeat;
-  transition:
-    max-width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.25s ease,
-    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    margin-right 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.case-back-link:hover .case-back-arrow {
-  max-width: 18px;
-  opacity: 1;
-  transform: translateX(0);
-  margin-right: 10px;
-}
-
-/* White floating container for the stacked section names.
-   Rides up with Overview, then sticks under the Back button. */
+/* White floating panel: Back + section names in one stack.
+   Rides up with Overview, then sticks near the top. */
 .case-floating-nav {
   position: absolute;
-  top: calc(var(--case-back-sticky-top) + 64px);
+  top: var(--case-back-sticky-top);
   left: 0;
   width: 100%;
   box-sizing: border-box;
@@ -4661,7 +4593,7 @@ body:has(.case-layout) {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: none;
   border: 0;
   overflow: visible;
   opacity: 0;
@@ -4736,6 +4668,90 @@ body:has(.case-layout) {
 .case-floating-nav .case-nav-link:focus-visible {
   outline: 2px solid #333;
   border-radius: 10px;
+}
+
+/* Back sits in the same panel as section links (text-only, not a separate pill). */
+.case-floating-nav .case-back-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: auto;
+  box-sizing: border-box;
+  padding: 0;
+  background: transparent;
+  color: #B8B8B8;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.2;
+  border-radius: 0;
+  box-shadow: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  transform-origin: left center;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.case-floating-nav .case-back-link > span:not(.case-back-arrow) {
+  font-weight: inherit;
+}
+
+.case-floating-nav .case-back-link:hover {
+  color: #2B2B2B;
+  transform: scale(1.12);
+}
+
+.case-back-arrow {
+  display: inline-block;
+  width: 18px;
+  max-width: 0;
+  height: 18px;
+  flex-shrink: 0;
+  margin-right: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateX(12px);
+  background-color: currentColor;
+  -webkit-mask: url("../media/Convoy/Solution/Features/ArrowLeft.svg") center / contain no-repeat;
+  mask: url("../media/Convoy/Solution/Features/ArrowLeft.svg") center / contain no-repeat;
+  transition:
+    max-width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.25s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-right 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.case-back-link:hover .case-back-arrow {
+  max-width: 18px;
+  opacity: 1;
+  transform: translateX(0);
+  margin-right: 10px;
+}
+
+/* Standalone Back pill (e.g. Flock designs gallery) keeps the old card look. */
+.flock-designs-back-container .case-back-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px 20px 16px 30px;
+  background: #FFFFFF;
+  color: #B8B8B8;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.2;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.flock-designs-back-container .case-back-link:hover {
+  color: #2B2B2B;
+  transform: scale(1.12);
 }
 
 /* Case Study Layout */
@@ -5011,7 +5027,12 @@ body:has(.case-layout) .case-main .footer-pill-link :is(span, .footer-pill-icon,
     padding: 18px 20px 24px 26px;
   }
 
-  .case-back-link {
+  .case-floating-nav .case-back-link {
+    padding: 0;
+    font-size: 15px;
+  }
+
+  .flock-designs-back-container .case-back-link {
     padding: 14px 20px 14px 26px;
   }
 

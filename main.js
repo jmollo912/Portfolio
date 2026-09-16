@@ -1832,8 +1832,7 @@ function initCaseStudyScrollSpy() {
     }
   }
 
-  // Back stays pinned at the sticky top for the whole page (including hero).
-  // Section nav rides up with Overview, then sticks just under Back.
+  // Unified panel (Back + sections) rides up with Overview, then sticks near the top.
   function getCaseBackStickyTop() {
     return Math.min(96, Math.max(64, window.innerHeight * 0.1));
   }
@@ -1841,20 +1840,11 @@ function initCaseStudyScrollSpy() {
   function updateCaseNavPosition() {
     if (!caseNavGroup || !firstSection) return;
 
-    const backEl = caseNavGroup.querySelector('.case-back-container');
     const sectionNav = caseNav;
-    const stackGap = 12;
-    const backTop = getCaseBackStickyTop();
-
-    if (backEl) {
-      backEl.style.top = `${backTop}px`;
-    }
-
-    const backHeight = backEl ? backEl.offsetHeight : 56;
-    const stuckNavTop = backTop + backHeight + stackGap;
+    const stuckNavTop = getCaseBackStickyTop();
     const overviewTop = firstSection.getBoundingClientRect().top;
 
-    // Still in the hero (Overview below the fold) — keep section nav hidden.
+    // Still in the hero (Overview below the fold) — keep panel hidden.
     if (overviewTop >= window.innerHeight - 8) {
       sectionNav.classList.remove('is-visible', 'is-stuck');
       sectionNav.style.top = `${stuckNavTop}px`;
