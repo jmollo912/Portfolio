@@ -227,7 +227,7 @@
   --case-side-gutter: clamp(168px, 15vw, 240px);
   --case-nav-gap: 16px;
   --case-nav-width: min(160px, calc(var(--case-side-gutter) - (2 * var(--case-nav-gap))));
-  --case-back-sticky-top: clamp(64px, 10vh, 96px);
+  --case-back-sticky-top: clamp(140px, 18vh, 200px);
   min-height: 100vh;
   background: #FFFFFF;
 }

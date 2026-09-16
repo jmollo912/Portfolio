@@ -1757,6 +1757,9 @@ function initCaseStudyScrollSpy() {
   }).filter(Boolean);
 
   const firstSection = document.getElementById(sectionIds[0]);
+  // Align the floating panel with the Overview H1 (falls back to the section).
+  const alignTarget =
+    document.querySelector('.overview-project-title') || firstSection;
 
   // Suppress scroll spy while a programmatic smooth scroll is in flight, so
   // intermediate sections don't briefly flash as active.
@@ -1832,17 +1835,19 @@ function initCaseStudyScrollSpy() {
     }
   }
 
-  // Unified panel (Back + sections) rides up with Overview, then sticks near the top.
+  // Unified panel rides with the Overview H1, then sticks with top padding.
+  // Keep in sync with --case-back-sticky-top: clamp(140px, 18vh, 200px)
   function getCaseBackStickyTop() {
-    return Math.min(96, Math.max(64, window.innerHeight * 0.1));
+    return Math.min(200, Math.max(140, window.innerHeight * 0.18));
   }
 
   function updateCaseNavPosition() {
-    if (!caseNavGroup || !firstSection) return;
+    if (!caseNavGroup || !firstSection || !alignTarget) return;
 
     const sectionNav = caseNav;
     const stuckNavTop = getCaseBackStickyTop();
     const overviewTop = firstSection.getBoundingClientRect().top;
+    const alignTop = alignTarget.getBoundingClientRect().top;
 
     // Still in the hero (Overview below the fold) — keep panel hidden.
     if (overviewTop >= window.innerHeight - 8) {
@@ -1853,9 +1858,10 @@ function initCaseStudyScrollSpy() {
 
     sectionNav.classList.add('is-visible');
 
-    if (overviewTop > stuckNavTop) {
+    // Keep the panel top flush with the H1 until it hits the sticky offset.
+    if (alignTop > stuckNavTop) {
       sectionNav.classList.remove('is-stuck');
-      sectionNav.style.top = `${Math.round(overviewTop)}px`;
+      sectionNav.style.top = `${Math.round(alignTop)}px`;
     } else {
       sectionNav.classList.add('is-stuck');
       sectionNav.style.top = `${stuckNavTop}px`;
