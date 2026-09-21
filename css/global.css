@@ -4595,7 +4595,7 @@ body:has(.case-layout) {
   padding-top: var(--case-layout-pad-top);
 }
 
-/* White floating panel: Back + section names in one stack.
+/* Transparent side nav panel: Back + section names in one stack.
    Sticky on the nav column — no JS top math. */
 .case-floating-nav {
   position: relative;
@@ -4603,7 +4603,7 @@ body:has(.case-layout) {
   left: auto;
   width: 100%;
   box-sizing: border-box;
-  background: #FFFFFF;
+  background: transparent;
   padding: 22px 24px 28px 30px;
   border-radius: 18px;
   display: flex;
