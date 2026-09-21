@@ -1740,7 +1740,6 @@ document.addEventListener('DOMContentLoaded', initCaseStudyHeaderBehavior);
 // ==========================================
 function initCaseStudyScrollSpy() {
   const caseNav = document.querySelector('.case-floating-nav');
-  const caseNavGroup = document.querySelector('.case-nav-group');
   if (!caseNav) return;
 
   const caseNavLinks = caseNav.querySelectorAll('.case-nav-link');
@@ -1755,9 +1754,7 @@ function initCaseStudyScrollSpy() {
   }).filter(Boolean);
 
   const firstSection = document.getElementById(sectionIds[0]);
-  // Align the floating panel with the Overview H1 (falls back to the section).
-  const alignTarget =
-    document.querySelector('.overview-project-title') || firstSection;
+  const caseHero = document.querySelector('.case-hero-centered');
 
   // Suppress scroll spy while a programmatic smooth scroll is in flight, so
   // intermediate sections don't briefly flash as active.
@@ -1833,36 +1830,18 @@ function initCaseStudyScrollSpy() {
     }
   }
 
-  // Unified panel rides with the Overview H1, then sticks with top padding.
-  // Keep in sync with --case-back-sticky-top: clamp(140px, 18vh, 200px)
-  function getCaseBackStickyTop() {
-    return Math.min(200, Math.max(140, window.innerHeight * 0.18));
-  }
-
-  function updateCaseNavPosition() {
-    if (!caseNavGroup || !firstSection || !alignTarget) return;
-
-    const sectionNav = caseNav;
-    const stuckNavTop = getCaseBackStickyTop();
-    const overviewTop = firstSection.getBoundingClientRect().top;
-    const alignTop = alignTarget.getBoundingClientRect().top;
-
-    // Still in the hero (Overview below the fold) — keep panel hidden.
-    if (overviewTop >= window.innerHeight - 8) {
-      sectionNav.classList.remove('is-visible', 'is-stuck');
-      sectionNav.style.top = `${stuckNavTop}px`;
+  // Sticky positioning is CSS-owned. Optionally fade the panel while the
+  // full-bleed hero still fills the viewport (desktop only).
+  function updateCaseNavVisibility() {
+    if (!caseHero || window.matchMedia('(max-width: 600px)').matches) {
+      caseNav.classList.add('is-visible');
       return;
     }
-
-    sectionNav.classList.add('is-visible');
-
-    // Keep the panel top flush with the H1 until it hits the sticky offset.
-    if (alignTop > stuckNavTop) {
-      sectionNav.classList.remove('is-stuck');
-      sectionNav.style.top = `${Math.round(alignTop)}px`;
+    const heroBottom = caseHero.getBoundingClientRect().bottom;
+    if (heroBottom > window.innerHeight * 0.55) {
+      caseNav.classList.remove('is-visible');
     } else {
-      sectionNav.classList.add('is-stuck');
-      sectionNav.style.top = `${stuckNavTop}px`;
+      caseNav.classList.add('is-visible');
     }
   }
 
@@ -1922,7 +1901,7 @@ function initCaseStudyScrollSpy() {
     navPosTicking = true;
     requestAnimationFrame(() => {
       navPosTicking = false;
-      updateCaseNavPosition();
+      updateCaseNavVisibility();
       updateActiveCaseSection();
       const active = caseNav.querySelector('.case-nav-link.active');
       if (active) positionCaseMarker(active);
@@ -1932,7 +1911,9 @@ function initCaseStudyScrollSpy() {
   window.addEventListener('scroll', onCaseNavScrollOrResize, { passive: true });
   window.addEventListener('resize', onCaseNavScrollOrResize);
 
-  updateCaseNavPosition();
+  // Start hidden until hero check runs (CSS defaults visible; sync class now).
+  caseNav.classList.remove('is-visible');
+  updateCaseNavVisibility();
   updateActiveCaseSection();
   requestAnimationFrame(() => {
     if (caseMarker) caseMarker.classList.add('ready');

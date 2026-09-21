@@ -224,10 +224,8 @@
 
 /* More designs gallery page */
 .flock-designs-page {
-  --case-side-gutter: clamp(168px, 15vw, 240px);
-  --case-nav-gap: 16px;
-  --case-nav-width: min(160px, calc(var(--case-side-gutter) - (2 * var(--case-nav-gap))));
-  --case-back-sticky-top: clamp(140px, 18vh, 200px);
+  --case-nav-col: clamp(140px, 14vw, 180px);
+  --case-nav-sticky-top: clamp(96px, 12vh, 140px);
   min-height: 100vh;
   background: #FFFFFF;
 }
@@ -246,16 +244,14 @@
 
 .flock-designs-back-container {
   position: fixed;
-  top: var(--case-back-sticky-top);
-  left: max(
-    var(--case-nav-gap),
-    calc(var(--case-side-gutter) - var(--case-nav-width) - var(--case-nav-gap))
-  );
+  top: var(--case-nav-sticky-top);
+  left: clamp(16px, 3vw, 32px);
   z-index: 1000;
-  width: var(--case-nav-width);
-  max-width: calc(100vw - var(--case-side-gutter) - 24px);
+  width: var(--case-nav-col);
+  max-width: calc(100vw - 48px);
   margin: 0;
   pointer-events: auto;
+  box-sizing: border-box;
 }
 
 .flock-designs-back-container .case-back-link {
@@ -451,7 +447,8 @@ html.flock-designs-lightbox-open body {
 
 @media (max-width: 900px) {
   .flock-designs-page {
-    --case-side-gutter: clamp(112px, 14vw, 160px);
+    --case-nav-col: clamp(120px, 16vw, 150px);
+    --case-nav-sticky-top: clamp(72px, 10vh, 112px);
   }
 
   .flock-designs-grid {
@@ -461,9 +458,7 @@ html.flock-designs-lightbox-open body {
 
 @media (max-width: 600px) {
   .flock-designs-page {
-    --case-side-gutter: 0px;
-    --case-nav-width: 0px;
-    --case-nav-gap: 0px;
+    --case-nav-col: 0px;
   }
 
   .flock-designs-back-container {

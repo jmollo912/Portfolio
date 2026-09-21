@@ -4148,15 +4148,31 @@ button.case-card {
     display: none !important;
   }
 
-  /* Drop case-study side gutters so copy can use the full phone width */
+  /* Single-column case layout on phones — desktop sticky nav hidden above */
   body:has(.case-layout) {
-    --case-side-gutter: 0px;
-    --case-nav-width: 0px;
-    --case-nav-gap: 0px;
+    --case-nav-col: 0px;
+    --case-layout-gap: 0px;
+    --case-layout-pad-x: 0px;
+  }
+
+  .case-layout {
+    display: block;
+    max-width: none;
+    padding-inline: 0;
   }
 
   .case-main {
     padding-inline: 0 !important;
+    width: 100%;
+  }
+
+  .case-content-wrapper {
+    max-width: none;
+    width: 100%;
+    padding:
+      clamp(32px, 6vw, 48px)
+      12px
+      clamp(48px, 8vw, 72px);
   }
 
   .case-layout .case-main .container,
@@ -4181,10 +4197,14 @@ button.case-card {
   }
 }
 
-/* Narrow tablets / large phones — shrink gutters; other layout tweaks. */
+/* Narrow tablets / large phones — tighter nav column; other layout tweaks. */
 @media (max-width: 900px) {
   body:has(.case-layout) {
-    --case-side-gutter: clamp(112px, 14vw, 160px);
+    --case-nav-col: clamp(130px, 18vw, 160px);
+    --case-layout-gap: clamp(16px, 2.5vw, 28px);
+    --case-nav-sticky-top: clamp(24px, 4vh, 40px);
+    --case-layout-max: 100%;
+    --case-layout-pad-x: clamp(12px, 2.5vw, 20px);
   }
 
   .hero {
@@ -4552,38 +4572,35 @@ button.case-card {
   }
 }
 
-/* Case study pages — reserve equal side gutters so the left nav
-   always sits in the margin and never overlaps main content. */
+/* Case study pages — two-column shell (sticky nav | scrolling content) */
 body:has(.case-layout) {
-  --case-side-gutter: clamp(168px, 15vw, 240px);
-  --case-nav-gap: 16px;
-  --case-nav-width: min(160px, calc(var(--case-side-gutter) - (2 * var(--case-nav-gap))));
-  --case-back-sticky-top: clamp(140px, 18vh, 200px);
+  --case-nav-col: clamp(160px, 14vw, 200px);
+  --case-layout-gap: clamp(28px, 3.5vw, 56px);
+  --case-nav-sticky-top: clamp(32px, 4vh, 56px);
+  --case-layout-max: 1280px;
+  --case-layout-pad-x: clamp(16px, 3vw, 32px);
+  --case-layout-pad-top: clamp(40px, 5vw, 60px);
 }
 
-/* Fixed left rail for the unified case section nav (Back + sections). */
+/* Sticky left rail — must be a direct grid child of .case-layout */
 .case-nav-group {
-  position: fixed;
-  top: 0;
-  left: max(
-    var(--case-nav-gap),
-    calc(var(--case-side-gutter) - var(--case-nav-width) - var(--case-nav-gap))
-  );
-  bottom: 0;
-  z-index: 1000;
-  width: var(--case-nav-width);
+  position: sticky;
+  top: var(--case-nav-sticky-top);
+  align-self: start;
+  z-index: 100;
+  width: 100%;
   min-width: 0;
-  max-width: var(--case-nav-width);
   box-sizing: border-box;
   pointer-events: none;
+  padding-top: var(--case-layout-pad-top);
 }
 
 /* White floating panel: Back + section names in one stack.
-   Rides with the Overview H1, then sticks with top padding. */
+   Sticky on the nav column — no JS top math. */
 .case-floating-nav {
-  position: absolute;
-  top: var(--case-back-sticky-top);
-  left: 0;
+  position: relative;
+  top: auto;
+  left: auto;
   width: 100%;
   box-sizing: border-box;
   background: #FFFFFF;
@@ -4599,7 +4616,6 @@ body:has(.case-layout) {
   visibility: hidden;
   pointer-events: none;
   transition: opacity 0.3s ease, visibility 0.3s ease;
-  will-change: top;
   z-index: 1;
 }
 
@@ -4753,16 +4769,22 @@ body:has(.case-layout) {
   transform: scale(1.12);
 }
 
-/* Case Study Layout */
+/* Parent shell: centered max-width grid → sticky nav | fluid main */
 .case-layout {
-  display: flex;
-  min-height: 100vh;
+  display: grid;
+  grid-template-columns: var(--case-nav-col) minmax(0, 1fr);
+  column-gap: var(--case-layout-gap);
+  align-items: start;
   width: 100%;
+  max-width: var(--case-layout-max);
+  margin-inline: auto;
+  padding-inline: var(--case-layout-pad-x);
   box-sizing: border-box;
+  min-height: 100vh;
 }
 
+/* Fluid content column — min-width: 0 prevents grid blowout from wide images */
 .case-main {
-  flex: 1;
   min-width: 0;
   width: 100%;
   max-width: 100%;
@@ -4770,8 +4792,19 @@ body:has(.case-layout) {
   flex-direction: column;
   align-items: stretch;
   box-sizing: border-box;
-  /* Keep content clear of the floating left nav (and matching right margin). */
-  padding-inline: var(--case-side-gutter, 0px);
+}
+
+/* Inner content pad; width is fluid within .case-main */
+.case-content-wrapper {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  box-sizing: border-box;
+  padding:
+    var(--case-layout-pad-top)
+    50px
+    clamp(60px, 8vw, 80px)
+    50px;
 }
 
 /* Case study content - fill layout, images to edges */
@@ -5120,14 +5153,22 @@ body:has(.case-layout) .case-main .footer-pill-link :is(span, .footer-pill-icon,
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
 }
 
-/* Case Study Sections */
+/* Case Study Sections — spacing between blocks; outer pad lives on wrapper */
 .case-section {
-  padding: 100px 0 60px 0;
+  padding: clamp(48px, 6vw, 80px) 0;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   box-sizing: border-box;
+}
+
+.case-content-wrapper > .case-section:first-child {
+  padding-top: 0;
+}
+
+.case-content-wrapper > .case-section:last-child {
+  padding-bottom: 0;
 }
 
 .case-section-alt {
@@ -6007,10 +6048,6 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
 
 /* Case Study Responsive */
 @media (max-width: 1100px) {
-  .case-layout {
-    flex-direction: column;
-  }
-
   .case-title {
     font-size: 36px;
   }
