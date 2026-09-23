@@ -224,8 +224,6 @@
 
 /* More designs gallery page */
 .flock-designs-page {
-  --case-nav-col: clamp(140px, 14vw, 180px);
-  --case-nav-sticky-top: clamp(96px, 12vh, 140px);
   min-height: 100vh;
   background: #FFFFFF;
 }
@@ -242,20 +240,49 @@
   margin: 0 auto;
 }
 
-.flock-designs-back-container {
-  position: fixed;
-  top: var(--case-nav-sticky-top);
-  left: clamp(16px, 3vw, 32px);
-  z-index: 1000;
-  width: var(--case-nav-col);
-  max-width: calc(100vw - 48px);
-  margin: 0;
-  pointer-events: auto;
+.flock-designs-header {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 28px);
+  margin: 0 0 clamp(28px, 4vw, 48px);
   box-sizing: border-box;
 }
 
-.flock-designs-back-container .case-back-link {
-  width: 100%;
+.flock-designs-header .case-back-link {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: auto;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  color: #B8B8B8;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.2;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  transform-origin: left center;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.flock-designs-header .case-back-link:hover {
+  color: #2B2B2B;
+  transform: scale(1.12);
+  background: transparent;
+  box-shadow: none;
+}
+
+.flock-designs-title {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 36px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: #000000;
 }
 
 .flock-designs-grid {
@@ -446,30 +473,21 @@ html.flock-designs-lightbox-open body {
 }
 
 @media (max-width: 900px) {
-  .flock-designs-page {
-    --case-nav-col: clamp(120px, 16vw, 150px);
-    --case-nav-sticky-top: clamp(72px, 10vh, 112px);
-  }
-
   .flock-designs-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .flock-designs-title {
+    font-size: clamp(20px, 5vw, 28px);
   }
 }
 
 @media (max-width: 600px) {
-  .flock-designs-page {
-    --case-nav-col: 0px;
-  }
-
-  .flock-designs-back-container {
-    position: sticky;
-    top: clamp(16px, 4vw, 24px);
-    left: auto;
-    width: 100%;
-    max-width: none;
-    margin-bottom: clamp(24px, 5vw, 32px);
-    padding-inline: clamp(16px, 5vw, 24px);
-    box-sizing: border-box;
+  .flock-designs-header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: clamp(20px, 4vw, 32px);
   }
 
   .flock-designs-page-main {
