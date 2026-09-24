@@ -1,0 +1,10 @@
+/* Sandbox page styles
+   Load with global.css on html/sandbox.html
+   Previous Lab styles remain in css/lab.css (backup with html/lab.html).
+*/
+
+.sandbox-page {
+  min-height: 60vh;
+  padding-top: clamp(96px, 14vh, 140px);
+  padding-bottom: 80px;
+}

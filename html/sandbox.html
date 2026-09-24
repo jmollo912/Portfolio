@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me — Giuseppe Mollo</title>
-    <meta name="description" content="Learn more about Giuseppe Mollo, a UX designer focused on making products simple, intuitive, and human-centered.">
+    <title>Sandbox — Giuseppe Mollo</title>
+    <meta name="description" content="Experiments and side projects from Giuseppe Mollo.">
     <link rel="icon" href="../media/Icons/gmWebLogo.jpg" type="image/jpeg">
-    <link rel="canonical" href="/html/about.html">
-    <meta property="og:type" content="profile">
+    <link rel="canonical" href="/html/sandbox.html">
+    <meta property="og:type" content="website">
     <meta property="og:site_name" content="Giuseppe Mollo">
-    <meta property="og:title" content="About Me — Giuseppe Mollo">
-    <meta property="og:description" content="Learn more about Giuseppe Mollo, a UX designer focused on making products simple, intuitive, and human-centered.">
-    <meta property="og:url" content="https://gmollodesign.com/html/about.html">
-    <meta property="og:image" content="https://gmollodesign.com/media/HeroPage/AboutMe/HeadshotAlt.jpg">
+    <meta property="og:title" content="Sandbox — Giuseppe Mollo">
+    <meta property="og:description" content="Experiments and side projects from Giuseppe Mollo.">
+    <meta property="og:url" content="https://gmollodesign.com/html/sandbox.html">
+    <meta property="og:image" content="https://gmollodesign.com/media/TheLab/BlenderDesk.webp">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="About Me — Giuseppe Mollo">
-    <meta name="twitter:description" content="Learn more about Giuseppe Mollo, a UX designer focused on making products simple, intuitive, and human-centered.">
-    <meta name="twitter:image" content="https://gmollodesign.com/media/HeroPage/AboutMe/HeadshotAlt.jpg">
+    <meta name="twitter:title" content="Sandbox — Giuseppe Mollo">
+    <meta name="twitter:description" content="Experiments and side projects from Giuseppe Mollo.">
+    <meta name="twitter:image" content="https://gmollodesign.com/media/TheLab/BlenderDesk.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/sandbox.css">
     <link rel="stylesheet" href="../vendor/lenis/lenis.css">
     <script>document.documentElement.classList.add('js');</script>
     <script src="../vendor/lenis/lenis.min.js" defer></script>
@@ -28,21 +29,19 @@
 </head>
 <body>
     <div class="custom-cursor" aria-hidden="true"></div>
-    
-    <!-- Mobile Hamburger Button -->
+
     <button class="case-hamburger" aria-label="Toggle navigation menu">
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
     </button>
-    
-    <!-- Mobile Dropdown Menu -->
+
     <nav class="case-mobile-nav">
         <ul>
             <li><a href="../index.html" class="case-nav-link">Home</a></li>
             <li><a href="../index.html#case-studies" class="case-nav-link">Work</a></li>
-            <li><a href="sandbox.html" class="case-nav-link">Sandbox</a></li>
-            <li><a href="#" class="case-nav-link active">About</a></li>
+            <li><a href="#" class="case-nav-link active">Sandbox</a></li>
+            <li><a href="about.html" class="case-nav-link">About</a></li>
             <li><a href="../media/About/Resume/ResumeGiuseppeMollo_1.pdf" target="_blank" rel="noopener" class="case-nav-link">Resume</a></li>
         </ul>
     </nav>
@@ -77,7 +76,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="sandbox.html" class="nav-icon-link nav-icon-link--lab" data-nav-label="Sandbox">
+                            <a href="#" class="nav-icon-link nav-icon-link--lab" data-nav-label="Sandbox" aria-current="page">
                                 <span class="nav-icon-wrap" aria-hidden="true">
                                     <img class="nav-icon nav-icon--inactive" src="../media/NavBar/Inactive%20Icons/Playground.png" alt="" width="24" height="24" decoding="async">
                                     <img class="nav-icon nav-icon--active" src="../media/NavBar/Active%20Icons/sandbox.png" alt="" width="24" height="24" decoding="async">
@@ -86,7 +85,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="nav-icon-link" data-nav-label="About">
+                            <a href="about.html" class="nav-icon-link" data-nav-label="About">
                                 <span class="nav-icon-wrap" aria-hidden="true">
                                     <img class="nav-icon nav-icon--inactive" src="../media/NavBar/Inactive%20Icons/About.png" alt="" width="24" height="24" decoding="async">
                                     <img class="nav-icon nav-icon--active" src="../media/NavBar/Active%20Icons/About.png" alt="" width="24" height="24" decoding="async">
@@ -96,7 +95,7 @@
                         </li>
                     </ul>
                 </nav>
-                <span class="nav-active-label" aria-hidden="true">About</span>
+                <span class="nav-active-label" aria-hidden="true">Sandbox</span>
             </div>
             <a href="../media/About/Resume/ResumeGiuseppeMollo_1.pdf" target="_blank" rel="noopener" class="nav-resume" aria-label="View resume">
                 <span>Resume</span>
@@ -105,85 +104,13 @@
         </div>
     </header>
 
-    <main class="about-page">
-        <section class="about-story" aria-labelledby="about-story-title">
-            <div class="about-story-wrap">
-                <img
-                    class="about-story-float about-story-float--football"
-                    src="../media/About/AboutFootball.jpg"
-                    alt=""
-                    width="560"
-                    height="420"
-                    loading="lazy"
-                    decoding="async"
-                    aria-hidden="true"
-                >
-                <img
-                    class="about-story-float about-story-float--scad"
-                    src="../media/About/AboutScad.jpg"
-                    alt=""
-                    width="560"
-                    height="420"
-                    loading="lazy"
-                    decoding="async"
-                    aria-hidden="true"
-                >
-                <img
-                    class="about-story-float about-story-float--ai"
-                    src="../media/About/AboutAI.jpg"
-                    alt=""
-                    width="420"
-                    height="320"
-                    loading="lazy"
-                    decoding="async"
-                    aria-hidden="true"
-                >
-
-                <div class="about-story-content">
-                    <h1 id="about-story-title" class="about-story-title">My Story...</h1>
-
-                    <p class="about-story-text">I always knew I wanted to be a <strong>designer</strong>.</p>
-
-                    <p class="about-story-text">From drawing little pictures for my friends in middle school to doodling in my notebooks when I was supposed to be taking notes in geometry, I've always been the person who would rather design something than just look at it.</p>
-
-                    <p class="about-story-text">Growing up in Philadelphia, the City of Brotherly Love, I was surrounded by a rich sports culture that had a bigger influence on my design than I realized at the time. The energy, personality, rivalries, and visual language of Philadelphia sports helped shape the way I think about design today.</p>
-
-                    <p class="about-story-text">When I first heard about SCAD, I knew that was where I wanted to be. I just didn't know what kind of "design" I wanted to pursue yet.</p>
-
-                    <p class="about-story-text">So I started with graphic design.</p>
-
-                    <p class="about-story-text">I taught myself Photoshop, experimented, made a lot of things that probably shouldn't see the light of day, and slowly started figuring out what I enjoyed about design.</p>
-
-                    <p class="about-story-text">Then my roommate introduced me to UX Design. He basically described it as graphic design for websites. That was all I needed to hear and hit the ground running.</p>
-
-                    <p class="about-story-text">It took me a while to realize that UX Design isn't just graphic design for websites. You're building an intuitive experience for a specific user. You're solving problems, making decisions, anticipating questions, and trying to make user's interaction with a product feel effortless. The last thing I ever want someone to say after using something I've designed is:</p>
-
-                    <p class="about-story-quote">"I don't know what to do."</p>
-
-                    <p class="about-story-text">That's what keeps me interested in design: solving problems.</p>
-
-                    <p class="about-story-text">When I needed a way to render my 3D models at home, I figured out how to use Blender. When I struggled with building my portfolio, I taught myself how to integrate AI into my design process and vibecoded this entire site from scratch.</p>
-
-                    <p class="about-story-text">Product designer might be my title, but that's far from what I really am, I'm a <strong>problem solver with a designer's brain.</strong></p>
-
-                </div>
-            </div>
-        </section>
-
-        <div class="about-contact-cta container" aria-label="Contact">
-            <div class="about-cta-actions">
-                <a href="mailto:gmollodesign@gmail.com" class="about-cta-btn">
-                    Lets Build Something Great
-                    <span class="about-cta-btn-mail" aria-hidden="true"></span>
-                </a>
-            </div>
-        </div>
+    <main class="sandbox-page" id="sandbox">
+        <h1 class="sr-only">Sandbox</h1>
+        <!-- Build Sandbox content here. Previous Lab page kept at html/lab.html as backup. -->
     </main>
 
     <footer class="site-footer-new">
         <div class="container footer-inner">
-        
-
             <div class="footer-pill-bar">
                 <ul class="footer-pill">
                     <li>

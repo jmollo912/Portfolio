@@ -1186,6 +1186,8 @@ const mainNavGroup = document.querySelector('.nav-group');
 const mainNavLabel = document.querySelector('.nav-active-label');
 const isAboutPage = window.location.pathname.includes('about.html');
 const isLabPage = window.location.pathname.includes('lab.html');
+const isSandboxPage = window.location.pathname.includes('sandbox.html');
+const isSandboxOrLabPage = isSandboxPage || isLabPage;
 const NAV_HANDOFF_KEY = 'floatingNavHandoff';
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let activeNavHref = '';
@@ -1346,7 +1348,7 @@ function resolveInitialNavHref() {
     return about?.getAttribute('href') || '#';
   }
 
-  if (isLabPage) {
+  if (isSandboxOrLabPage) {
     const lab = navLinkList.find((a) => {
       const label = a.getAttribute('data-nav-label');
       return a.classList.contains('nav-icon-link--lab') || label === 'Sandbox' || label === 'Playground' || label === 'The Lab' || label === 'Lab';
@@ -1385,9 +1387,9 @@ function setActiveNav(href, { force = false } = {}) {
       a.getAttribute('data-nav-label') === 'The Lab' ||
       a.getAttribute('data-nav-label') === 'Lab';
 
-    // Lab is not a nav destination (coming soon). Only mark it active when already on lab.html.
+    // Sandbox/Lab tab: active on sandbox.html (or lab.html backup).
     if (isLabLink) {
-      if (isLabPage) {
+      if (isSandboxOrLabPage) {
         a.classList.add('active');
         a.setAttribute('aria-current', 'page');
         activeLink = a;
@@ -1508,7 +1510,7 @@ function lockMainNavUntilScrollSettles() {
 }
 
 function updateActiveSection() {
-  if (isAboutPage || isLabPage || !navSections.length || mainNavAutoScrolling) return;
+  if (isAboutPage || isSandboxOrLabPage || !navSections.length || mainNavAutoScrolling) return;
 
   // Section whose top has crossed this line (just below the nav) is "current".
   const line = Math.max(120, window.innerHeight * 0.25);
@@ -1542,7 +1544,7 @@ function restoreSmoothScroll() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!isAboutPage && !isLabPage) {
+  if (!isAboutPage && !isSandboxOrLabPage) {
     const hash = window.location.hash;
     if (hash && hash !== '#hero') {
       jumpToHash(hash);
@@ -1554,7 +1556,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Re-snap after layout settles (images/fonts) so cross-page hash links land correctly.
 window.addEventListener('load', () => {
-  if (isAboutPage || isLabPage) return;
+  if (isAboutPage || isSandboxOrLabPage) return;
   const hash = window.location.hash;
   if (hash && hash !== '#hero') jumpToHash(hash);
 }, { once: true });
@@ -1564,10 +1566,10 @@ document.addEventListener('click', function(e) {
   if (!a || a.target === '_blank') return;
   if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
-  // Lab is coming soon — block navigation, keep under-label + cursor tip.
+  // Disabled / coming-soon nav items (href="#" or aria-disabled).
   if (
-    a.classList.contains('nav-icon-link--lab') ||
-    a.getAttribute('aria-disabled') === 'true'
+    a.getAttribute('aria-disabled') === 'true' ||
+    a.getAttribute('href') === '#'
   ) {
     e.preventDefault();
     e.stopPropagation();
@@ -1623,11 +1625,11 @@ document.addEventListener('click', function(e) {
   ) {
     const href = crossLink.getAttribute('href') || '';
     const toAbout = href.includes('about.html');
-    const toLab = href.includes('lab.html');
+    const toSandbox = href.includes('sandbox.html') || href.includes('lab.html');
     const toHomeFromStandalone =
-      (isAboutPage || isLabPage) &&
+      (isAboutPage || isSandboxOrLabPage) &&
       (href.includes('index.html') || href === '../' || href === '/');
-    if (toAbout || toLab || toHomeFromStandalone) {
+    if (toAbout || toSandbox || toHomeFromStandalone) {
       e.preventDefault();
       navigateWithNavHandoff(crossLink.href);
       return;
@@ -2504,13 +2506,18 @@ function ensureNavLabTip() {
   return tip;
 }
 
-/** Floating nav Lab: not linked; “Coming soon!” follows the pointer (under-label still shows). */
+/** Floating nav Sandbox tip only when the link is still disabled / coming soon. */
 function initLabComingSoonTip() {
-  if (isLabPage) return;
+  if (isSandboxOrLabPage) return;
   const labLink = mainFloatingNav?.querySelector(
     '.nav-icon-link--lab, a[data-nav-label="Sandbox"], a[data-nav-label="Playground"], a[data-nav-label="The Lab"], a[data-nav-label="Lab"]'
   );
   if (!labLink) return;
+
+  const href = labLink.getAttribute('href') || '';
+  if (href && href !== '#' && labLink.getAttribute('aria-disabled') !== 'true') {
+    return;
+  }
 
   const tip = ensureNavLabTip();
 
