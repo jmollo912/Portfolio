@@ -2163,7 +2163,10 @@ function initCaseStudyMobileNav() {
   // Close menu when clicking a nav link
   const navLinks = mobileNav.querySelectorAll('.case-nav-link');
   navLinks.forEach(link => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', (e) => {
+      if (link.getAttribute('aria-disabled') === 'true' || link.getAttribute('href') === '#') {
+        e.preventDefault();
+      }
       hamburger.classList.remove('active');
       mobileNav.classList.remove('active');
     });
