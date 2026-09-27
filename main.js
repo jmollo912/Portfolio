@@ -308,17 +308,19 @@ function initHeroPhoneTyping() {
   const stage = document.getElementById('hero-stage');
   const textbox = document.getElementById('hero-textbox');
   const typed = document.getElementById('hero-typed');
+  const sizer = document.getElementById('hero-typed-sizer');
   const caret = document.getElementById('hero-type-caret');
   const cursor = document.getElementById('hero-cursor');
   const hint = document.getElementById('hero-textbox-hint');
   if (!stage || !textbox || !typed) return;
 
-  const INTRO = 'hi my name is Giuseppe';
+  const INTRO = 'hi my name is\nGiuseppe';
   const OUTRO = 'welcome to my portfolio';
   const TYPE_MS = 61;
   const DELETE_MS = 34;
   const HOLD_MS = 720;
   let done = false;
+  let reserve = INTRO;
 
   function fontSize() {
     const width = stage.offsetWidth;
@@ -337,8 +339,9 @@ function initHeroPhoneTyping() {
     textbox.style.opacity = '1';
     textbox.style.borderColor = 'transparent';
     textbox.style.background = 'transparent';
-    typed.style.fontSize = `${size}px`;
+    textbox.style.fontSize = `${size}px`;
     typed.classList.toggle('is-typing', !done);
+    if (sizer && sizer.textContent !== reserve) sizer.textContent = reserve;
     if (typed.textContent !== text) typed.textContent = text;
     if (cursor) cursor.style.opacity = '0';
     if (hint) hint.classList.remove('visible');
@@ -350,6 +353,7 @@ function initHeroPhoneTyping() {
 
   function finish() {
     done = true;
+    reserve = OUTRO;
     if (caret) caret.hidden = true;
     layout(OUTRO);
     stage.setAttribute('aria-label', OUTRO);
@@ -396,6 +400,7 @@ function initHeroPhoneTyping() {
         layout(INTRO.slice(0, count));
         later(deleteIntro, DELETE_MS);
       } else {
+        reserve = OUTRO;
         later(typeOutro, 160);
       }
     };

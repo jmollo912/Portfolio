@@ -1535,22 +1535,32 @@ body {
   }
 
   #hero-textbox.is-phone-type {
+    display: grid;
+    align-content: center;
     border-color: transparent;
     background: transparent;
     overflow: visible;
     white-space: normal;
     padding: 0 20px;
     text-align: left;
-    justify-content: flex-start;
+    justify-content: stretch;
   }
 
+  #hero-textbox.is-phone-type .hero-typed-sizer,
   #hero-textbox.is-phone-type #hero-typed {
+    grid-area: 1 / 1;
     display: block;
     width: 100%;
     min-width: 0;
-    white-space: normal;
+    white-space: pre-line;
     text-align: left;
     line-height: 1.12;
+    font-weight: 600;
+    align-self: start;
+  }
+
+  #hero-textbox.is-phone-type .hero-typed-sizer {
+    visibility: hidden;
   }
 
   #hero-textbox.is-phone-type #hero-typed.is-typing::after {
@@ -2800,13 +2810,9 @@ button.case-card {
     width: 100%;
     max-width: 340px;
   }
-  
-  .profile-card-main {
-    min-height: 360px;
-  }
-  
+
   .profile-card-image {
-    height: 240px;
+    height: 350px;
   }
 }
 
@@ -3974,6 +3980,7 @@ button.case-card {
   .about-cta-section .about-hero-text {
     align-items: center;
     text-align: center;
+    order: 1;
   }
 
   .about-cta-section .about-hero-text > .work-card-desc {
@@ -3982,6 +3989,7 @@ button.case-card {
 
   .about-cta-section .profile-card {
     justify-self: center;
+    order: 2;
   }
   
   .about-early-life-grid {
@@ -4338,13 +4346,13 @@ button.case-card {
     align-items: center;
     padding: 0;
     gap: 0;
-    top: 12px;
+    top: calc(12px + env(safe-area-inset-top, 0px));
   }
 
   .site-header .nav-group {
     display: flex !important;
     position: fixed;
-    top: 12px;
+    top: calc(12px + env(safe-area-inset-top, 0px));
     left: 50%;
     transform: translateX(-50%);
     flex-direction: column;
@@ -4413,7 +4421,7 @@ button.case-card {
 /* Phone (<= 809px) — vertically center the hero text box animation */
 @media (max-width: 809px) {
   .hero {
-    padding: 64px 0 40px;
+    padding: calc(64px + env(safe-area-inset-top, 0px)) 0 40px;
     min-height: 100dvh;
     box-sizing: border-box;
     display: flex;
