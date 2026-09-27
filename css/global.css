@@ -2830,10 +2830,46 @@ button.case-card {
 }
 
 @media (max-width: 600px) {
+  .about-cta-section .about-hero-content {
+    padding-inline: 48px;
+    box-sizing: border-box;
+  }
+
   .about-cta-section .profile-card {
-    width: calc(100% - 40px);
-    max-width: 340px;
+    width: 100%;
+    max-width: 220px;
+    margin-inline: auto;
     justify-self: center;
+    border-radius: 18px;
+  }
+
+  .about-cta-section .profile-card-main {
+    min-height: 0;
+    padding: 8px;
+  }
+
+  .about-cta-section .profile-card-image {
+    height: auto;
+    aspect-ratio: 4 / 5;
+    border-radius: 12px;
+  }
+
+  .about-cta-section .profile-card-footer {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .about-cta-section .profile-card-username {
+    font-size: 12px;
+  }
+
+  .about-cta-section .profile-card-platform {
+    font-size: 11px;
+  }
+
+  .about-cta-section .profile-card-connect {
+    padding: 8px 12px;
+    font-size: 12px;
   }
 }
 
