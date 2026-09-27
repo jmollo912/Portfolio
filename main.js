@@ -2449,21 +2449,31 @@ function initWorkCardVideos() {
   if (!videos.length) return;
 
   const tryPlay = (video) => {
+    video.controls = false;
     video.muted = true;
     video.defaultMuted = true;
+    video.volume = 0;
     video.playsInline = true;
+    video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
+    video.setAttribute('disablePictureInPicture', '');
     const playPromise = video.play();
     if (playPromise && typeof playPromise.catch === 'function') {
       playPromise.catch(() => {});
     }
   };
 
+  const tryPlayAll = () => {
+    videos.forEach(tryPlay);
+  };
+
   videos.forEach((video) => {
+    video.controls = false;
     video.preload = 'auto';
     video.muted = true;
     video.defaultMuted = true;
+    video.volume = 0;
     video.playsInline = true;
 
     const kickoff = () => tryPlay(video);
@@ -2473,15 +2483,8 @@ function initWorkCardVideos() {
     } else {
       video.addEventListener('loadeddata', kickoff, { once: true });
       video.addEventListener('canplay', kickoff, { once: true });
-      // Force a fetch even if the browser deferred autoplay preload.
-      try {
-        video.load();
-      } catch (_) {
-        /* ignore */
-      }
     }
 
-    // Re-attempt when the card scrolls into view (covers late decode / tab restore).
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver(
         (entries) => {
@@ -2495,14 +2498,13 @@ function initWorkCardVideos() {
     }
   });
 
-  // One more attempt after full page load (images/fonts finished competing).
-  window.addEventListener(
-    'load',
-    () => {
-      videos.forEach(tryPlay);
-    },
-    { once: true }
-  );
+  window.addEventListener('load', tryPlayAll, { once: true });
+  window.addEventListener('pageshow', tryPlayAll);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') tryPlayAll();
+  });
+  document.addEventListener('touchstart', tryPlayAll, { once: true, passive: true });
+  document.addEventListener('click', tryPlayAll, { once: true });
 }
 
 document.addEventListener('DOMContentLoaded', initWorkCardVideos);
