@@ -1,0 +1,8 @@
+---
+description: Do not start a local preview or live server
+alwaysApply: true
+---
+
+Giuseppe runs his own live server. Never start one for this project: no `python -m http.server`, `npx serve`, Live Server, or any other local preview server, even to verify UI.
+
+Use his already-running server if a page needs to be checked in the browser. If it is not reachable, say so and stop. Do not launch a substitute.

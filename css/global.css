@@ -4124,12 +4124,9 @@ button.case-card {
   }
 }
 
-/* RESPONSIVE - SMALLEST BREAKPOINT (hamburger nav only) */
+/* RESPONSIVE - SMALLEST BREAKPOINT */
 @media (max-width: 600px) {
-  /* Hide desktop nav elements */
-  .nav-wrapper,
-  .site-header .nav-group,
-  .site-header .floating-nav,
+  /* Wordmark and Resume don’t fit beside the pill; case-study side nav stays off */
   .nav-profile,
   .nav-brand,
   .nav-resume,
@@ -4172,13 +4169,25 @@ button.case-card {
     padding-inline: 12px;
   }
 
-  /* Show hamburger and mobile nav */
-  .case-hamburger {
+  /* Case studies keep the section menu. Pages with the icon pill do not. */
+  body:has(.case-layout) .case-hamburger {
     display: flex !important;
   }
 
-  .case-mobile-nav {
+  body:has(.case-layout) .case-mobile-nav {
     display: block !important;
+  }
+
+  body:has(.site-header) .case-hamburger,
+  body:has(.site-header) .case-mobile-nav {
+    display: none !important;
+  }
+
+  /* Case studies stack in one column on phones */
+  .work-grid,
+  .case-more-work-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 
   /* Skip the full-bleed case hero on phones — open on Overview */
@@ -4268,6 +4277,42 @@ button.case-card {
     width: 44px;
     height: 44px;
     padding: 0;
+  }
+}
+
+/* Phones: same centered floating pill as desktop (undo the 768px shrink) */
+@media (max-width: 600px) {
+  .nav-wrapper {
+    display: flex !important;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    gap: 0;
+    top: 12px;
+  }
+
+  .site-header .nav-group {
+    display: flex !important;
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .site-header .floating-nav {
+    display: flex !important;
+  }
+
+  .floating-nav ul {
+    gap: 6px;
+  }
+
+  .floating-nav a.nav-icon-link {
+    width: 48px;
+    height: 48px;
   }
 }
 
@@ -5509,6 +5554,14 @@ body:has(.case-layout) .case-main .footer-pill-link :is(span, .footer-pill-icon,
 .case-mobile-nav .case-nav-link.active {
   color: #000000;
   background: rgba(0, 0, 0, 0.06);
+}
+
+.case-mobile-nav .case-nav-link[aria-disabled="true"],
+.case-mobile-nav .case-nav-link[aria-disabled="true"]:hover,
+.case-mobile-nav .case-nav-link[aria-disabled="true"].active {
+  color: #B8B8B8;
+  background: transparent;
+  cursor: default;
 }
 
 /* Tablet and mobile breakpoint (iPad and smaller) */
