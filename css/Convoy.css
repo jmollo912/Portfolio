@@ -341,8 +341,10 @@
 @media (max-width: 600px) {
   /* Keep comparison photos within the 35-40vh mobile image budget */
   .robot-comparison-image {
-    height: 34vh;
-    max-height: 280px;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: none;
   }
 }
 

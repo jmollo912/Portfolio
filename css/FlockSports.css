@@ -483,6 +483,16 @@ html.flock-designs-lightbox-open body {
 }
 
 @media (max-width: 600px) {
+  .case-image-grid-flock-3 {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .case-image-grid-flock-3 .case-grid-image {
+    max-width: 100%;
+    max-height: none;
+  }
+
   .flock-designs-header {
     flex-wrap: wrap;
     align-items: flex-start;

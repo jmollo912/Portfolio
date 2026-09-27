@@ -2816,6 +2816,14 @@ button.case-card {
   }
 }
 
+@media (max-width: 600px) {
+  .about-cta-section .profile-card {
+    width: calc(100% - 40px);
+    max-width: 340px;
+    justify-self: center;
+  }
+}
+
 .about-text {
   flex: 1;
   display: flex;
@@ -4214,8 +4222,8 @@ button.case-card {
     max-width: none;
     width: 100%;
     padding:
-      clamp(32px, 6vw, 48px)
-      12px
+      calc(88px + env(safe-area-inset-top, 0px))
+      20px
       clamp(48px, 8vw, 72px);
   }
 
@@ -4240,9 +4248,8 @@ button.case-card {
     display: none !important;
   }
 
-  /* Case studies stack in one column on phones */
-  .work-grid,
-  .case-more-work-grid {
+  /* Homepage work stacks in one column on phones */
+  .work-grid {
     grid-template-columns: 1fr;
     gap: 20px;
   }
@@ -5781,10 +5788,10 @@ body:has(.case-layout) .case-main .footer-pill-link :is(span, .footer-pill-icon,
 }
 
 @media (max-width: 600px) {
-  /* Defensive cap so any unusually tall content shot stays within the 35-40vh mobile budget */
   .case-content-image {
-    max-height: 40vh;
-    width: auto;
+    max-width: 100%;
+    width: 100%;
+    height: auto;
     margin-inline: auto;
   }
 }
@@ -5989,9 +5996,14 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
 
 .app-features-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   margin: 24px 0 40px;
+  width: 100%;
+}
+
+.app-features-item {
+  min-width: 0;
 }
 
 .app-features-img {
@@ -6003,7 +6015,8 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
 
 @media (max-width: 600px) {
   .app-features-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
   }
 }
 
@@ -6127,6 +6140,34 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
+  width: 100%;
+}
+
+.case-more-work-grid .work-card {
+  min-width: 0;
+  width: 100%;
+}
+
+.case-more-work-grid .work-card-image-wrap--media {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.case-more-work-grid .work-card-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+}
+
+.case-more-work-grid .work-card-corner-arrow {
+  width: 12px;
+  height: 12px;
 }
 
 .case-more-work-grid .work-card:focus-visible {
@@ -6147,15 +6188,27 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
   }
 
   .case-more-work-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .case-more-work-grid .work-card-corner {
+    width: 26px;
+    height: 26px;
+    top: 6px;
+    right: 6px;
+  }
+
+  .case-more-work-grid .work-card-corner-arrow {
+    width: 9px;
+    height: 9px;
   }
 }
 
 @media (max-width: 420px) {
   .case-more-work-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
   }
 }
 
@@ -6219,6 +6272,131 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
 
   .next-project-title {
     font-size: 24px;
+  }
+}
+
+/* Phones — keep case study copy, images, and cards inside the screen */
+@media (max-width: 600px) {
+  body:has(.case-layout) {
+    --case-nav-col: 0px;
+    --case-layout-gap: 0px;
+    --case-layout-pad-x: 0px;
+  }
+
+  .case-layout {
+    display: block;
+    grid-template-columns: minmax(0, 1fr);
+    max-width: none;
+    width: 100%;
+    padding-inline: 0;
+  }
+
+  .case-nav-group,
+  .case-floating-nav {
+    display: none !important;
+  }
+
+  .case-main,
+  .case-content-wrapper {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-inline: 0;
+  }
+
+  .case-content-wrapper {
+    padding:
+      calc(88px + env(safe-area-inset-top, 0px))
+      20px
+      clamp(48px, 8vw, 72px);
+  }
+
+  .case-back-link-mobile,
+  .case-hamburger {
+    top: calc(12px + env(safe-area-inset-top, 0px));
+  }
+
+  .case-layout,
+  .case-main,
+  .case-content-wrapper,
+  .case-section,
+  .section-header,
+  .overview-rows,
+  .overview-row,
+  .overview-row-body,
+  .case-content {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .overview-project-title,
+  .section-heading,
+  .section-intro,
+  .overview-row-body,
+  .case-main p,
+  .case-main li {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+
+  .overview-project-title,
+  .section-heading {
+    font-size: clamp(28px, 8vw, 36px);
+  }
+
+  .case-layout img:not(.work-card-image):not(.work-card-corner-arrow),
+  .case-content-image,
+  .coral-prototype-img,
+  .coral-research-img,
+  .coral-features-img,
+  .problem-corey-img,
+  .comparison-image,
+  .robot-comparison-image {
+    max-width: 100% !important;
+    width: 100%;
+    height: auto;
+  }
+
+  .case-template-grid,
+  .case-template-grid-3,
+  .case-template-grid-4,
+  .case-image-grid,
+  .case-info-card,
+  .case-meta-grid,
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .case-more-work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .about-cta-actions.coral-solution-cta,
+  .case-main .about-cta-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .case-main .footer-pill-link {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .footer-pill-bar {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .footer-pill-bar .footer-pill,
+  .footer-pill-bar .footer-pill-link {
+    width: 100%;
+    justify-content: center;
   }
 }
 

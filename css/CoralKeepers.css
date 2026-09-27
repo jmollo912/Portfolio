@@ -228,7 +228,7 @@
 /* Research section — three concern images within case study margins */
 .coral-research-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   width: 100%;
   max-width: 100%;
@@ -284,8 +284,8 @@
 
 @media (max-width: 700px) {
   .coral-research-row {
-    grid-template-columns: 1fr;
-    gap: 24px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
   }
 }
 
@@ -347,7 +347,7 @@
 /* Solution feature screenshots */
 .coral-features-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   width: 100%;
   max-width: 100%;
@@ -368,13 +368,14 @@
 
 @media (max-width: 600px) {
   .coral-features-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
   }
 
-  /* Defensive cap so any unusually tall prototype photo stays within the 35-40vh mobile budget */
   .coral-prototype-img {
-    max-height: 40vh;
-    width: auto;
+    max-width: 100%;
+    width: 100%;
+    height: auto;
     margin-inline: auto;
   }
 }
