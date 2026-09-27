@@ -1528,6 +1528,55 @@ body {
   .hero {
     background-size: 18px 18px;
   }
+
+  #hero-cursor,
+  .hero-corner-handle {
+    display: none !important;
+  }
+
+  #hero-textbox.is-phone-type {
+    border-color: transparent;
+    background: transparent;
+    overflow: visible;
+    white-space: normal;
+    padding: 0 20px;
+    text-align: left;
+    justify-content: flex-start;
+  }
+
+  #hero-textbox.is-phone-type #hero-typed {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    white-space: normal;
+    text-align: left;
+    line-height: 1.12;
+  }
+
+  #hero-textbox.is-phone-type #hero-typed.is-typing::after {
+    content: "";
+    display: inline-block;
+    width: 2px;
+    height: 0.85em;
+    margin-left: 4px;
+    background: #111111;
+    vertical-align: -0.06em;
+    animation: hero-caret-blink 1s steps(1) infinite;
+  }
+
+  .hero-type-caret {
+    width: 2px;
+    height: 0.9em;
+    margin-left: 3px;
+    background: #111111;
+    flex: 0 0 auto;
+    animation: hero-caret-blink 1s steps(1) infinite;
+  }
+}
+
+@keyframes hero-caret-blink {
+  0%, 45% { opacity: 1; }
+  46%, 100% { opacity: 0; }
 }
 
 .hero-figure {

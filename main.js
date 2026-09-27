@@ -160,11 +160,15 @@ function startHeroAnimations() {
     if (heroCaption) heroCaption.classList.add('animate-in');
     if (heroCanvas) heroCanvas.classList.add('animate-in');
 
-    // Wall pics start stacked in the center and spread out one by one.
-    // The cursor + text box animation only begins once they've all landed.
-    initWallPicsSpread(() => {
-      initHeroCursorAnimation();
-    });
+    // Phones skip the highlight-box animation and type two lines instead.
+    // Desktop waits for the wall pictures to land, then draws the box.
+    if (window.matchMedia('(max-width: 600px)').matches) {
+      initHeroPhoneTyping();
+    } else {
+      initWallPicsSpread(() => {
+        initHeroCursorAnimation();
+      });
+    }
   }, 100);
 }
 
@@ -294,6 +298,122 @@ function initWallPicsSpread(onComplete) {
   }
 
   waitForImages(wallPics).then(runSpread);
+}
+
+// ==========================================
+// HERO PHONE TYPING — no highlight box
+// Types a greeting, deletes it, then types the welcome line.
+// ==========================================
+function initHeroPhoneTyping() {
+  const stage = document.getElementById('hero-stage');
+  const textbox = document.getElementById('hero-textbox');
+  const typed = document.getElementById('hero-typed');
+  const caret = document.getElementById('hero-type-caret');
+  const cursor = document.getElementById('hero-cursor');
+  const hint = document.getElementById('hero-textbox-hint');
+  if (!stage || !textbox || !typed) return;
+
+  const INTRO = 'hi my name is Giuseppe';
+  const OUTRO = 'welcome to my portfolio';
+  const TYPE_MS = 61;
+  const DELETE_MS = 34;
+  const HOLD_MS = 720;
+  let done = false;
+
+  function fontSize() {
+    const width = stage.offsetWidth;
+    if (width < 50) return 0;
+    return Math.round(Math.min(56, Math.max(40, width * 0.13)));
+  }
+
+  function layout(text) {
+    const size = fontSize();
+    if (!size) return false;
+    textbox.classList.add('is-phone-type');
+    textbox.style.left = '0';
+    textbox.style.top = '0';
+    textbox.style.width = '100%';
+    textbox.style.height = '100%';
+    textbox.style.opacity = '1';
+    textbox.style.borderColor = 'transparent';
+    textbox.style.background = 'transparent';
+    typed.style.fontSize = `${size}px`;
+    typed.classList.toggle('is-typing', !done);
+    if (typed.textContent !== text) typed.textContent = text;
+    if (cursor) cursor.style.opacity = '0';
+    if (hint) hint.classList.remove('visible');
+    document.querySelectorAll('.hero-corner-handle').forEach((handle) => {
+      handle.style.opacity = '0';
+    });
+    return true;
+  }
+
+  function finish() {
+    done = true;
+    if (caret) caret.hidden = true;
+    layout(OUTRO);
+    stage.setAttribute('aria-label', OUTRO);
+  }
+
+  if (typeof ResizeObserver !== 'undefined') {
+    const resizeObserver = new ResizeObserver(() => {
+      if (done) layout(OUTRO);
+    });
+    resizeObserver.observe(stage);
+  }
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const showFinal = () => {
+      if (layout(OUTRO)) finish();
+      else requestAnimationFrame(showFinal);
+    };
+    showFinal();
+    return;
+  }
+
+  const start = () => {
+    if (!layout('')) {
+      requestAnimationFrame(start);
+      return;
+    }
+
+    let count = 0;
+    const later = (fn, ms) => { setTimeout(fn, ms); };
+
+    const typeIntro = () => {
+      layout(INTRO.slice(0, count));
+      if (count < INTRO.length) {
+        count += 1;
+        later(typeIntro, TYPE_MS);
+      } else {
+        later(deleteIntro, HOLD_MS);
+      }
+    };
+
+    const deleteIntro = () => {
+      if (count > 0) {
+        count -= 1;
+        layout(INTRO.slice(0, count));
+        later(deleteIntro, DELETE_MS);
+      } else {
+        later(typeOutro, 160);
+      }
+    };
+
+    const typeOutro = () => {
+      layout(OUTRO.slice(0, count));
+      if (count < OUTRO.length) {
+        count += 1;
+        later(typeOutro, TYPE_MS);
+      } else {
+        finish();
+      }
+    };
+
+    typeIntro();
+  };
+
+  start();
 }
 
 // ==========================================
