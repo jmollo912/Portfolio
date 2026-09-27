@@ -386,6 +386,14 @@
   justify-content: flex-start;
 }
 
+@media (max-width: 600px) {
+  .coral-solution-cta {
+    justify-content: center;
+    margin-inline: auto;
+    gap: 12px;
+  }
+}
+
 .coral-solution-cta .about-cta-btn {
   margin-top: 0;
 }

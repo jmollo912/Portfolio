@@ -6376,8 +6376,7 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
     gap: 8px;
   }
 
-  .about-cta-actions.coral-solution-cta,
-  .case-main .about-cta-actions {
+  .case-main .about-cta-actions:not(.coral-solution-cta) {
     flex-direction: column;
     align-items: stretch;
   }
@@ -6385,6 +6384,23 @@ h2:not(.section-heading):not(.work-card-title):not(.section-label):not(.about-he
   .case-main .footer-pill-link {
     width: 100%;
     justify-content: center;
+  }
+
+  .coral-solution-cta {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-inline: auto;
+    width: 100%;
+    max-width: none;
+  }
+
+  .coral-solution-cta .footer-pill-link {
+    width: auto;
+    flex: 0 1 auto;
+    padding-inline: 16px;
   }
 
   .footer-pill-bar {

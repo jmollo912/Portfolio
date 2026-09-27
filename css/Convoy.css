@@ -20,14 +20,14 @@
 }
 .case-hero-main-image--convoy img {
   width: auto;
-  max-width: 90vw;
-  max-height: 75vh;
+  max-width: 100vw;
+  max-height: 88vh;
   height: auto;
   object-fit: contain;
 }
 @media (max-width: 900px) {
   .case-hero-main-image--convoy img {
-    max-height: 35vh;
+    max-height: 58vh;
   }
 }
 
