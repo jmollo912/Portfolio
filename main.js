@@ -644,7 +644,7 @@ function initHeroCursorAnimation() {
   const DELETE_MS = 28;
   const HOLD_MS = 640;
   const WEIGHT_START = 450;
-  const WEIGHT_END = 600;
+  const WEIGHT_END = 700;
 
   let measureCanvas;
   let done = false;
@@ -662,6 +662,9 @@ function initHeroCursorAnimation() {
 
   function lerp(a, b, t) { return a + (b - a) * t; }
   function easeInOut(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - ((-2 * t + 2) ** 3) / 2;
+  }
   function easeOut(t) { return 1 - (1 - t) * (1 - t); }
 
   function fontSize() {
@@ -769,7 +772,7 @@ function initHeroCursorAnimation() {
 
     setWeight(word, WEIGHT_START);
     word.style.transform = 'scale(1)';
-    word.style.transformOrigin = 'center top';
+    word.style.transformOrigin = 'center center';
     const SCALE_END = 1.5;
 
     const highlight = document.createElement('div');
@@ -802,8 +805,9 @@ function initHeroCursorAnimation() {
     const fill = slider.querySelector('.hero-weight-slider-fill');
     const knob = slider.querySelector('.hero-weight-slider-knob');
 
-    const padX = 28;
-    const padY = 20;
+    const padX = 22;
+    const padTop = 4;
+    const padBottom = 22;
     let drawOrigin = { x: 0, y: 0 };
     let drawnSize = { w: 0, h: 0 };
 
@@ -821,8 +825,8 @@ function initHeroCursorAnimation() {
 
     const syncHighlightOrigin = () => {
       const r = wordRectLocal();
-      drawOrigin = { x: r.left - padX, y: r.top - padY };
-      drawnSize = { w: r.width + padX * 2, h: r.height + padY * 2 };
+      drawOrigin = { x: r.left - padX, y: r.top - padTop };
+      drawnSize = { w: r.width + padX * 2, h: r.height + padTop + padBottom };
     };
 
     const setHighlightBox = (w, h) => {
@@ -835,9 +839,22 @@ function initHeroCursorAnimation() {
     const placeHighlightOnWord = () => {
       const r = wordRectLocal();
       highlight.style.left = `${r.left - padX}px`;
-      highlight.style.top = `${r.top - padY}px`;
+      highlight.style.top = `${r.top - padTop}px`;
       highlight.style.width = `${r.width + padX * 2}px`;
-      highlight.style.height = `${r.height + padY * 2}px`;
+      highlight.style.height = `${r.height + padTop + padBottom}px`;
+    };
+
+    // Scale grows the word and the box together from their center, so both
+    // stay in place while the padding stays even around the text.
+    let scaleLayout = null;
+    const placeScaledHighlight = (scale) => {
+      const box = scaleLayout;
+      const left = box.left - (box.width * (scale - 1)) / 2;
+      const top = box.top - (box.height * (scale - 1)) / 2;
+      highlight.style.left = `${left - padX * scale}px`;
+      highlight.style.top = `${top - padTop * scale}px`;
+      highlight.style.width = `${box.width * scale + padX * 2 * scale}px`;
+      highlight.style.height = `${box.height * scale + (padTop + padBottom) * scale}px`;
     };
 
     let sliderAnchor = null;
@@ -849,7 +866,7 @@ function initHeroCursorAnimation() {
         slider.style.width = `${sliderAnchor.width}px`;
       }
       slider.style.left = `${r.left + (r.width - sliderAnchor.width) / 2}px`;
-      slider.style.top = `${r.top + r.height + padY + 18}px`;
+      slider.style.top = `${r.top + r.height + padBottom + 18}px`;
     };
 
     const setSliderProgress = (p) => {
@@ -906,7 +923,7 @@ function initHeroCursorAnimation() {
 
     const fadeInMs = 180;
     const holdBeforeDrawMs = 200;
-    const drawMs = 1100;
+    const drawMs = 680;
     const holdAfterDrawMs = 220;
     const toSliderMs = 380;
     const dragMs = 720;
@@ -959,7 +976,7 @@ function initHeroCursorAnimation() {
       //    stretch of the drag so nothing pops on the starting frame.
       if (elapsed < mark + drawMs) {
         const t = (elapsed - mark) / drawMs;
-        const p = easeInOut(t);
+        const p = easeInOutCubic(t);
         const w = lerp(0, drawnSize.w, p);
         const h = lerp(0, drawnSize.h, p);
         setHighlightBox(w, h);
@@ -999,7 +1016,7 @@ function initHeroCursorAnimation() {
       mark += toSliderMs;
       slider.style.opacity = '1';
 
-      // 4. Drag slider L → R, weight 450 → 600
+      // 4. Drag slider L → R, weight 450 → 700
       if (elapsed < mark + dragMs) {
         const p = easeInOut((elapsed - mark) / dragMs);
         setSliderProgress(p);
@@ -1032,21 +1049,31 @@ function initHeroCursorAnimation() {
       mark += toTrMs;
       slider.style.opacity = '0';
 
-      // 6. Scale portfolio up from BR (highlight stays)
+      // 6. Scale portfolio and highlight together, centered
       if (elapsed < mark + scaleMs) {
+        if (!scaleLayout) {
+          word.style.transform = 'scale(1)';
+          word.style.transformOrigin = 'center center';
+          scaleLayout = wordRectLocal();
+        }
         const p = easeInOut((elapsed - mark) / scaleMs);
         const scale = lerp(1, SCALE_END, p);
         word.style.transform = `scale(${scale})`;
-        placeHighlightOnWord();
+        placeScaledHighlight(scale);
         const br = cursorAtHighlight('br');
         setCursor(br.x, br.y, 1);
         requestAnimationFrame(frame);
         return;
       }
       mark += scaleMs;
+      if (!scaleLayout) {
+        word.style.transform = 'scale(1)';
+        word.style.transformOrigin = 'center center';
+        scaleLayout = wordRectLocal();
+      }
       word.style.transform = `scale(${SCALE_END})`;
       finalScale = SCALE_END;
-      placeHighlightOnWord();
+      placeScaledHighlight(SCALE_END);
 
       // 7. Hold at scaled size
       if (elapsed < mark + holdScaleMs) {

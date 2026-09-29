@@ -1546,7 +1546,8 @@ body {
   min-width: 0;
   white-space: pre-line;
   text-align: center;
-  line-height: 1.15;
+  line-height: 1;
+  letter-spacing: 0.04em;
   font-weight: 450;
   font-variation-settings: "wght" 450;
   align-self: start;
@@ -1577,7 +1578,7 @@ body {
 
 #hero-textbox.is-desktop-type .hero-portfolio {
   display: inline-block;
-  transform-origin: center top;
+  transform-origin: center center;
   line-height: 1;
   will-change: transform, font-variation-settings;
 }
