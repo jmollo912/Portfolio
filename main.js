@@ -862,7 +862,7 @@ function initHeroCursorAnimation() {
       const r = wordRectLocal();
       // Lock the slider width once so the knob track never jitters.
       if (!sliderAnchor) {
-        sliderAnchor = { width: Math.max(120, Math.min(180, r.width * 0.95)) };
+        sliderAnchor = { width: Math.max(72, Math.min(110, r.width * 0.55)) };
         slider.style.width = `${sliderAnchor.width}px`;
       }
       slider.style.left = `${r.left + (r.width - sliderAnchor.width) / 2}px`;

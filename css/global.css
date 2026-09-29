@@ -1210,7 +1210,7 @@ body {
 
 /* 1 — Eagles */
 .wall-pic-group-1 {
-  width: 14%;
+  width: 12%;
   bottom: 65%;
   left: 21%;
   z-index: 11;
@@ -1233,7 +1233,7 @@ body {
 
 /* 2 — Fishing */
 .wall-pic-group-2 {
-  width: 17%;
+  width: 15%;
   top: 19%;
   right: 7%;
 }
@@ -1256,7 +1256,7 @@ body {
 
 /* 3 — Flying */
 .wall-pic-group-3 {
-  width: 19%;
+  width: 17%;
   bottom: 3%;
   left: 26%;
 }
@@ -1278,8 +1278,8 @@ body {
 
 /* 4 — Capstone */
 .wall-pic-group-4 {
-  width: 19%;
-  top: 5%;
+  width: 17%;
+  top: -2%;
   right: 31%;
 }
 
@@ -1300,7 +1300,7 @@ body {
 
 /* 5 — Hiking */
 .wall-pic-group-5 {
-  width: 18%;
+  width: 16%;
   bottom: 28%;
   left: 5%;
 }
@@ -1329,7 +1329,7 @@ body {
 
 /* 6 — Georgia / Florida */
 .wall-pic-group-6 {
-  width: 19%;
+  width: 17%;
   bottom: 3%;
   right: 19%;
 }
@@ -1546,7 +1546,7 @@ body {
   min-width: 0;
   white-space: pre-line;
   text-align: center;
-  line-height: 1;
+  line-height: 1.12;
   letter-spacing: 0.04em;
   font-weight: 450;
   font-variation-settings: "wght" 450;
@@ -1579,7 +1579,8 @@ body {
 #hero-textbox.is-desktop-type .hero-portfolio {
   display: inline-block;
   transform-origin: center center;
-  line-height: 1;
+  line-height: inherit;
+  letter-spacing: inherit;
   will-change: transform, font-variation-settings;
 }
 
@@ -1699,6 +1700,7 @@ body {
     white-space: pre-line;
     text-align: left;
     line-height: 1.12;
+    letter-spacing: 0.04em;
     font-weight: 600;
     align-self: start;
   }
@@ -1721,7 +1723,8 @@ body {
   #hero-textbox.is-phone-type .hero-portfolio {
     display: inline-block;
     transform-origin: left center;
-    line-height: 1;
+    line-height: inherit;
+    letter-spacing: inherit;
   }
 
   .hero-phone-cursor {
