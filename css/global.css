@@ -1524,6 +1524,149 @@ body {
   box-sizing: border-box;
 }
 
+/* Desktop hero: centered typing + portfolio weight slider */
+#hero-textbox.is-desktop-type {
+  display: grid;
+  align-content: center;
+  justify-content: center;
+  border-color: transparent;
+  background: transparent;
+  overflow: visible;
+  white-space: normal;
+  padding: 0 24px;
+  text-align: center;
+}
+
+#hero-textbox.is-desktop-type .hero-typed-sizer,
+#hero-textbox.is-desktop-type #hero-typed {
+  grid-area: 1 / 1;
+  display: block;
+  max-width: 100%;
+  margin: 0;
+  min-width: 0;
+  white-space: pre-line;
+  text-align: center;
+  line-height: 1.15;
+  font-weight: 450;
+  font-variation-settings: "wght" 450;
+  align-self: start;
+  justify-self: start;
+}
+
+#hero-textbox.is-desktop-type .hero-typed-sizer {
+  visibility: hidden;
+  width: max-content;
+  padding-right: 10px;
+  box-sizing: content-box;
+}
+
+#hero-textbox.is-desktop-type #hero-typed {
+  width: 100%;
+}
+
+#hero-textbox.is-desktop-type #hero-typed.is-typing::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 0.85em;
+  margin-left: 4px;
+  background: #111111;
+  vertical-align: -0.06em;
+  animation: hero-caret-blink 1s steps(1) infinite;
+}
+
+#hero-textbox.is-desktop-type .hero-portfolio {
+  display: inline-block;
+  transform-origin: center top;
+  line-height: 1;
+  will-change: transform, font-variation-settings;
+}
+
+.hero-portfolio-highlight {
+  position: absolute;
+  z-index: 3;
+  box-sizing: border-box;
+  border: 2.5px solid var(--brand-blue);
+  background: rgba(var(--brand-blue-rgb), 0.3);
+  pointer-events: none;
+}
+
+.hero-portfolio-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  border: 2.5px solid var(--brand-blue);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.hero-portfolio-handle--tl {
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+}
+
+.hero-portfolio-handle--tr {
+  right: 0;
+  top: 0;
+  transform: translate(50%, -50%);
+}
+
+.hero-portfolio-handle--bl {
+  left: 0;
+  bottom: 0;
+  transform: translate(-50%, 50%);
+}
+
+.hero-portfolio-handle--br {
+  right: 0;
+  bottom: 0;
+  transform: translate(50%, 50%);
+}
+
+.hero-weight-slider {
+  position: absolute;
+  z-index: 4;
+  height: 28px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-weight-slider-track {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  margin-top: 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.12);
+  overflow: visible;
+}
+
+.hero-weight-slider-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: var(--brand-blue);
+}
+
+.hero-weight-slider-knob {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2.5px solid var(--brand-blue);
+  box-sizing: border-box;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+}
+
 @media (max-width: 600px) {
   .hero {
     background-size: 18px 18px;
@@ -1578,49 +1721,6 @@ body {
     display: inline-block;
     transform-origin: left center;
     line-height: 1;
-  }
-
-  .hero-portfolio-highlight {
-    position: absolute;
-    z-index: 3;
-    box-sizing: border-box;
-    border: 2.5px solid var(--brand-blue);
-    background: rgba(var(--brand-blue-rgb), 0.3);
-    pointer-events: none;
-  }
-
-  .hero-portfolio-handle {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: #ffffff;
-    border: 2.5px solid var(--brand-blue);
-    box-sizing: border-box;
-    pointer-events: none;
-  }
-
-  .hero-portfolio-handle--tl {
-    left: 0;
-    top: 0;
-    transform: translate(-50%, -50%);
-  }
-
-  .hero-portfolio-handle--tr {
-    right: 0;
-    top: 0;
-    transform: translate(50%, -50%);
-  }
-
-  .hero-portfolio-handle--bl {
-    left: 0;
-    bottom: 0;
-    transform: translate(-50%, 50%);
-  }
-
-  .hero-portfolio-handle--br {
-    right: 0;
-    bottom: 0;
-    transform: translate(50%, 50%);
   }
 
   .hero-phone-cursor {

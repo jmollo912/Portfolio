@@ -160,14 +160,13 @@ function startHeroAnimations() {
     if (heroCaption) heroCaption.classList.add('animate-in');
     if (heroCanvas) heroCanvas.classList.add('animate-in');
 
-    // Phones skip the highlight-box animation and type two lines instead.
-    // Desktop waits for the wall pictures to land, then draws the box.
+    // Phones type two lines + expand portfolio. Desktop runs the same
+    // centered typing concept with a weight slider, in parallel with wall pics.
     if (window.matchMedia('(max-width: 600px)').matches) {
       initHeroPhoneTyping();
     } else {
-      initWallPicsSpread(() => {
-        initHeroCursorAnimation();
-      });
+      initWallPicsSpread();
+      initHeroCursorAnimation();
     }
   }, 100);
 }
@@ -626,358 +625,532 @@ function initHeroPhoneTyping() {
 }
 
 // ==========================================
-// HERO CURSOR ANIMATION — plays once on load
+// HERO CURSOR ANIMATION — desktop typing + weight slider
+// Types greeting → welcome (portfolio on line 2) → highlight portfolio →
+// drag weight slider (+300) → scale up at BR → fade highlight → hint.
 // ==========================================
 function initHeroCursorAnimation() {
   const stage = document.getElementById('hero-stage');
-  if (!stage) return;
+  const cursor = document.getElementById('hero-cursor');
+  const textbox = document.getElementById('hero-textbox');
+  const typed = document.getElementById('hero-typed');
+  const sizer = document.getElementById('hero-typed-sizer');
+  const hint = document.getElementById('hero-textbox-hint');
+  if (!stage || !textbox || !typed || !cursor) return;
 
-  const cursor   = document.getElementById('hero-cursor');
-  const textbox  = document.getElementById('hero-textbox');
-  const typed    = document.getElementById('hero-typed');
-  const hint     = document.getElementById('hero-textbox-hint');
-  const handles  = {
-    tl: document.getElementById('hero-h-tl'),
-    tr: document.getElementById('hero-h-tr'),
-    bl: document.getElementById('hero-h-bl'),
-    br: document.getElementById('hero-h-br'),
-  };
+  const INTRO = 'hi my name is\nGiuseppe';
+  const OUTRO = 'welcome to my\nportfolio';
+  const TYPE_MS = 52;
+  const DELETE_MS = 28;
+  const HOLD_MS = 640;
+  const WEIGHT_START = 450;
+  const WEIGHT_END = 600;
 
-  const FINAL_TEXT = "Welcome to my portfolio!";
-  const TYPE_CHAR_MS = 61;
-  const CURSOR_ENTRANCE_MS = 440;
-  const BOX_H_PAD = 28;
   let measureCanvas;
+  let done = false;
+  let reserve = INTRO;
+  let portfolioReady = false;
+  let finalWeight = WEIGHT_START;
+  let finalScale = 1;
 
-  function measureTextWidth(text, fontSize, weight = 600) {
+  function measure(text, size, weight = WEIGHT_START) {
     if (!measureCanvas) measureCanvas = document.createElement('canvas');
     const ctx = measureCanvas.getContext('2d');
-    ctx.font = `${weight} ${fontSize}px "Plus Jakarta Sans", system-ui, -apple-system, sans-serif`;
+    ctx.font = `${weight} ${size}px "Plus Jakarta Sans", system-ui, -apple-system, sans-serif`;
     return ctx.measureText(text).width;
   }
 
-  function lerp(a, b, t)    { return a + (b - a) * t; }
-  function easeInOut(t)     { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
-  function easeOut(t)       { return 1 - (1 - t) * (1 - t); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function easeInOut(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
+  function easeOut(t) { return 1 - (1 - t) * (1 - t); }
 
-  let animFrame;
-  let animationComplete = false;
-
-  function getMetrics() {
-    const W = stage.offsetWidth;
-    const H = stage.offsetHeight;
-    if (W < 50 || H < 50) return null;
-
-    const boxCX = W / 2;
-    const boxCY = H / 2;
-    const hs = Math.round(Math.max(13, Math.min(W, H) * 0.02));
-    const edge = Math.max(16, Math.min(W, H) * 0.04);
-    const maxW = W - edge * 2;
-    const maxH = H - edge * 2;
-
-    // Final box — scales with viewport, capped on large screens
-    let finalW = Math.min(W * 0.82, 640, maxW);
-    let finalH = Math.min(H * 0.36, 140, maxH);
-    let finalFS = Math.min(finalH * 0.42, 58);
-
-    while (finalFS > 14 && measureTextWidth(FINAL_TEXT, finalFS, 600) + BOX_H_PAD > finalW) {
-      finalFS -= 1;
-    }
-    finalH = Math.min(Math.max(finalFS / 0.42, finalFS + 16), maxH);
-
-    const textW = measureTextWidth(FINAL_TEXT, finalFS, 600) + BOX_H_PAD;
-    finalW = Math.min(Math.max(finalW, textW), maxW);
-
-    // Initial box — always smaller than final so the expand phase grows the box
-    let targetW = Math.min(W * 0.41, finalW * 0.72, maxW);
-    let targetH = Math.min(H * 0.20, finalH * 0.72, maxH);
-    const targetFS = targetH * 0.4;
-
-    targetW = Math.min(Math.max(targetW, 80), finalW * 0.82);
-    targetH = Math.min(Math.max(targetH, 32), finalH * 0.82);
-
-    const drawStartX   = boxCX - targetW / 2;
-    const drawStartY   = boxCY - targetH / 2;
-    const cursorStartX = drawStartX;
-    const cursorStartY = drawStartY;
-    const cursorEntranceX = W - edge * 1.5;
-    const cursorEntranceY = H - edge * 1.5;
-    const drawEndX     = boxCX + targetW / 2;
-    const drawEndY     = boxCY + targetH / 2;
-    const trHandleX    = boxCX + targetW / 2 - hs / 2;
-    const trHandleY    = boxCY - targetH / 2 - hs / 2;
-    const finalTrX     = boxCX + finalW / 2 - hs / 2;
-    const finalTrY     = boxCY - finalH / 2 - hs / 2;
-
-    return {
-      W, H, hs, boxCX, boxCY,
-      targetW, targetH, targetFS,
-      finalW, finalH, finalFS,
-      cursorStartX, cursorStartY,
-      cursorEntranceX, cursorEntranceY,
-      drawStartX, drawStartY,
-      drawEndX, drawEndY,
-      trHandleX, trHandleY,
-      finalTrX, finalTrY,
-    };
+  function fontSize() {
+    const width = stage.offsetWidth;
+    if (width < 50) return 0;
+    const max = Math.min(width * 0.72, 560);
+    const lines = ['hi my name is', 'Giuseppe', 'welcome to my', 'portfolio'];
+    let size = Math.min(64, Math.floor(width * 0.055));
+    while (size > 22 && lines.some((line) => measure(line, size) > max)) size -= 1;
+    return size;
   }
 
-  function setCursor(x, y) {
+  function hideLegacyHandles() {
+    document.querySelectorAll('.hero-corner-handle').forEach((handle) => {
+      handle.style.opacity = '0';
+    });
+  }
+
+  function placeHint() {
+    if (!hint) return;
+    const stageBox = stage.getBoundingClientRect();
+    const typedBox = typed.getBoundingClientRect();
+    const left = Math.max(0, typedBox.left - stageBox.left);
+    const width = Math.min(typedBox.width, stage.offsetWidth - left);
+    hint.style.left = `${left}px`;
+    hint.style.top = `${typedBox.bottom - stageBox.top + 10}px`;
+    hint.style.width = `${Math.max(width, 180)}px`;
+  }
+
+  function setCursor(x, y, opacity) {
     cursor.style.left = `${x}px`;
-    cursor.style.top  = `${y}px`;
+    cursor.style.top = `${y}px`;
+    if (opacity !== undefined) cursor.style.opacity = String(opacity);
   }
 
-  function setCursorOpacity(op) {
-    cursor.style.opacity = op;
+  function setWeight(el, weight) {
+    // Fractional weights keep the variable font gliding instead of stepping.
+    const w = Math.round(weight * 10) / 10;
+    el.style.fontWeight = String(Math.round(w));
+    el.style.fontVariationSettings = `"wght" ${w}`;
   }
 
-  function applyBox(cx, cy, w, h, fontSize, hs) {
-    const left = cx - w / 2;
-    const top  = cy - h / 2;
-    textbox.style.left   = `${left}px`;
-    textbox.style.top    = `${top}px`;
-    textbox.style.width  = `${w}px`;
-    textbox.style.height = `${h}px`;
-    typed.style.fontSize = `${fontSize}px`;
-    const ho = hs / 2;
-    Object.values(handles).forEach(handle => {
-      handle.style.width  = `${hs}px`;
-      handle.style.height = `${hs}px`;
-    });
-    handles.tl.style.left = `${left - ho}px`;
-    handles.tl.style.top  = `${top  - ho}px`;
-    handles.tr.style.left = `${left + w - ho}px`;
-    handles.tr.style.top  = `${top  - ho}px`;
-    handles.bl.style.left = `${left - ho}px`;
-    handles.bl.style.top  = `${top  + h - ho}px`;
-    handles.br.style.left = `${left + w - ho}px`;
-    handles.br.style.top  = `${top  + h - ho}px`;
-    if (hint) {
-      hint.style.left = `${left}px`;
-      // Sit just under the typed line; gap lives on .hero-textbox-hint padding-top
-      hint.style.top = `${top + h / 2 + fontSize * 0.55 + 2}px`;
-      hint.style.width = `${w}px`;
-    }
-  }
-
-  function showBox(show) {
-    const op = show ? '1' : '0';
-    textbox.style.opacity = op;
-    Object.values(handles).forEach(h => h.style.opacity = op);
-  }
-
-  function setHighlightOpacity(op) {
-    const clamped = Math.max(0, Math.min(1, op));
-    textbox.style.borderColor = `rgba(var(--brand-blue-rgb), ${clamped})`;
-    textbox.style.background = `rgba(var(--brand-blue-rgb), ${0.3 * clamped})`;
-    Object.values(handles).forEach(h => {
-      h.style.opacity = String(clamped);
-    });
-  }
-
-  function hideHint() {
+  function layout(text) {
+    const size = fontSize();
+    if (!size) return false;
+    textbox.classList.add('is-desktop-type');
+    textbox.style.left = '0';
+    textbox.style.top = '0';
+    textbox.style.width = '100%';
+    textbox.style.height = '100%';
+    textbox.style.opacity = '1';
+    textbox.style.borderColor = 'transparent';
+    textbox.style.background = 'transparent';
+    textbox.style.fontSize = `${size}px`;
+    typed.classList.toggle('is-typing', !done && !portfolioReady);
+    if (sizer && sizer.textContent !== reserve) sizer.textContent = reserve;
+    if (!portfolioReady && typed.textContent !== text) typed.textContent = text;
+    hideLegacyHandles();
     if (hint) hint.classList.remove('visible');
-  }
-
-  function showHint() {
-    if (hint) hint.classList.add('visible');
-  }
-
-  function clearTyped() {
-    typed.textContent = '';
-    typed.classList.remove('hero-typed--interactive');
-    typed.removeAttribute('aria-label');
-  }
-
-  /** Plain text node — keeps Plus Jakarta Sans kerning consistent through type, expand, and highlight fade. */
-  function setTypedText(text) {
-    if (typed.textContent !== text) typed.textContent = text;
-    typed.classList.remove('hero-typed--interactive');
-    typed.removeAttribute('aria-label');
+    cursor.style.opacity = '0';
+    return true;
   }
 
   function applyFinalState() {
-    const m = getMetrics();
-    if (!m) return;
-    setTypedText(FINAL_TEXT);
-    applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
+    done = true;
+    reserve = OUTRO;
+    portfolioReady = true;
+    typed.classList.remove('is-typing');
+    const size = fontSize();
+    if (!size) return;
+    textbox.classList.add('is-desktop-type');
+    textbox.style.left = '0';
+    textbox.style.top = '0';
+    textbox.style.width = '100%';
+    textbox.style.height = '100%';
     textbox.style.opacity = '1';
-    setHighlightOpacity(0);
-    setCursorOpacity(0);
-    showHint();
+    textbox.style.borderColor = 'transparent';
+    textbox.style.background = 'transparent';
+    textbox.style.fontSize = `${size}px`;
+    typed.innerHTML = 'welcome to my\n<span class="hero-portfolio">portfolio</span>';
+    const word = typed.querySelector('.hero-portfolio');
+    if (word) {
+      setWeight(word, finalWeight);
+      word.style.transform = `scale(${finalScale})`;
+    }
+    if (sizer) sizer.textContent = OUTRO;
+    hideLegacyHandles();
+    cursor.style.opacity = '0';
+    placeHint();
+    if (hint) hint.classList.add('visible');
+    stage.setAttribute('aria-label', 'welcome to my portfolio');
   }
 
-  function runAnimation() {
-    const m0 = getMetrics();
-    if (!m0) return;
-
-    animationComplete = false;
-
-    // Phases:
-    //  0 cursor enters from bottom-right (move + fade in)
-    //  1 hold cursor at draw start
-    //  2 drag down-right to draw the box
-    //  3 type "Welcome to my portfolio"
-    //  4 hold after welcome line
-    //  5 move cursor to top-right handle
-    //  6 expand animation (cursor follows top-right handle)
-    //  7 hold after expand
-    //  8 cursor fade out
-    //  9 highlight box + handles fade out (text remains)
-    const TYPE_MS = FINAL_TEXT.length * TYPE_CHAR_MS;
-    const phases = [
-      CURSOR_ENTRANCE_MS,
-      210,
-      545,
-      TYPE_MS,
-      270,
-      410,
-      610,
-      340,
-      340,
-      470,
-    ];
-    const ends   = [];
-    let acc = 0;
-    phases.forEach(d => { acc += d; ends.push(acc); });
-
-    showBox(false);
-    hideHint();
-    clearTyped();
-    setCursorOpacity(0);
-    setHighlightOpacity(1);
-    setCursor(m0.cursorEntranceX, m0.cursorEntranceY);
-
-    let start = null;
-
-    function pT(i, elapsed) {
-      const s = i === 0 ? 0 : ends[i - 1];
-      return Math.max(0, Math.min(1, (elapsed - s) / phases[i]));
+  function runPortfolioSequence() {
+    done = true;
+    reserve = OUTRO;
+    typed.classList.remove('is-typing');
+    typed.innerHTML = 'welcome to my\n<span class="hero-portfolio">portfolio</span>';
+    portfolioReady = true;
+    const word = typed.querySelector('.hero-portfolio');
+    if (!word) {
+      applyFinalState();
+      return;
     }
 
-    function typedTextForElapsed(el) {
-      if (el < ends[2]) return '';
+    setWeight(word, WEIGHT_START);
+    word.style.transform = 'scale(1)';
+    word.style.transformOrigin = 'center top';
+    const SCALE_END = 1.5;
 
-      if (el < ends[3]) {
-        const t = pT(3, el);
-        return FINAL_TEXT.slice(0, Math.floor(t * FINAL_TEXT.length));
+    const highlight = document.createElement('div');
+    highlight.className = 'hero-portfolio-highlight';
+    highlight.setAttribute('aria-hidden', 'true');
+    const handles = ['tl', 'tr', 'bl', 'br'].map((name) => {
+      const handle = document.createElement('span');
+      handle.className = `hero-portfolio-handle hero-portfolio-handle--${name}`;
+      highlight.appendChild(handle);
+      return handle;
+    });
+    textbox.appendChild(highlight);
+
+    const setHandlesVisible = (visible) => {
+      handles.forEach((handle) => {
+        handle.style.opacity = visible ? '1' : '0';
+      });
+    };
+    setHandlesVisible(false);
+
+    const slider = document.createElement('div');
+    slider.className = 'hero-weight-slider';
+    slider.setAttribute('aria-hidden', 'true');
+    slider.innerHTML =
+      '<div class="hero-weight-slider-track">' +
+      '<div class="hero-weight-slider-fill"></div>' +
+      '<div class="hero-weight-slider-knob"></div>' +
+      '</div>';
+    textbox.appendChild(slider);
+    const fill = slider.querySelector('.hero-weight-slider-fill');
+    const knob = slider.querySelector('.hero-weight-slider-knob');
+
+    const padX = 28;
+    const padY = 20;
+    let drawOrigin = { x: 0, y: 0 };
+    let drawnSize = { w: 0, h: 0 };
+
+    // Absolute children sit inside the textbox border, so offset by it.
+    const wordRectLocal = () => {
+      const box = textbox.getBoundingClientRect();
+      const current = word.getBoundingClientRect();
+      return {
+        left: current.left - box.left - textbox.clientLeft,
+        top: current.top - box.top - textbox.clientTop,
+        width: current.width,
+        height: current.height,
+      };
+    };
+
+    const syncHighlightOrigin = () => {
+      const r = wordRectLocal();
+      drawOrigin = { x: r.left - padX, y: r.top - padY };
+      drawnSize = { w: r.width + padX * 2, h: r.height + padY * 2 };
+    };
+
+    const setHighlightBox = (w, h) => {
+      highlight.style.left = `${drawOrigin.x}px`;
+      highlight.style.top = `${drawOrigin.y}px`;
+      highlight.style.width = `${Math.max(0, w)}px`;
+      highlight.style.height = `${Math.max(0, h)}px`;
+    };
+
+    const placeHighlightOnWord = () => {
+      const r = wordRectLocal();
+      highlight.style.left = `${r.left - padX}px`;
+      highlight.style.top = `${r.top - padY}px`;
+      highlight.style.width = `${r.width + padX * 2}px`;
+      highlight.style.height = `${r.height + padY * 2}px`;
+    };
+
+    let sliderAnchor = null;
+    const placeSlider = () => {
+      const r = wordRectLocal();
+      // Lock the slider width once so the knob track never jitters.
+      if (!sliderAnchor) {
+        sliderAnchor = { width: Math.max(120, Math.min(180, r.width * 0.95)) };
+        slider.style.width = `${sliderAnchor.width}px`;
       }
+      slider.style.left = `${r.left + (r.width - sliderAnchor.width) / 2}px`;
+      slider.style.top = `${r.top + r.height + padY + 18}px`;
+    };
 
-      return FINAL_TEXT;
+    const setSliderProgress = (p) => {
+      const pct = Math.max(0, Math.min(1, p)) * 100;
+      fill.style.width = `${pct}%`;
+      knob.style.left = `${pct}%`;
+    };
+
+    const stagePoint = (clientX, clientY) => {
+      const stageBox = stage.getBoundingClientRect();
+      return { x: clientX - stageBox.left, y: clientY - stageBox.top };
+    };
+
+    const cursorAtHighlight = (edge) => {
+      const hi = highlight.getBoundingClientRect();
+      if (edge === 'tl') return stagePoint(hi.left, hi.top);
+      if (edge === 'br') return stagePoint(hi.right, hi.bottom);
+      if (edge === 'tr') return stagePoint(hi.right, hi.top);
+      return stagePoint(hi.right, hi.top);
+    };
+
+    const cursorAtKnob = () => {
+      const k = knob.getBoundingClientRect();
+      return stagePoint(k.left + k.width / 2, k.top + k.height / 2);
+    };
+
+    // Stage-space point offset from the highlight's draw origin. Uses the
+    // drag geometry itself (not the rendered box) so the border thickness
+    // never nudges the cursor.
+    const dragPoint = (dx, dy) => {
+      const box = textbox.getBoundingClientRect();
+      return stagePoint(
+        box.left + textbox.clientLeft + drawOrigin.x + dx,
+        box.top + textbox.clientTop + drawOrigin.y + dy
+      );
+    };
+
+    syncHighlightOrigin();
+    setHighlightBox(0, 0);
+    highlight.style.opacity = '0';
+    setSliderProgress(0);
+    slider.style.opacity = '0';
+    placeSlider();
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      finalWeight = WEIGHT_END;
+      finalScale = SCALE_END;
+      highlight.remove();
+      slider.remove();
+      applyFinalState();
+      return;
     }
 
-    function frame(ts) {
-      const m = getMetrics();
-      if (!m) {
-        animFrame = requestAnimationFrame(frame);
+    const fadeInMs = 180;
+    const holdBeforeDrawMs = 200;
+    const drawMs = 1100;
+    const holdAfterDrawMs = 220;
+    const toSliderMs = 380;
+    const dragMs = 720;
+    const toTrMs = 360;
+    const scaleMs = 560;
+    const holdScaleMs = 220;
+    const cursorFadeMs = 260;
+    const highlightFadeMs = 480;
+    const started = performance.now();
+    let entrance = null;
+
+    const frame = (now) => {
+      const elapsed = now - started;
+      let mark = 0;
+
+      // 0. Cursor fades in at TL of future highlight
+      if (elapsed < fadeInMs) {
+        const p = elapsed / fadeInMs;
+        syncHighlightOrigin();
+        setHighlightBox(0, 0);
+        highlight.style.opacity = '0';
+        setHandlesVisible(false);
+        const tl = dragPoint(0, 0);
+        if (!entrance) {
+          entrance = {
+            x: tl.x + stage.offsetWidth * 0.08,
+            y: tl.y + stage.offsetHeight * 0.1,
+          };
+        }
+        setCursor(lerp(entrance.x, tl.x, easeOut(p)), lerp(entrance.y, tl.y, easeOut(p)), p);
+        requestAnimationFrame(frame);
+        return;
+      }
+      mark = fadeInMs;
+
+      // Hold at the top-left of "portfolio" before drawing
+      if (elapsed < mark + holdBeforeDrawMs) {
+        syncHighlightOrigin();
+        setHighlightBox(0, 0);
+        highlight.style.opacity = '0';
+        setHandlesVisible(false);
+        const tl = dragPoint(0, 0);
+        setCursor(tl.x, tl.y, 1);
+        requestAnimationFrame(frame);
+        return;
+      }
+      mark += holdBeforeDrawMs;
+
+      // 1. Draw highlight TL → BR — box + handles fade in over the first
+      //    stretch of the drag so nothing pops on the starting frame.
+      if (elapsed < mark + drawMs) {
+        const t = (elapsed - mark) / drawMs;
+        const p = easeInOut(t);
+        const w = lerp(0, drawnSize.w, p);
+        const h = lerp(0, drawnSize.h, p);
+        setHighlightBox(w, h);
+        const reveal = Math.min(1, t / 0.18);
+        highlight.style.opacity = String(reveal);
+        handles.forEach((handle) => { handle.style.opacity = String(reveal); });
+        const tip = dragPoint(w, h);
+        setCursor(tip.x, tip.y, 1);
+        requestAnimationFrame(frame);
+        return;
+      }
+      mark += drawMs;
+      setHighlightBox(drawnSize.w, drawnSize.h);
+      highlight.style.opacity = '1';
+      setHandlesVisible(true);
+
+      // 2. Brief hold on full highlight
+      if (elapsed < mark + holdAfterDrawMs) {
+        setCursor(cursorAtHighlight('br').x, cursorAtHighlight('br').y, 1);
+        requestAnimationFrame(frame);
+        return;
+      }
+      mark += holdAfterDrawMs;
+
+      // 3. Reveal slider + move cursor to knob
+      placeSlider();
+      if (elapsed < mark + toSliderMs) {
+        const p = easeInOut((elapsed - mark) / toSliderMs);
+        slider.style.opacity = String(p);
+        const from = cursorAtHighlight('br');
+        const to = cursorAtKnob();
+        setCursor(lerp(from.x, to.x, p), lerp(from.y, to.y, p), 1);
+        setSliderProgress(0);
+        requestAnimationFrame(frame);
+        return;
+      }
+      mark += toSliderMs;
+      slider.style.opacity = '1';
+
+      // 4. Drag slider L → R, weight 450 → 600
+      if (elapsed < mark + dragMs) {
+        const p = easeInOut((elapsed - mark) / dragMs);
+        setSliderProgress(p);
+        const weight = lerp(WEIGHT_START, WEIGHT_END, p);
+        setWeight(word, weight);
+        placeHighlightOnWord();
+        placeSlider();
+        const k = cursorAtKnob();
+        setCursor(k.x, k.y, 1);
+        requestAnimationFrame(frame);
+        return;
+      }
+      mark += dragMs;
+      setSliderProgress(1);
+      setWeight(word, WEIGHT_END);
+      finalWeight = WEIGHT_END;
+      placeHighlightOnWord();
+      placeSlider();
+
+      // 5. Cursor to BR of highlight; slider fades out on the way
+      if (elapsed < mark + toTrMs) {
+        const p = easeInOut((elapsed - mark) / toTrMs);
+        slider.style.opacity = String(1 - p);
+        const from = cursorAtKnob();
+        const to = cursorAtHighlight('br');
+        setCursor(lerp(from.x, to.x, p), lerp(from.y, to.y, p), 1);
+        requestAnimationFrame(frame);
+        return;
+      }
+      mark += toTrMs;
+      slider.style.opacity = '0';
+
+      // 6. Scale portfolio up from BR (highlight stays)
+      if (elapsed < mark + scaleMs) {
+        const p = easeInOut((elapsed - mark) / scaleMs);
+        const scale = lerp(1, SCALE_END, p);
+        word.style.transform = `scale(${scale})`;
+        placeHighlightOnWord();
+        const br = cursorAtHighlight('br');
+        setCursor(br.x, br.y, 1);
+        requestAnimationFrame(frame);
+        return;
+      }
+      mark += scaleMs;
+      word.style.transform = `scale(${SCALE_END})`;
+      finalScale = SCALE_END;
+      placeHighlightOnWord();
+
+      // 7. Hold at scaled size
+      if (elapsed < mark + holdScaleMs) {
+        setCursor(cursorAtHighlight('br').x, cursorAtHighlight('br').y, 1);
+        requestAnimationFrame(frame);
+        return;
+      }
+      mark += holdScaleMs;
+
+      // 8. Cursor fades out
+      if (elapsed < mark + cursorFadeMs) {
+        const p = (elapsed - mark) / cursorFadeMs;
+        setCursor(cursorAtHighlight('br').x, cursorAtHighlight('br').y, 1 - p);
+        requestAnimationFrame(frame);
+        return;
+      }
+      mark += cursorFadeMs;
+      setCursor(cursorAtHighlight('br').x, cursorAtHighlight('br').y, 0);
+
+      // 9. Highlight fade, then hint
+      const fadeElapsed = elapsed - mark;
+      const p = Math.min(1, fadeElapsed / highlightFadeMs);
+      highlight.style.opacity = String(1 - easeOut(p));
+      if (p < 1) {
+        requestAnimationFrame(frame);
         return;
       }
 
-      if (!start) start = ts;
-      const el = ts - start;
-      const typedText = typedTextForElapsed(el);
+      highlight.remove();
+      slider.remove();
+      placeHint();
+      if (hint) hint.classList.add('visible');
+      stage.setAttribute('aria-label', 'welcome to my portfolio');
+    };
 
-      if (el < ends[0]) {
-        // 0. Enter from bottom-right — move and fade in to draw start
-        const p = easeOut(pT(0, el));
-        setCursorOpacity(p);
-        setCursor(
-          lerp(m.cursorEntranceX, m.drawStartX, p),
-          lerp(m.cursorEntranceY, m.drawStartY, p)
-        );
-        showBox(false);
-      } else if (el < ends[1]) {
-        // 1. Hold cursor at draw start
-        setCursorOpacity(1);
-        setCursor(m.drawStartX, m.drawStartY);
-        showBox(false);
-      } else if (el < ends[2]) {
-        // 2. Drag down-right to draw the box
-        setCursorOpacity(1);
-        const p = easeInOut(pT(2, el));
-        const w = lerp(0, m.targetW, p);
-        const h = lerp(0, m.targetH, p);
-        applyBox(m.drawStartX + w/2, m.drawStartY + h/2, w, h, m.targetFS, m.hs);
-        showBox(true);
-        setCursor(m.drawStartX + w, m.drawStartY + h);
-        clearTyped();
-      } else if (el < ends[4]) {
-        // 3–4. Type welcome message + hold
-        setCursorOpacity(1);
-        setTypedText(typedText);
-        applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
-        showBox(true);
-        setCursor(m.drawEndX, m.drawEndY);
-      } else if (el < ends[5]) {
-        // 5. Move from bottom-right corner → top-right handle
-        setCursorOpacity(1);
-        setTypedText(FINAL_TEXT);
-        applyBox(m.boxCX, m.boxCY, m.targetW, m.targetH, m.targetFS, m.hs);
-        showBox(true);
-        const p = easeInOut(pT(5, el));
-        setCursor(lerp(m.drawEndX, m.trHandleX, p), lerp(m.drawEndY, m.trHandleY, p));
-      } else if (el < ends[6]) {
-        // 6. Expand the box (cursor follows top-right handle)
-        setCursorOpacity(1);
-        setTypedText(FINAL_TEXT);
-        const p = easeInOut(pT(6, el));
-        applyBox(m.boxCX, m.boxCY, lerp(m.targetW, m.finalW, p), lerp(m.targetH, m.finalH, p), lerp(m.targetFS, m.finalFS, p), m.hs);
-        showBox(true);
-        setCursor(lerp(m.trHandleX, m.finalTrX, p), lerp(m.trHandleY, m.finalTrY, p));
-      } else if (el < ends[7]) {
-        // 7. Hold after expand
-        setCursorOpacity(1);
-        setTypedText(FINAL_TEXT);
-        applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
-        showBox(true);
-        setCursor(m.finalTrX, m.finalTrY);
-      } else if (el < ends[8]) {
-        // 8. Cursor fade out
-        setTypedText(FINAL_TEXT);
-        applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
-        showBox(true);
-        setHighlightOpacity(1);
-        setCursor(m.finalTrX, m.finalTrY);
-        setCursorOpacity(1 - pT(8, el));
-      } else if (el < ends[9]) {
-        // 9. Highlight fade out — leave title text only
-        setTypedText(FINAL_TEXT);
-        applyBox(m.boxCX, m.boxCY, m.finalW, m.finalH, m.finalFS, m.hs);
-        textbox.style.opacity = '1';
-        setCursorOpacity(0);
-        setHighlightOpacity(1 - easeOut(pT(9, el)));
-      } else {
-        animationComplete = true;
-        applyFinalState();
-        return;
-      }
-
-      animFrame = requestAnimationFrame(frame);
-    }
-
-    animFrame = requestAnimationFrame(frame);
-  }
-
-  function startWhenReady() {
-    if (getMetrics()) {
-      runAnimation();
-    } else {
-      requestAnimationFrame(startWhenReady);
-    }
+    requestAnimationFrame(frame);
   }
 
   if (typeof ResizeObserver !== 'undefined') {
     const resizeObserver = new ResizeObserver(() => {
-      if (animationComplete) applyFinalState();
+      if (done) {
+        const size = fontSize();
+        if (size) textbox.style.fontSize = `${size}px`;
+        placeHint();
+      }
     });
     resizeObserver.observe(stage);
-  } else {
-    window.addEventListener('resize', () => {
-      if (animationComplete) applyFinalState();
-    });
   }
 
-  startWhenReady();
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    finalWeight = WEIGHT_END;
+    finalScale = 1.5;
+    const showFinal = () => {
+      if (layout(OUTRO)) applyFinalState();
+      else requestAnimationFrame(showFinal);
+    };
+    showFinal();
+    return;
+  }
+
+  const start = () => {
+    if (!layout('')) {
+      requestAnimationFrame(start);
+      return;
+    }
+
+    let count = 0;
+    const later = (fn, ms) => { setTimeout(fn, ms); };
+
+    const typeIntro = () => {
+      layout(INTRO.slice(0, count));
+      if (count < INTRO.length) {
+        count += 1;
+        later(typeIntro, TYPE_MS);
+      } else {
+        later(deleteIntro, HOLD_MS);
+      }
+    };
+
+    const deleteIntro = () => {
+      if (count > 0) {
+        count -= 1;
+        layout(INTRO.slice(0, count));
+        later(deleteIntro, DELETE_MS);
+      } else {
+        reserve = OUTRO;
+        later(typeOutro, 140);
+      }
+    };
+
+    const typeOutro = () => {
+      layout(OUTRO.slice(0, count));
+      if (count < OUTRO.length) {
+        count += 1;
+        later(typeOutro, TYPE_MS);
+      } else {
+        runPortfolioSequence();
+      }
+    };
+
+    later(typeIntro, 500);
+  };
+
+  start();
 }
 
 // Wait for loading screen to finish before starting animations
