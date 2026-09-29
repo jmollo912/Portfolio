@@ -1574,6 +1574,65 @@ body {
     animation: hero-caret-blink 1s steps(1) infinite;
   }
 
+  #hero-textbox.is-phone-type .hero-portfolio {
+    display: inline-block;
+    transform-origin: left center;
+    line-height: 1;
+  }
+
+  .hero-portfolio-highlight {
+    position: absolute;
+    z-index: 3;
+    box-sizing: border-box;
+    border: 2.5px solid var(--brand-blue);
+    background: rgba(var(--brand-blue-rgb), 0.3);
+    pointer-events: none;
+  }
+
+  .hero-portfolio-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+    border: 2.5px solid var(--brand-blue);
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+
+  .hero-portfolio-handle--tl {
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%);
+  }
+
+  .hero-portfolio-handle--tr {
+    right: 0;
+    top: 0;
+    transform: translate(50%, -50%);
+  }
+
+  .hero-portfolio-handle--bl {
+    left: 0;
+    bottom: 0;
+    transform: translate(-50%, 50%);
+  }
+
+  .hero-portfolio-handle--br {
+    right: 0;
+    bottom: 0;
+    transform: translate(50%, 50%);
+  }
+
+  .hero-phone-cursor {
+    position: absolute;
+    width: 36px;
+    height: auto;
+    z-index: 22;
+    pointer-events: none;
+    opacity: 0;
+    user-select: none;
+  }
+
   .hero-type-caret {
     width: 2px;
     height: 0.9em;

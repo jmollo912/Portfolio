@@ -315,17 +315,32 @@ function initHeroPhoneTyping() {
   if (!stage || !textbox || !typed) return;
 
   const INTRO = 'hi my name is\nGiuseppe';
-  const OUTRO = 'welcome to my portfolio';
+  const OUTRO = 'welcome to my\nportfolio';
   const TYPE_MS = 61;
   const DELETE_MS = 34;
   const HOLD_MS = 720;
   let done = false;
   let reserve = INTRO;
+  let portfolioExpanded = false;
+
+  let measureCanvas;
+
+  function measure(text, size) {
+    if (!measureCanvas) measureCanvas = document.createElement('canvas');
+    const ctx = measureCanvas.getContext('2d');
+    ctx.font = `600 ${size}px "Plus Jakarta Sans", system-ui, -apple-system, sans-serif`;
+    return ctx.measureText(text).width;
+  }
 
   function fontSize() {
     const width = stage.offsetWidth;
     if (width < 50) return 0;
-    return Math.round(Math.min(56, Math.max(40, width * 0.13)));
+    // Text box has 20px side padding; leave a little room for the caret.
+    const max = width - 40 - 12;
+    const lines = ['hi my name is', 'Giuseppe', 'welcome to my', 'portfolio'];
+    let size = Math.min(80, Math.floor(width * 0.22));
+    while (size > 16 && lines.some((line) => measure(line, size) > max)) size -= 1;
+    return size;
   }
 
   function layout(text) {
@@ -340,9 +355,9 @@ function initHeroPhoneTyping() {
     textbox.style.borderColor = 'transparent';
     textbox.style.background = 'transparent';
     textbox.style.fontSize = `${size}px`;
-    typed.classList.toggle('is-typing', !done);
+    typed.classList.toggle('is-typing', !done && !portfolioExpanded);
     if (sizer && sizer.textContent !== reserve) sizer.textContent = reserve;
-    if (typed.textContent !== text) typed.textContent = text;
+    if (!portfolioExpanded && typed.textContent !== text) typed.textContent = text;
     if (cursor) cursor.style.opacity = '0';
     if (hint) hint.classList.remove('visible');
     document.querySelectorAll('.hero-corner-handle').forEach((handle) => {
@@ -355,8 +370,197 @@ function initHeroPhoneTyping() {
     done = true;
     reserve = OUTRO;
     if (caret) caret.hidden = true;
+    typed.classList.remove('is-typing');
     layout(OUTRO);
-    stage.setAttribute('aria-label', OUTRO);
+    stage.setAttribute('aria-label', 'welcome to my portfolio');
+  }
+
+  function expandPortfolio() {
+    done = true;
+    reserve = OUTRO;
+    if (caret) caret.hidden = true;
+    typed.classList.remove('is-typing');
+    const base = fontSize();
+    if (!base) {
+      finish();
+      return;
+    }
+    typed.innerHTML = 'welcome to my\n<span class="hero-portfolio">portfolio</span>';
+    portfolioExpanded = true;
+    const word = typed.querySelector('.hero-portfolio');
+    if (!word) {
+      finish();
+      return;
+    }
+
+    const targetWidth = textbox.clientWidth - 40;
+    let endSize = base;
+    while (endSize < 220 && measure('portfolio', endSize) < targetWidth) endSize += 1;
+    while (endSize > base && measure('portfolio', endSize) > targetWidth) endSize -= 1;
+
+    const highlight = document.createElement('div');
+    highlight.className = 'hero-portfolio-highlight';
+    highlight.setAttribute('aria-hidden', 'true');
+    const handleNames = ['tl', 'tr', 'bl', 'br'];
+    handleNames.forEach((name) => {
+      const handle = document.createElement('span');
+      handle.className = `hero-portfolio-handle hero-portfolio-handle--${name}`;
+      highlight.appendChild(handle);
+    });
+    textbox.appendChild(highlight);
+
+    const phoneCursor = document.createElement('img');
+    phoneCursor.src = 'media/Icons/CursorSmall.svg';
+    phoneCursor.alt = '';
+    phoneCursor.className = 'hero-phone-cursor';
+    phoneCursor.setAttribute('aria-hidden', 'true');
+    stage.appendChild(phoneCursor);
+
+    const setPhoneCursor = (x, y, opacity) => {
+      phoneCursor.style.left = `${x}px`;
+      phoneCursor.style.top = `${y}px`;
+      phoneCursor.style.opacity = String(opacity);
+    };
+
+    word.style.fontSize = `${base}px`;
+    const textBoxRect = textbox.getBoundingClientRect();
+    const wordBox = word.getBoundingClientRect();
+    const padX = 8;
+    const padY = 6;
+    const drawOrigin = {
+      x: wordBox.left - textBoxRect.left - padX,
+      y: wordBox.top - textBoxRect.top - padY,
+    };
+    const drawnSize = {
+      w: wordBox.width + padX * 2,
+      h: wordBox.height + padY * 2,
+    };
+
+    const setHighlightBox = (w, h) => {
+      highlight.style.left = `${drawOrigin.x}px`;
+      highlight.style.top = `${drawOrigin.y}px`;
+      highlight.style.width = `${Math.max(0, w)}px`;
+      highlight.style.height = `${Math.max(0, h)}px`;
+    };
+
+    const stagePoint = (clientX, clientY) => {
+      const stageBox = stage.getBoundingClientRect();
+      return { x: clientX - stageBox.left, y: clientY - stageBox.top };
+    };
+
+    const cursorAt = (edge) => {
+      const hi = highlight.getBoundingClientRect();
+      if (edge === 'tl') return stagePoint(hi.left, hi.top);
+      if (edge === 'br') return stagePoint(hi.right, hi.bottom);
+      return stagePoint(hi.right - 4, hi.top);
+    };
+
+    const placeHighlightOnWord = () => {
+      const box = textbox.getBoundingClientRect();
+      const current = word.getBoundingClientRect();
+      highlight.style.left = `${current.left - box.left - padX}px`;
+      highlight.style.top = `${current.top - box.top - padY}px`;
+      highlight.style.width = `${current.width + padX * 2}px`;
+      highlight.style.height = `${current.height + padY * 2}px`;
+    };
+
+    setHighlightBox(0, 0);
+    const startPoint = cursorAt('tl');
+    setPhoneCursor(startPoint.x, startPoint.y, 0);
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      word.style.fontSize = `${endSize}px`;
+      highlight.remove();
+      phoneCursor.remove();
+      stage.setAttribute('aria-label', 'welcome to my portfolio');
+      return;
+    }
+
+    const easeInOut = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
+    const easeOut = (t) => 1 - (1 - t) * (1 - t);
+    const lerp = (a, b, t) => a + (b - a) * t;
+
+    const fadeInMs = 160;
+    const drawMs = 520;
+    const toHandleMs = 340;
+    const dragMs = 650;
+    const cursorFadeMs = 280;
+    const highlightFadeMs = 470;
+    const started = performance.now();
+
+    const frame = (now) => {
+      const elapsed = now - started;
+      let mark = 0;
+
+      if (elapsed < fadeInMs) {
+        const p = elapsed / fadeInMs;
+        setHighlightBox(0, 0);
+        const point = cursorAt('tl');
+        setPhoneCursor(point.x, point.y, p);
+        requestAnimationFrame(frame);
+        return;
+      }
+      mark = fadeInMs;
+
+      if (elapsed < mark + drawMs) {
+        const p = easeInOut((elapsed - mark) / drawMs);
+        word.style.fontSize = `${base}px`;
+        setHighlightBox(lerp(0, drawnSize.w, p), lerp(0, drawnSize.h, p));
+        const point = cursorAt('br');
+        setPhoneCursor(point.x, point.y, 1);
+        requestAnimationFrame(frame);
+        return;
+      }
+      mark += drawMs;
+
+      setHighlightBox(drawnSize.w, drawnSize.h);
+
+      if (elapsed < mark + toHandleMs) {
+        const p = easeInOut((elapsed - mark) / toHandleMs);
+        const br = cursorAt('br');
+        const tr = cursorAt('tr');
+        setPhoneCursor(lerp(br.x, tr.x, p), lerp(br.y, tr.y, p), 1);
+        requestAnimationFrame(frame);
+        return;
+      }
+      mark += toHandleMs;
+
+      if (elapsed < mark + dragMs) {
+        const p = easeInOut((elapsed - mark) / dragMs);
+        word.style.fontSize = `${lerp(base, endSize, p)}px`;
+        placeHighlightOnWord();
+        const point = cursorAt('tr');
+        setPhoneCursor(point.x, point.y, 1);
+        requestAnimationFrame(frame);
+        return;
+      }
+
+      word.style.fontSize = `${endSize}px`;
+      placeHighlightOnWord();
+      mark += dragMs;
+
+      if (elapsed < mark + cursorFadeMs) {
+        const p = (elapsed - mark) / cursorFadeMs;
+        const point = cursorAt('tr');
+        setPhoneCursor(point.x, point.y, 1 - p);
+        requestAnimationFrame(frame);
+        return;
+      }
+
+      phoneCursor.remove();
+      const fadeElapsed = elapsed - mark - cursorFadeMs;
+      const p = Math.min(1, fadeElapsed / highlightFadeMs);
+      highlight.style.opacity = String(1 - easeOut(p));
+      if (p < 1) {
+        requestAnimationFrame(frame);
+        return;
+      }
+      highlight.remove();
+      stage.setAttribute('aria-label', 'welcome to my portfolio');
+    };
+
+    requestAnimationFrame(frame);
   }
 
   if (typeof ResizeObserver !== 'undefined') {
@@ -411,7 +615,7 @@ function initHeroPhoneTyping() {
         count += 1;
         later(typeOutro, TYPE_MS);
       } else {
-        finish();
+        expandPortfolio();
       }
     };
 
