@@ -2889,6 +2889,10 @@ button.case-card {
 }
 
 @media (max-width: 600px) {
+  .about-cta-section .about-line-break {
+    display: none;
+  }
+
   .about-cta-section .about-hero-content {
     padding-inline: 48px;
     box-sizing: border-box;
