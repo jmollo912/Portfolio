@@ -1445,7 +1445,7 @@ body {
 
 #hero-cursor {
   position: absolute;
-  width: 200px !important;
+  width: 36px !important;
   height: auto !important;
   pointer-events: none;
   z-index: 20;
