@@ -160,13 +160,15 @@ function startHeroAnimations() {
     if (heroCaption) heroCaption.classList.add('animate-in');
     if (heroCanvas) heroCanvas.classList.add('animate-in');
 
-    // Phones type two lines + expand portfolio. Desktop runs the same
-    // centered typing concept with a weight slider, in parallel with wall pics.
+    // Phones type two lines + expand portfolio. Desktop waits until the
+    // wall pics have left the center, then pauses half a second so the
+    // typing doesn't sit on top of the stacked photos.
     if (window.matchMedia('(max-width: 600px)').matches) {
       initHeroPhoneTyping();
     } else {
-      initWallPicsSpread();
-      initHeroCursorAnimation();
+      initWallPicsSpread(() => {
+        setTimeout(initHeroCursorAnimation, 500);
+      });
     }
   }, 100);
 }
@@ -228,12 +230,13 @@ function initWallPicsSpread(onComplete) {
       .sort((a, b) => b.z - a.z || b.domIndex - a.domIndex)
       .map((item) => item.n);
     const PAUSE = 280;    // hold stacked in the center before spreading
-    const STEP = 50;      // gap between each picture releasing
-    const DURATION = 240; // travel time per picture
-    const EASING = 'ease-in-out';
+    const STEP = 90;      // gap between each picture releasing
+    const DURATION = 560; // travel time per picture
+    const EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
     // Start small in the center stack; scale up to 1 as each pic lands.
     const STACK_SCALE = 0.52;
     const STACK_SCALE_LANDSCAPE = 0.4;
+    const startPose = new WeakMap();
 
     function stackScaleFor(pic) {
       // Eagles stays slightly larger on top of the stack, still undersized.
@@ -242,6 +245,12 @@ function initWallPicsSpread(onComplete) {
       const h = pic.naturalHeight;
       if (w > 0 && h > 0 && w > h) return STACK_SCALE_LANDSCAPE;
       return STACK_SCALE * 0.86;
+    }
+
+    function finalDegrees(pic) {
+      const raw = getComputedStyle(pic).getPropertyValue('--base-transform').trim();
+      const match = raw.match(/-?\d+(\.\d+)?/);
+      return match ? parseFloat(match[0]) : 0;
     }
 
     function picCenterInContainer(pic) {
@@ -259,7 +268,10 @@ function initWallPicsSpread(onComplete) {
       const dx = cx - px;
       const dy = cy - py;
       const scale = stackScaleFor(pic);
+      startPose.set(pic, { dx, dy, scale });
       pic.style.transition = 'none';
+      pic.style.setProperty('transition-delay', '0s', 'important');
+      pic.style.willChange = 'transform';
       pic.style.transform = `translate(${dx}px, ${dy}px) scale(${scale}) rotate(0deg)`;
       pic.style.opacity = '1';
     });
@@ -268,31 +280,88 @@ function initWallPicsSpread(onComplete) {
     void container.offsetHeight;
 
     requestAnimationFrame(() => {
-      wallPics.forEach(pic => {
-        pic.style.transition = `transform ${DURATION}ms ${EASING}, opacity 0.2s ease-out, box-shadow 0.25s ease-out`;
-        pic.style.transitionDelay = '0s';
-      });
+      let finished = 0;
+      const settlePic = (pic, deg) => {
+        // Snap to the normalized resting rotation so clearing 360+deg
+        // doesn't reverse-spin when CSS takes over.
+        pic.style.transition = 'none';
+        pic.style.transform = `translate(0px, 0px) scale(1) rotate(${deg}deg)`;
+        pic.classList.add('animate-in');
+        void pic.offsetHeight;
+      };
+
+      const markDone = () => {
+        finished += 1;
+        if (finished < order.length) return;
+        wallPics.forEach(pic => {
+          pic.style.transition = '';
+          pic.style.removeProperty('transition-delay');
+          pic.style.transform = '';
+          pic.style.willChange = '';
+          pic.classList.add('entrance-done');
+        });
+        done();
+      };
 
       // Hold the stack briefly, then release pictures one by one.
       order.forEach((n, i) => {
         const pic = container.querySelector('.wall-pic-' + n);
-        if (!pic) return;
+        if (!pic) {
+          markDone();
+          return;
+        }
+
         setTimeout(() => {
-          pic.style.transform = '';
-          pic.classList.add('animate-in');
+          const pose = startPose.get(pic) || { dx: 0, dy: 0, scale: STACK_SCALE };
+          const endDeg = finalDegrees(pic);
+          // Alternate spin direction; one full turn + resting tilt.
+          const dir = i % 2 === 0 ? 1 : -1;
+          const spinDeg = dir * 360 + endDeg;
+
+          // Arc outward so travel reads as a circular spin, not a straight line.
+          const travel = Math.hypot(pose.dx, pose.dy) || 1;
+          const perpX = -pose.dy / travel;
+          const perpY = pose.dx / travel;
+          const bulge = Math.min(96, travel * 0.28) * dir;
+          const midX = pose.dx * 0.5 + perpX * bulge;
+          const midY = pose.dy * 0.5 + perpY * bulge;
+          const midScale = (pose.scale + 1) / 2;
+
+          pic.style.transition = 'none';
+          pic.style.setProperty('transition-delay', '0s', 'important');
+
+          const animation = pic.animate(
+            [
+              {
+                transform: `translate(${pose.dx}px, ${pose.dy}px) scale(${pose.scale}) rotate(0deg)`,
+              },
+              {
+                transform: `translate(${midX}px, ${midY}px) scale(${midScale}) rotate(${spinDeg * 0.5}deg)`,
+                offset: 0.5,
+              },
+              {
+                transform: `translate(0px, 0px) scale(1) rotate(${spinDeg}deg)`,
+              },
+            ],
+            {
+              duration: DURATION,
+              easing: EASING,
+              fill: 'forwards',
+            }
+          );
+
+          const finish = () => {
+            settlePic(pic, endDeg);
+            markDone();
+          };
+
+          if (animation.finished) {
+            animation.finished.then(finish).catch(finish);
+          } else {
+            setTimeout(finish, DURATION + 16);
+          }
         }, PAUSE + i * STEP);
       });
-
-      const total = PAUSE + (order.length - 1) * STEP + DURATION;
-      setTimeout(() => {
-        wallPics.forEach(pic => {
-          pic.style.transition = '';
-          pic.style.transitionDelay = '';
-          pic.style.transform = '';
-          pic.classList.add('entrance-done');
-        });
-        done();
-      }, total + 80);
     });
   }
 
@@ -1174,7 +1243,7 @@ function initHeroCursorAnimation() {
       }
     };
 
-    later(typeIntro, 500);
+    typeIntro();
   };
 
   start();
