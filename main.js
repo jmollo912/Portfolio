@@ -350,8 +350,14 @@ function initWallPicsSpread(onComplete) {
             }
           );
 
+          let settled = false;
           const finish = () => {
+            if (settled) return;
+            settled = true;
+            // Drop the finished spin so stylesheet hover can rotate back to 0deg.
+            // A filled animation keeps owning `transform` and blocks :hover.
             settlePic(pic, endDeg);
+            animation.cancel();
             markDone();
           };
 
