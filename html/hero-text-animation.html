@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Hero Text Animation — Giuseppe Mollo</title>
+    <meta name="description" content="Standalone black-background recreation of the portfolio hero typing and highlight animation.">
+    <link rel="icon" href="../media/Icons/gmWebLogo.jpg" type="image/jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/hero-text-animation.css">
+</head>
+<body>
+    <main class="hero-export" aria-label="Hero text animation stage">
+        <div id="hero-stage" class="hero-export-stage" aria-label="Typing animation">
+            <img id="hero-cursor" src="../media/Icons/CursorSmall.svg" alt="" aria-hidden="true" width="36" height="36">
+            <div id="hero-textbox">
+                <span class="hero-typed-sizer" id="hero-typed-sizer" aria-hidden="true"></span>
+                <span id="hero-typed"></span>
+            </div>
+        </div>
+        <button type="button" class="hero-export-replay" id="hero-replay">Replay</button>
+    </main>
+    <script src="../js/hero-text-animation.js" defer></script>
+</body>
+</html>
