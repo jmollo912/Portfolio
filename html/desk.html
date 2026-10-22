@@ -15,11 +15,11 @@
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../vendor/lenis/lenis.css">
     <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js">
-    <link rel="preload" as="fetch" href="../Desk_Hero/Desk_06-hero.glb" crossorigin>
+    <link rel="preload" as="fetch" href="../Desk_Hero/Desk_09-hero.glb" crossorigin>
     <link rel="preload" as="fetch" href="https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/draco/gltf/draco_decoder.wasm" crossorigin>
     <script>
       if (!window.matchMedia('(max-width: 600px)').matches) {
-        window.__deskGltf = fetch('../Desk_Hero/Desk_06-hero.glb').then((response) => {
+        window.__deskGltf = fetch('../Desk_Hero/Desk_09-hero.glb').then((response) => {
           if (!response.ok) throw new Error(String(response.status));
           return response.arrayBuffer();
         });
