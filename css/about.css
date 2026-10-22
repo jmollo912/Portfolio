@@ -1,0 +1,187 @@
+/* =============================================================================
+   ABOUT PAGE — WALL PHOTOS
+   Edit size and placement here. This file only loads on html/about.html.
+
+   LEFT:  1 Eagles, 5 Hiking, 3 Flying
+   RIGHT: 4 Capstone, 2 Fishing, 6 Georgia / Florida
+
+   Per photo:
+     --wall-width    photo width
+     --wall-x        shift left / right  (positive = right)
+     --wall-y        shift up / down     (positive = down)
+     --wall-rotate   tilt
+
+   Per hover caption (same idea):
+     --hover-width   caption width
+     --hover-x       shift left / right  (positive = right)
+     --hover-y       shift up / down     (positive = down)
+     --hover-rotate  tilt
+
+   Sizes below are the full desktop size. The photos shrink automatically
+   when the window gets smaller so they stay on screen.
+   ============================================================================= */
+
+.about-story-wrap {
+  --about-wall-scale: 1;
+  --about-wall-sticky-top: 108px;
+  --about-wall-gap: 28px;
+  --about-wall-from-text: 40px;
+  --about-wall-col-width: 180px;
+
+  display: grid;
+  grid-template-columns:
+    minmax(var(--about-wall-col-width), 1fr)
+    minmax(0, 400px)
+    minmax(var(--about-wall-col-width), 1fr);
+  align-items: stretch;
+  column-gap: var(--about-wall-from-text);
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 3vw, 40px);
+}
+
+.about-wall-col {
+  position: relative;
+  pointer-events: none;
+}
+
+.about-wall-col,
+.about-wall-col-pin {
+  overflow: visible;
+}
+
+.about-wall-col-pin {
+  display: flex;
+  flex-direction: column;
+  gap: var(--about-wall-gap);
+  align-items: center;
+  padding-top: 8px;
+  z-index: 8;
+  transform: scale(var(--about-wall-scale, 1));
+  transform-origin: top center;
+}
+
+.about-wall-col-pin.is-fixed {
+  position: fixed;
+  top: var(--about-wall-sticky-top);
+}
+
+.about-wall-col-pin.is-bottom {
+  position: absolute;
+  top: auto;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.about-page .about-wall-col .wall-pic-group {
+  position: relative;
+  left: auto;
+  right: auto;
+  top: auto;
+  bottom: auto;
+  width: var(--wall-width);
+  overflow: visible;
+  transform: translate(var(--wall-x, 0px), var(--wall-y, 0px));
+}
+
+.about-page .about-wall-col .wall-pic {
+  --base-transform: rotate(var(--wall-rotate, 0deg));
+}
+
+.about-page .about-wall-col .wall-pic-hovertext {
+  top: 0;
+  left: 0;
+  right: auto;
+  bottom: auto;
+  width: var(--hover-width, 140px);
+  transform: translate(var(--hover-x, 0px), var(--hover-y, 0px)) rotate(var(--hover-rotate, 0deg));
+}
+
+.about-page .about-wall-col .wall-pic-group:hover .wall-pic-hovertext,
+.about-page .about-wall-col .wall-pic-group:focus-within .wall-pic-hovertext {
+  opacity: 1;
+  transform: translate(var(--hover-x, 0px), var(--hover-y, 0px)) rotate(var(--hover-rotate, 0deg));
+}
+
+/* 1 — Eagles (left, top) */
+.about-page .wall-pic-group-1 {
+  --wall-width: 180px;
+  --wall-x: 0px;
+  --wall-y: -50px;
+  --wall-rotate: 11deg;
+  --hover-width: 200px;
+  --hover-x: -200px;
+  --hover-y: 24px;
+  --hover-rotate: 0deg;
+}
+
+/* 5 — Hiking (left, middle) */
+.about-page .wall-pic-group-5 {
+  --wall-width: 225px;
+  --wall-x: -150px;
+  --wall-y: 0px;
+  --wall-rotate: -9deg;
+  --hover-width: 180px;
+  --hover-x: -120px;
+  --hover-y: 150px;
+  --hover-rotate: 0deg;
+}
+
+/* 3 — Flying (left, bottom) */
+.about-page .wall-pic-group-3 {
+  --wall-width: 220px;
+  --wall-x: 0px;
+  --wall-y: 50px;
+  --wall-rotate: 5deg;
+  --hover-width: 140px;
+  --hover-x: -170px;
+  --hover-y: 110px;
+  --hover-rotate: 0deg;
+}
+
+/* 4 — Capstone (right, top) */
+.about-page .wall-pic-group-4 {
+  --wall-width: 250px;
+  --wall-x: 20px;
+  --wall-y: -40px;
+  --wall-rotate: -5deg;
+  --hover-width: 160px;
+  --hover-x: -168px;
+  --hover-y: -8px;
+  --hover-rotate: 0deg;
+}
+
+/* 2 — Fishing (right, middle) */
+.about-page .wall-pic-group-2 {
+  --wall-width: 180px;
+  --wall-x:100px;
+  --wall-y: 0px;
+  --wall-rotate: 5deg;
+  --hover-width: 140px;
+  --hover-x: 140px;
+  --hover-y: 230px;
+  --hover-rotate: -15deg;
+}
+
+/* 6 — Georgia / Florida (right, bottom) */
+.about-page .wall-pic-group-6 {
+  --wall-width: 220px;
+  --wall-x: 0px;
+  --wall-y: 40px;
+  --wall-rotate: 13deg;
+  --hover-width: 180px;
+  --hover-x: 260px;
+  --hover-y: 10px;
+  --hover-rotate: 0deg;
+}
+
+@media (max-width: 860px) {
+  .about-story-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .about-wall-col {
+    display: none;
+  }
+}

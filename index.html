@@ -25,9 +25,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Borel&family=Plus+Jakarta+Sans:wght@200..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="vendor/lenis/lenis.css">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js">
+    <link rel="preload" as="fetch" href="Desk_Hero/Desk_06-hero.glb" crossorigin>
+    <link rel="preload" as="fetch" href="https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/draco/gltf/draco_decoder.wasm" crossorigin>
+    <script>
+      if (!window.matchMedia('(max-width: 600px)').matches) {
+        window.__deskGltf = fetch('Desk_Hero/Desk_06-hero.glb').then((response) => {
+          if (!response.ok) throw new Error(String(response.status));
+          return response.arrayBuffer();
+        });
+      }
+    </script>
     <script>document.documentElement.classList.add('js');if('scrollRestoration' in history)history.scrollRestoration='manual';if(!location.hash||location.hash==='#hero'){scrollTo(0,0)}else{document.documentElement.style.scrollBehavior='auto'}</script>
     <script src="vendor/lenis/lenis.min.js" defer></script>
     <script defer src="main.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+        }
+      }
+    </script>
+    <script type="module" src="js/desk-hero.js"></script>
     <script>
       document.addEventListener('keydown', (event) => {
         if (!(event.metaKey || event.ctrlKey) || !event.shiftKey) return;
@@ -115,7 +136,7 @@
     </header>
 
     <main>
-        <section class="hero" id="hero">
+        <section class="hero desk-hero" id="hero">
             <h1 class="sr-only">Giuseppe Mollo — Portfolio</h1>
             <div class="hero-canvas" role="figure" aria-label="Portfolio hero canvas">
                 <div class="hero-canvas-inner">
@@ -126,38 +147,14 @@
                             <span id="hero-typed"></span>
                             <span class="hero-type-caret" id="hero-type-caret" hidden aria-hidden="true"></span>
                         </div>
-                        <!-- Hover hint (hidden for now). Uncomment to bring back:
-                        <p class="hero-textbox-hint" id="hero-textbox-hint">(psst... hover over the images to see what I've been up to! )</p>
-                        -->
                         <div class="hero-corner-handle" id="hero-h-tl"></div>
                         <div class="hero-corner-handle" id="hero-h-tr"></div>
                         <div class="hero-corner-handle" id="hero-h-bl"></div>
                         <div class="hero-corner-handle" id="hero-h-br"></div>
                     </div>
-
-                    <div class="wall-pic-group wall-pic-group-1">
-                        <img src="media/HeroPage/WallPictures/Eagles Game.webp" alt="" class="wall-pic wall-pic-1">
-                        <img src="media/HeroPage/WallPictures/HoverText/eagles.png" alt="" class="wall-pic-hovertext wall-pic-hovertext-1" aria-hidden="true">
-                    </div>
-                    <div class="wall-pic-group wall-pic-group-2">
-                        <img src="media/HeroPage/WallPictures/Fishing.webp" alt="" class="wall-pic wall-pic-2">
-                        <img src="media/HeroPage/WallPictures/HoverText/First%20fish.png" alt="" class="wall-pic-hovertext wall-pic-hovertext-2" aria-hidden="true">
-                    </div>
-                    <div class="wall-pic-group wall-pic-group-3">
-                        <img src="media/HeroPage/WallPictures/Flying.webp" alt="" class="wall-pic wall-pic-3">
-                        <img src="media/HeroPage/WallPictures/HoverText/flight.png" alt="" class="wall-pic-hovertext wall-pic-hovertext-3" aria-hidden="true">
-                    </div>
-                    <div class="wall-pic-group wall-pic-group-4">
-                        <img src="media/HeroPage/WallPictures/CapstoneGroup copy.webp" alt="" class="wall-pic wall-pic-4">
-                        <img src="media/HeroPage/WallPictures/HoverText/Capstone.png" alt="" class="wall-pic-hovertext wall-pic-hovertext-4" aria-hidden="true">
-                    </div>
-                    <div class="wall-pic-group wall-pic-group-5">
-                        <img src="media/HeroPage/WallPictures/Hiking w mik.webp" alt="" class="wall-pic wall-pic-5">
-                        <img src="media/HeroPage/WallPictures/HoverText/hike.png" alt="" class="wall-pic-hovertext wall-pic-hovertext-5" aria-hidden="true">
-                    </div>
-                    <div class="wall-pic-group wall-pic-group-6">
-                        <img src="media/HeroPage/WallPictures/GeorgiaFlorida.jpg" alt="" class="wall-pic wall-pic-6">
-                        <img src="media/HeroPage/WallPictures/HoverText/Georgia%20Florida.png" alt="" class="wall-pic-hovertext wall-pic-hovertext-6" aria-hidden="true">
+                    <div class="desk-stage">
+                        <canvas id="desk-canvas"></canvas>
+                        <p class="desk-status" id="desk-status">Loading desk…</p>
                     </div>
                 </div>
                 <a href="#case-studies" class="case-hero-see-btn" aria-label="Scroll to projects">

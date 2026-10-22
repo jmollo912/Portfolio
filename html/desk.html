@@ -10,89 +10,21 @@
     <link rel="icon" href="../media/Icons/gmWebLogo.jpg" type="image/jpeg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Borel&family=Plus+Jakarta+Sans:wght@200..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../vendor/lenis/lenis.css">
-    <style>
-        .hero.desk-hero .hero-canvas-inner {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0;
-            overflow: visible;
-            padding-bottom: 56px;
-            height: 100%;
-            min-height: 0;
-            max-height: none;
-        }
-
-        .hero.desk-hero #hero-stage {
-            position: relative;
-            top: auto;
-            right: auto;
-            bottom: auto;
-            left: auto;
-            width: 100%;
-            height: clamp(120px, 18vh, 176px);
-            flex: 0 0 auto;
-        }
-
-        .hero.desk-hero #hero-textbox.is-desktop-type {
-            align-content: end;
-        }
-
-        .desk-stage {
-            position: relative;
-            z-index: 4;
-            width: 100%;
-            height: clamp(400px, 52vh, 580px);
-            flex: 0 0 auto;
-            overflow: visible;
-            background: transparent;
-        }
-
-        @media (max-width: 809px) {
-            .hero.desk-hero .hero-canvas-inner {
-                height: 100%;
-                max-height: calc(100dvh - 112px);
-                min-height: 0;
-                padding-bottom: 48px;
-            }
-
-            .hero.desk-hero #hero-stage {
-                height: clamp(72px, 14vh, 120px);
-            }
-
-            .desk-stage {
-                width: 100%;
-                height: clamp(220px, 38vh, 320px);
-            }
-        }
-
-        #desk-canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-
-        .desk-status {
-            position: absolute;
-            inset: 0;
-            display: grid;
-            place-items: center;
-            margin: 0;
-            font-size: 15px;
-            font-weight: 500;
-            color: rgba(0, 0, 0, 0.4);
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        .desk-status.is-hidden {
-            display: none;
-        }
-    </style>
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js">
+    <link rel="preload" as="fetch" href="../Desk_Hero/Desk_06-hero.glb" crossorigin>
+    <link rel="preload" as="fetch" href="https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/draco/gltf/draco_decoder.wasm" crossorigin>
+    <script>
+      if (!window.matchMedia('(max-width: 600px)').matches) {
+        window.__deskGltf = fetch('../Desk_Hero/Desk_06-hero.glb').then((response) => {
+          if (!response.ok) throw new Error(String(response.status));
+          return response.arrayBuffer();
+        });
+      }
+    </script>
     <script>document.documentElement.classList.add('js');if('scrollRestoration' in history)history.scrollRestoration='manual';if(!location.hash||location.hash==='#hero'){scrollTo(0,0)}</script>
     <script src="../vendor/lenis/lenis.min.js" defer></script>
     <script defer src="../main.js"></script>
@@ -208,164 +140,6 @@
         </section>
     </main>
 
-    <script type="module">
-        import * as THREE from 'three';
-        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-        import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-
-        const canvas = document.getElementById('desk-canvas');
-        const hero = document.getElementById('hero');
-        const status = document.getElementById('desk-status');
-        const MODEL_URL = '../Desk_Hero/Desk_06-v1.glb';
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const FOLLOW_YAW = 0.14;
-        const FOLLOW_PITCH = 0.09;
-        const FOLLOW_SHIFT = 0.18;
-        const FOLLOW_EASE = 0.08;
-
-        const renderer = new THREE.WebGLRenderer({
-            canvas,
-            antialias: true,
-            alpha: true,
-        });
-        renderer.setClearColor(0x000000, 0);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.outputColorSpace = THREE.SRGBColorSpace;
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.05;
-        renderer.shadowMap.enabled = true;
-
-        const scene = new THREE.Scene();
-        scene.background = null;
-
-        const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 200);
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.enablePan = false;
-        controls.enableRotate = false;
-        controls.enableZoom = false;
-        controls.autoRotate = false;
-
-        const pmrem = new THREE.PMREMGenerator(renderer);
-        scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-
-        scene.add(new THREE.HemisphereLight(0xffffff, 0xe8e8e8, 0.7));
-        const key = new THREE.DirectionalLight(0xffffff, 1.15);
-        key.position.set(4, 8, 6);
-        scene.add(key);
-
-        const pointer = { x: 0, y: 0, active: false };
-        const follow = { yaw: 0, pitch: 0, shiftX: 0, shiftY: 0 };
-        let deskPivot = null;
-        let deskHome = null;
-
-        function sizeRenderer() {
-            const width = canvas.clientWidth;
-            const height = canvas.clientHeight;
-            renderer.setSize(width, height, false);
-            camera.aspect = width / height || 1;
-            camera.updateProjectionMatrix();
-        }
-
-        function frameObject(object) {
-            const box = new THREE.Box3().setFromObject(object);
-            const size = box.getSize(new THREE.Vector3());
-            const center = box.getCenter(new THREE.Vector3());
-            const vFov = THREE.MathUtils.degToRad(camera.fov);
-            // Keep the desk at the scale it had in the 1080×380 stage,
-            // so a larger canvas adds margin instead of enlarging the model.
-            const refW = 1080;
-            const refH = 380;
-            const fitH = size.y / (2 * Math.tan(vFov / 2));
-            const fitW = size.x / (2 * Math.tan(vFov / 2) * (refW / refH));
-            const distAtRef = Math.max(fitH, fitW) * 1.32;
-            const dist = distAtRef * (Math.max(canvas.clientHeight, 1) / refH);
-            controls.target.copy(center);
-            camera.position.set(center.x, center.y + size.y * 0.08, center.z + dist);
-            camera.near = dist / 100;
-            camera.far = dist * 100;
-            camera.updateProjectionMatrix();
-            controls.update();
-        }
-
-        function setPointerFromEvent(event) {
-            const rect = hero.getBoundingClientRect();
-            const nx = ((event.clientX - rect.left) / Math.max(rect.width, 1)) * 2 - 1;
-            const ny = ((event.clientY - rect.top) / Math.max(rect.height, 1)) * 2 - 1;
-            pointer.x = THREE.MathUtils.clamp(nx, -1, 1);
-            pointer.y = THREE.MathUtils.clamp(ny, -1, 1);
-            pointer.active = true;
-        }
-
-        hero.addEventListener('pointermove', setPointerFromEvent);
-        hero.addEventListener('pointerenter', setPointerFromEvent);
-        hero.addEventListener('pointerleave', () => {
-            pointer.x = 0;
-            pointer.y = 0;
-            pointer.active = false;
-        });
-
-        sizeRenderer();
-
-        const loader = new GLTFLoader();
-        loader.load(
-            MODEL_URL,
-            (gltf) => {
-                const desk = new THREE.Group();
-                desk.add(gltf.scene);
-                // glTF is Y-up; 180° around Y turns the desk to face the camera
-                // without rolling it upside down.
-                desk.rotation.y = Math.PI;
-
-                const pivot = new THREE.Group();
-                pivot.add(desk);
-                scene.add(pivot);
-
-                const box = new THREE.Box3().setFromObject(desk);
-                const center = box.getCenter(new THREE.Vector3());
-                desk.position.sub(center);
-                pivot.position.copy(center);
-
-                deskPivot = pivot;
-                deskHome = center.clone();
-                frameObject(pivot);
-                status.classList.add('is-hidden');
-            },
-            undefined,
-            () => {
-                status.textContent = 'Couldn’t load the desk model.';
-            }
-        );
-
-        window.addEventListener('resize', () => {
-            sizeRenderer();
-            if (deskPivot) frameObject(deskPivot);
-        });
-
-        function tick() {
-            if (deskPivot && deskHome && !reduceMotion) {
-                const targetYaw = pointer.active ? pointer.x * FOLLOW_YAW : 0;
-                const targetPitch = pointer.active ? pointer.y * FOLLOW_PITCH : 0;
-                const targetShiftX = pointer.active ? pointer.x * FOLLOW_SHIFT : 0;
-                const targetShiftY = pointer.active ? -pointer.y * FOLLOW_SHIFT : 0;
-                follow.yaw += (targetYaw - follow.yaw) * FOLLOW_EASE;
-                follow.pitch += (targetPitch - follow.pitch) * FOLLOW_EASE;
-                follow.shiftX += (targetShiftX - follow.shiftX) * FOLLOW_EASE;
-                follow.shiftY += (targetShiftY - follow.shiftY) * FOLLOW_EASE;
-                deskPivot.rotation.y = follow.yaw;
-                deskPivot.rotation.x = follow.pitch;
-                deskPivot.position.set(
-                    deskHome.x + follow.shiftX,
-                    deskHome.y + follow.shiftY,
-                    deskHome.z
-                );
-            }
-            controls.update();
-            renderer.render(scene, camera);
-            requestAnimationFrame(tick);
-        }
-        tick();
-    </script>
+    <script type="module" src="../js/desk-hero.js"></script>
 </body>
 </html>

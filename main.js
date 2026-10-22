@@ -160,9 +160,8 @@ function startHeroAnimations() {
     if (heroCaption) heroCaption.classList.add('animate-in');
     if (heroCanvas) heroCanvas.classList.add('animate-in');
 
-    // Phones type two lines + expand portfolio. Desktop waits until the
-    // wall pics have left the center, then pauses half a second so the
-    // typing doesn't sit on top of the stacked photos.
+    // Phones type two lines + expand portfolio. Desktop types after a
+    // short beat (wall pics now live in the about section).
     if (window.matchMedia('(max-width: 600px)').matches) {
       initHeroPhoneTyping();
     } else {
@@ -180,7 +179,7 @@ function startHeroAnimations() {
 // ==========================================
 function initWallPicsSpread(onComplete) {
   const container = document.querySelector('.hero-canvas-inner');
-  const wallPics = Array.from(document.querySelectorAll('.wall-pic'));
+  const wallPics = Array.from(document.querySelectorAll('.hero-canvas-inner .wall-pic'));
   const done = () => { if (typeof onComplete === 'function') onComplete(); };
 
   if (!container || wallPics.length === 0) {
@@ -372,6 +371,182 @@ function initWallPicsSpread(onComplete) {
   }
 
   waitForImages(wallPics).then(runSpread);
+}
+
+function initAboutWallPics() {
+  const section = document.querySelector('.about-story');
+  const pics = Array.from(document.querySelectorAll('.about-wall-col .wall-pic'));
+  if (!section || pics.length === 0) return;
+
+  let revealed = false;
+
+  const markDone = () => {
+    pics.forEach((pic) => pic.classList.add('entrance-done'));
+  };
+
+  const reveal = () => {
+    if (revealed) return;
+    revealed = true;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      pics.forEach((pic) => pic.classList.add('animate-in', 'entrance-done'));
+      return;
+    }
+    pics.forEach((pic) => pic.classList.add('animate-in'));
+    window.setTimeout(markDone, 700);
+  };
+
+  const isInView = () => {
+    const rect = section.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    return rect.top < vh * 0.82 && rect.bottom > 80;
+  };
+
+  const onScroll = () => {
+    if (!isInView()) return;
+    reveal();
+    window.removeEventListener('scroll', onScroll, true);
+    if (lenis && typeof lenis.off === 'function') {
+      try { lenis.off('scroll', onScroll); } catch (_) { /* ignore */ }
+    }
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    if (!entries.some((entry) => entry.isIntersecting)) return;
+    observer.disconnect();
+    reveal();
+  }, { threshold: 0.05, rootMargin: '0px 0px -8% 0px' });
+
+  observer.observe(section);
+  window.addEventListener('scroll', onScroll, true);
+  if (lenis && typeof lenis.on === 'function') {
+    try { lenis.on('scroll', onScroll); } catch (_) { /* ignore */ }
+  }
+  requestAnimationFrame(() => {
+    requestAnimationFrame(onScroll);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initAboutWallPics);
+document.addEventListener('DOMContentLoaded', initAboutWallStick);
+
+function initAboutWallStick() {
+  const wrap = document.querySelector('.about-story-wrap');
+  const cols = Array.from(document.querySelectorAll('.about-wall-col'));
+  if (!wrap || cols.length === 0) return;
+
+  const mq = window.matchMedia('(max-width: 860px)');
+  const pins = cols
+    .map((col) => col.querySelector('.about-wall-col-pin'))
+    .filter(Boolean);
+  let lockTop = null;
+
+  function scrollY() {
+    if (lenis && typeof lenis.scroll === 'number') return lenis.scroll;
+    return window.scrollY || window.pageYOffset || 0;
+  }
+
+  function resetPin(pin) {
+    pin.classList.remove('is-fixed', 'is-bottom');
+    pin.style.left = '';
+    pin.style.width = '';
+    pin.style.top = '';
+  }
+
+  function fitScale() {
+    if (mq.matches) {
+      wrap.style.removeProperty('--about-wall-scale');
+      return;
+    }
+
+    wrap.style.setProperty('--about-wall-scale', '1');
+    pins.forEach(resetPin);
+
+    const pad = 16;
+    let scale = 1;
+    pins.forEach((pin) => {
+      const pinRect = pin.getBoundingClientRect();
+      const originX = pinRect.left + pinRect.width / 2;
+      const originY = pinRect.top;
+      pin.querySelectorAll('.wall-pic-group').forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.left < originX) {
+          scale = Math.min(scale, (originX - pad) / Math.max(originX - rect.left, 1));
+        }
+        if (rect.right > originX) {
+          scale = Math.min(scale, (window.innerWidth - pad - originX) / Math.max(rect.right - originX, 1));
+        }
+        if (rect.top < originY) {
+          scale = Math.min(scale, (originY - pad) / Math.max(originY - rect.top, 1));
+        }
+        if (rect.bottom > originY) {
+          scale = Math.min(scale, (window.innerHeight - pad - originY) / Math.max(rect.bottom - originY, 1));
+        }
+      });
+    });
+    wrap.style.setProperty('--about-wall-scale', String(Math.max(0.45, Math.min(1, scale))));
+  }
+
+  function refreshLockTop() {
+    pins.forEach(resetPin);
+    const pin = pins[0];
+    if (!pin || mq.matches) {
+      lockTop = null;
+      return;
+    }
+    lockTop = Math.round(pin.getBoundingClientRect().top + scrollY());
+  }
+
+  function update() {
+    if (mq.matches) {
+      pins.forEach(resetPin);
+      lockTop = null;
+      wrap.style.removeProperty('--about-wall-scale');
+      return;
+    }
+
+    if (lockTop == null) {
+      fitScale();
+      refreshLockTop();
+    }
+
+    const wrapRect = wrap.getBoundingClientRect();
+
+    pins.forEach((pin) => {
+      const col = pin.parentElement;
+      const colRect = col.getBoundingClientRect();
+      const pinHeight = pin.offsetHeight;
+      const releaseTop = wrapRect.bottom - pinHeight;
+
+      if (releaseTop <= lockTop) {
+        pin.classList.remove('is-fixed');
+        pin.classList.add('is-bottom');
+        pin.style.left = '';
+        pin.style.width = '';
+        pin.style.top = '';
+        return;
+      }
+
+      pin.classList.add('is-fixed');
+      pin.classList.remove('is-bottom');
+      pin.style.top = `${lockTop}px`;
+      pin.style.left = `${Math.round(colRect.left)}px`;
+      pin.style.width = `${Math.round(colRect.width)}px`;
+    });
+  }
+
+  function onResize() {
+    lockTop = null;
+    update();
+  }
+
+  if (lenis && typeof lenis.on === 'function') {
+    try { lenis.on('scroll', update); } catch (_) { /* ignore */ }
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', onResize);
+  window.addEventListener('load', onResize);
+  mq.addEventListener('change', onResize);
+  requestAnimationFrame(() => requestAnimationFrame(update));
 }
 
 // ==========================================
@@ -721,6 +896,7 @@ function initHeroCursorAnimation() {
   const HOLD_MS = 640;
   const WEIGHT_START = 450;
   const WEIGHT_END = 700;
+  const SCALE_END = 1.5;
 
   let measureCanvas;
   let done = false;
@@ -824,6 +1000,7 @@ function initHeroCursorAnimation() {
     const word = typed.querySelector('.hero-portfolio');
     if (word) {
       setWeight(word, finalWeight);
+      word.style.transformOrigin = 'center top';
       word.style.transform = `scale(${finalScale})`;
     }
     if (sizer) sizer.textContent = OUTRO;
@@ -848,8 +1025,8 @@ function initHeroCursorAnimation() {
 
     setWeight(word, WEIGHT_START);
     word.style.transform = 'scale(1)';
-    word.style.transformOrigin = 'center center';
-    const SCALE_END = 1.5;
+    // Grow downward so "portfolio" never climbs into "welcome to my".
+    word.style.transformOrigin = 'center top';
 
     const highlight = document.createElement('div');
     highlight.className = 'hero-portfolio-highlight';
@@ -882,7 +1059,8 @@ function initHeroCursorAnimation() {
     const knob = slider.querySelector('.hero-weight-slider-knob');
 
     const padX = 22;
-    const padTop = 4;
+    // No top pad — keeps the highlight flush under "welcome to my".
+    const padTop = 0;
     const padBottom = 22;
     let drawOrigin = { x: 0, y: 0 };
     let drawnSize = { w: 0, h: 0 };
@@ -920,13 +1098,12 @@ function initHeroCursorAnimation() {
       highlight.style.height = `${r.height + padTop + padBottom}px`;
     };
 
-    // Scale grows the word and the box together from their center, so both
-    // stay in place while the padding stays even around the text.
     let scaleLayout = null;
     const placeScaledHighlight = (scale) => {
       const box = scaleLayout;
+      // Keep the top edge locked; expand sideways from center and down only.
       const left = box.left - (box.width * (scale - 1)) / 2;
-      const top = box.top - (box.height * (scale - 1)) / 2;
+      const top = box.top;
       highlight.style.left = `${left - padX * scale}px`;
       highlight.style.top = `${top - padTop * scale}px`;
       highlight.style.width = `${box.width * scale + padX * 2 * scale}px`;
@@ -1125,11 +1302,11 @@ function initHeroCursorAnimation() {
       mark += toTrMs;
       slider.style.opacity = '0';
 
-      // 6. Scale portfolio and highlight together, centered
+      // 6. Scale portfolio and highlight together, growing downward
       if (elapsed < mark + scaleMs) {
         if (!scaleLayout) {
           word.style.transform = 'scale(1)';
-          word.style.transformOrigin = 'center center';
+          word.style.transformOrigin = 'center top';
           scaleLayout = wordRectLocal();
         }
         const p = easeInOut((elapsed - mark) / scaleMs);
@@ -1144,7 +1321,7 @@ function initHeroCursorAnimation() {
       mark += scaleMs;
       if (!scaleLayout) {
         word.style.transform = 'scale(1)';
-        word.style.transformOrigin = 'center center';
+        word.style.transformOrigin = 'center top';
         scaleLayout = wordRectLocal();
       }
       word.style.transform = `scale(${SCALE_END})`;

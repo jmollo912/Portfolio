@@ -1356,9 +1356,118 @@ body {
    3) Phone (<= 809px)  : tighter hero canvas padding
    =========================================== */
 
-/* Below 1200px — hide wall images */
+/* Below 1200px — hide leftover hero wall images (about columns keep theirs) */
 @media (max-width: 1199px) {
   .hero-canvas-inner .wall-pic-group {
+    display: none;
+  }
+}
+
+/* ── Desk hero (3D model + stacked welcome type) ── */
+.hero.desk-hero .hero-canvas-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  overflow: visible;
+  padding-bottom: 56px;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+}
+
+.hero.desk-hero #hero-stage {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  width: 100%;
+  height: clamp(120px, 18vh, 176px);
+  flex: 0 0 auto;
+}
+
+.hero.desk-hero #hero-textbox.is-desktop-type {
+  align-content: end;
+}
+
+.desk-stage {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  height: clamp(400px, 52vh, 580px);
+  flex: 0 0 auto;
+  overflow: visible;
+  background: transparent;
+}
+
+#desk-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.desk-status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.desk-status.is-hidden {
+  display: none;
+}
+
+@media (max-width: 809px) {
+  .hero.desk-hero .hero-canvas-inner {
+    height: 100%;
+    max-height: calc(100dvh - 112px);
+    min-height: 0;
+    padding-bottom: 48px;
+  }
+
+  .hero.desk-hero #hero-stage {
+    height: clamp(72px, 14vh, 120px);
+  }
+
+  .desk-stage {
+    width: 100%;
+    height: clamp(220px, 38vh, 320px);
+  }
+}
+
+@media (max-width: 600px) {
+  .hero.desk-hero .hero-canvas-inner {
+    display: block;
+    height: min(52vh, 420px);
+    min-height: 300px;
+    max-height: calc(100dvh - 160px);
+    padding-bottom: 0;
+  }
+
+  .hero.desk-hero #hero-stage {
+    position: absolute;
+    inset: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero.desk-hero #hero-textbox.is-desktop-type {
+    align-content: center;
+  }
+
+  .desk-stage {
     display: none;
   }
 }
@@ -1471,7 +1580,7 @@ body {
   font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   font-weight: 600;
   font-variation-settings: "wght" 600;
-  color: #111111;
+  color: #000000;
   line-height: 1;
   pointer-events: none;
 }
@@ -1571,14 +1680,14 @@ body {
   width: 2px;
   height: 0.85em;
   margin-left: 4px;
-  background: #111111;
+  background: #000000;
   vertical-align: -0.06em;
   animation: hero-caret-blink 1s steps(1) infinite;
 }
 
 #hero-textbox.is-desktop-type .hero-portfolio {
   display: inline-block;
-  transform-origin: center center;
+  transform-origin: center top;
   line-height: inherit;
   letter-spacing: inherit;
   will-change: transform, font-variation-settings;
@@ -1715,7 +1824,7 @@ body {
     width: 2px;
     height: 0.85em;
     margin-left: 4px;
-    background: #111111;
+    background: #000000;
     vertical-align: -0.06em;
     animation: hero-caret-blink 1s steps(1) infinite;
   }
@@ -3151,6 +3260,7 @@ button.case-card {
   z-index: 2;
   max-width: 400px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .about-story-title {
