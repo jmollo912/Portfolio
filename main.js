@@ -484,7 +484,8 @@ function initHeroPhoneTyping() {
     textbox.appendChild(highlight);
 
     const phoneCursor = document.createElement('img');
-    phoneCursor.src = 'media/Icons/CursorSmall.svg';
+    const heroCursor = document.getElementById('hero-cursor');
+    phoneCursor.src = heroCursor?.getAttribute('src') || 'media/Icons/CursorSmall.svg';
     phoneCursor.alt = '';
     phoneCursor.className = 'hero-phone-cursor';
     phoneCursor.setAttribute('aria-hidden', 'true');

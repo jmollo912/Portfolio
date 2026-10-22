@@ -28,6 +28,14 @@
     <script>document.documentElement.classList.add('js');if('scrollRestoration' in history)history.scrollRestoration='manual';if(!location.hash||location.hash==='#hero'){scrollTo(0,0)}else{document.documentElement.style.scrollBehavior='auto'}</script>
     <script src="vendor/lenis/lenis.min.js" defer></script>
     <script defer src="main.js"></script>
+    <script>
+      document.addEventListener('keydown', (event) => {
+        if (!(event.metaKey || event.ctrlKey) || !event.shiftKey) return;
+        if (event.key !== 'f' && event.key !== 'F') return;
+        event.preventDefault();
+        location.href = 'html/desk.html';
+      });
+    </script>
 </head>
 <body>
     <!-- Custom cursor kept in DOM; disabled via CSS + CUSTOM_CURSOR_ENABLED in main.js -->
