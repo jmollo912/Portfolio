@@ -27,11 +27,11 @@
     <link rel="stylesheet" href="vendor/lenis/lenis.css">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js">
-    <link rel="preload" as="fetch" href="Desk_Hero/Desk_09-hero.glb" crossorigin>
+    <link rel="preload" as="fetch" href="Desk_Hero/Desk_09-hero.glb" crossorigin fetchpriority="high">
     <link rel="preload" as="fetch" href="https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/draco/gltf/draco_decoder.wasm" crossorigin>
     <script>
       if (!window.matchMedia('(max-width: 600px)').matches) {
-        window.__deskGltf = fetch('Desk_Hero/Desk_09-hero.glb').then((response) => {
+        window.__deskGltf = fetch('Desk_Hero/Desk_09-hero.glb', { priority: 'high' }).then((response) => {
           if (!response.ok) throw new Error(String(response.status));
           return response.arrayBuffer();
         });
@@ -49,14 +49,6 @@
       }
     </script>
     <script type="module" src="js/desk-hero.js"></script>
-    <script>
-      document.addEventListener('keydown', (event) => {
-        if (!(event.metaKey || event.ctrlKey) || !event.shiftKey) return;
-        if (event.key !== 'f' && event.key !== 'F') return;
-        event.preventDefault();
-        location.href = 'html/desk.html';
-      });
-    </script>
 </head>
 <body>
     <!-- Custom cursor kept in DOM; disabled via CSS + CUSTOM_CURSOR_ENABLED in main.js -->
@@ -203,7 +195,7 @@
                             playsinline
                             webkit-playsinline
                             disablepictureinpicture
-                            preload="auto"
+                            preload="none"
                             aria-hidden="true"
                         ></video>
                     </div>
@@ -228,7 +220,7 @@
                             playsinline
                             webkit-playsinline
                             disablepictureinpicture
-                            preload="auto"
+                            preload="none"
                             aria-hidden="true"
                         ></video>
                     </div>

@@ -199,3 +199,4 @@ CHANGELOG (edit when brand changes)
 2026-09-21 — Case-study side nav panel background set to transparent (was white).
 2026-10-22 — Index hero uses the 3D desk + welcome typing. Wall photos moved to `html/about.html` as sticky left (1, 5, 3) / right (4, 2, 6) columns, replacing the story popup images. Phone hero stays type-only.
 2026-10-22 — Hero desk model swapped to `Desk_09-hero.glb` (Draco + WebP from `Desk_09-v1.glb`). `Desk_06` removed.
+2026-10-23 — Desk load is first in line: model and Three.js pieces preload at high priority, and homepage cover videos wait until their cards are near the screen.

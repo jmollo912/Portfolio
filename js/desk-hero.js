@@ -26,7 +26,7 @@ if (!canvas || !hero) {
 function startDesk() {
   if (stopDesk || phoneQuery.matches || !canvas || !hero) return;
 
-  const modelBuffer = window.__deskGltf || fetch(MODEL_URL).then((response) => {
+  const modelBuffer = window.__deskGltf || fetch(MODEL_URL, { priority: 'high' }).then((response) => {
     if (!response.ok) throw new Error(String(response.status));
     return response.arrayBuffer();
   });
@@ -37,11 +37,10 @@ function startDesk() {
     alpha: true,
   });
   renderer.setClearColor(0x000000, 0);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
-  renderer.shadowMap.enabled = true;
 
   const scene = new THREE.Scene();
   scene.background = null;

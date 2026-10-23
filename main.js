@@ -3121,47 +3121,47 @@ function initWorkCardVideos() {
     }
   };
 
-  const tryPlayAll = () => {
-    videos.forEach(tryPlay);
+  const arm = (video) => {
+    if (video.dataset.armed === 'true') {
+      tryPlay(video);
+      return;
+    }
+    video.dataset.armed = 'true';
+    video.preload = 'auto';
+    video.addEventListener('loadeddata', () => tryPlay(video), { once: true });
+    video.load();
   };
 
   videos.forEach((video) => {
     video.controls = false;
-    video.preload = 'auto';
+    video.preload = 'none';
     video.muted = true;
     video.defaultMuted = true;
     video.volume = 0;
     video.playsInline = true;
 
-    const kickoff = () => tryPlay(video);
-
-    if (video.readyState >= 2) {
-      kickoff();
-    } else {
-      video.addEventListener('loadeddata', kickoff, { once: true });
-      video.addEventListener('canplay', kickoff, { once: true });
-    }
-
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting) tryPlay(video);
+            if (entry.isIntersecting) arm(video);
+            else if (video.dataset.armed === 'true') video.pause();
           });
         },
-        { rootMargin: '120px 0px', threshold: 0.01 }
+        { rootMargin: '160px 0px', threshold: 0.01 }
       );
       observer.observe(video);
+    } else {
+      arm(video);
     }
   });
 
-  window.addEventListener('load', tryPlayAll, { once: true });
-  window.addEventListener('pageshow', tryPlayAll);
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') tryPlayAll();
+    if (document.visibilityState !== 'visible') return;
+    videos.forEach((video) => {
+      if (video.dataset.armed === 'true') tryPlay(video);
+    });
   });
-  document.addEventListener('touchstart', tryPlayAll, { once: true, passive: true });
-  document.addEventListener('click', tryPlayAll, { once: true });
 }
 
 document.addEventListener('DOMContentLoaded', initWorkCardVideos);
