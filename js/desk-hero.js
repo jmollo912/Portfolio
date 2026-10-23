@@ -15,7 +15,7 @@ const FOLLOW_YAW = 0.14;
 const FOLLOW_PITCH = 0.09;
 const FOLLOW_SHIFT = 0.18;
 const FOLLOW_EASE = 0.08;
-const FIT_PAD = 1.22;
+const FIT_PAD = 1.28;
 
 let stopDesk = null;
 
@@ -98,10 +98,12 @@ function startDesk() {
     const preferredFitW = size.x / (2 * tanHalf * (refW / refH));
     const distAtRef = Math.max(fitH, preferredFitW) * 1.32;
     const preferredDist = distAtRef * (height / refH);
+    // Pull back on short canvases so cursor-follow cannot run off the bitmap.
+    const followDist = fitH * 2;
 
-    const dist = Math.max(fitDist, preferredDist);
+    const dist = Math.max(fitDist, preferredDist, followDist);
     controls.target.copy(center);
-    camera.position.set(center.x, center.y + size.y * 0.08, center.z + dist);
+    camera.position.set(center.x, center.y + size.y * 0.03, center.z + dist);
     camera.near = dist / 100;
     camera.far = dist * 100;
     camera.updateProjectionMatrix();
