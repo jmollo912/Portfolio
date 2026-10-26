@@ -1374,7 +1374,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0;
+  gap: 10px;
   overflow: visible;
   padding-bottom: 56px;
   height: auto;
@@ -1389,12 +1389,12 @@ body {
   bottom: auto;
   left: auto;
   width: 100%;
-  height: clamp(120px, 18vh, 176px);
+  height: clamp(148px, 22vh, 220px);
   flex: 0 0 auto;
 }
 
 .hero.desk-hero #hero-textbox.is-desktop-type {
-  align-content: end;
+  align-content: start;
 }
 
 .desk-stage {
@@ -1404,6 +1404,7 @@ body {
   width: 100%;
   height: clamp(240px, 42vh, 580px);
   flex: 0 0 auto;
+  margin-top: 10px;
   overflow: visible;
   background: transparent;
 }
@@ -1442,15 +1443,17 @@ body {
     max-height: calc(100dvh - 112px);
     min-height: 0;
     padding-bottom: 48px;
+    gap: 10px;
   }
 
   .hero.desk-hero #hero-stage {
-    height: clamp(72px, 14vh, 120px);
+    height: clamp(88px, 16vh, 140px);
   }
 
   .desk-stage {
     width: 100%;
     height: clamp(220px, 38vh, 320px);
+    margin-top: 12px;
   }
 }
 
@@ -1591,7 +1594,7 @@ body {
   font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   font-weight: 600;
   font-variation-settings: "wght" 600;
-  color: #000000;
+  color: var(--cta, #2B2B2B);
   line-height: 1;
   pointer-events: none;
 }
@@ -1691,7 +1694,7 @@ body {
   width: 2px;
   height: 0.85em;
   margin-left: 4px;
-  background: #000000;
+  background: var(--cta, #2B2B2B);
   vertical-align: -0.06em;
   animation: hero-caret-blink 1s steps(1) infinite;
 }
@@ -1835,7 +1838,7 @@ body {
     width: 2px;
     height: 0.85em;
     margin-left: 4px;
-    background: #000000;
+    background: var(--cta, #2B2B2B);
     vertical-align: -0.06em;
     animation: hero-caret-blink 1s steps(1) infinite;
   }
@@ -6778,6 +6781,11 @@ body :where(
   blockquote
 ) {
   color: #000000;
+}
+
+#hero-typed,
+#hero-typed .hero-portfolio {
+  color: var(--cta, #2B2B2B);
 }
 
 .case-floating-nav .case-nav-link:not(.active) {
