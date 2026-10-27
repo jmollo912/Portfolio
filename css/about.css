@@ -119,7 +119,7 @@
 /* 5 — Hiking (left, middle) */
 .about-page .wall-pic-group-5 {
   --wall-width: 225px;
-  --wall-x: -150px;
+  --wall-x: -75px;
   --wall-y: 0px;
   --wall-rotate: -9deg;
   --hover-width: 180px;
