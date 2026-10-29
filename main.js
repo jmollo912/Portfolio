@@ -64,9 +64,15 @@ document.addEventListener('DOMContentLoaded', () => {
 // 1. CUSTOM CURSOR WITH DELAY
 // ==========================================
 
-/** Root-relative asset prefix: pages in /html/ use ../ ; site root (index) uses '' */
+/** Root-relative asset prefix: nested pages use ../ ; site root uses '' */
 function siteAssetPrefix() {
-  return window.location.pathname.includes('/html/') ? '../' : '';
+  const path = window.location.pathname.replace(/\/index\.html$/, '/');
+  if (path === '/' || path === '') return '';
+  return '../';
+}
+
+if (window.location.pathname === '/index.html') {
+  history.replaceState(null, '', '/' + window.location.search + window.location.hash);
 }
 
 // Handle hash navigation on page load (for cross-page links like Work from About page)
@@ -1966,7 +1972,9 @@ const mainFloatingNav = document.querySelector('.floating-nav');
 const mainNavMarker = mainFloatingNav?.querySelector('.nav-marker');
 const mainNavGroup = document.querySelector('.nav-group');
 const mainNavLabel = document.querySelector('.nav-active-label');
-const isAboutPage = window.location.pathname.includes('about.html');
+const isAboutPage = /(?:\/about\/?|about\.html)$/.test(
+  window.location.pathname.replace(/\/index\.html$/, '')
+);
 const isLabPage = window.location.pathname.includes('lab.html');
 const isSandboxPage = window.location.pathname.includes('sandbox.html');
 const isSandboxOrLabPage = isSandboxPage || isLabPage;
@@ -2385,8 +2393,8 @@ document.addEventListener('click', function(e) {
 document.addEventListener('click', function(e) {
   // Special handling for "Get to know me" button to animate nav before navigating
   const aboutCtaBtn = e.target.closest('.about-cta-btn');
-  if (aboutCtaBtn && aboutCtaBtn.getAttribute('href') === 'html/about.html') {
-    const aboutNavLink = document.querySelector('.floating-nav a[href="html/about.html"]');
+  if (aboutCtaBtn && (aboutCtaBtn.getAttribute('href') || '').includes('/about')) {
+    const aboutNavLink = document.querySelector('.floating-nav a[href="/about/"], .floating-nav a[href*="about"]');
     if (aboutNavLink) {
       e.preventDefault();
       e.stopPropagation();
@@ -2406,11 +2414,11 @@ document.addEventListener('click', function(e) {
     !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey
   ) {
     const href = crossLink.getAttribute('href') || '';
-    const toAbout = href.includes('about.html');
+    const toAbout = href.includes('/about') || href.includes('about.html');
     const toSandbox = href.includes('sandbox.html') || href.includes('lab.html');
     const toHomeFromStandalone =
       (isAboutPage || isSandboxOrLabPage) &&
-      (href.includes('index.html') || href === '../' || href === '/');
+      (href === '/' || href.startsWith('/#') || href.includes('index.html') || href === '../');
     if (toAbout || toSandbox || toHomeFromStandalone) {
       e.preventDefault();
       navigateWithNavHandoff(crossLink.href);
@@ -2971,7 +2979,7 @@ document.addEventListener('DOMContentLoaded', initCaseStudyMobileNav);
 function initCaseStudyNavTransition() {
   // Only run on index page
   const caseStudyLinks = document.querySelectorAll(
-    'a.case-card[href*="case-study"], a.work-card[href*="case-study"]'
+    'a.work-card[href^="/"], a.case-card[href^="/"]'
   );
   if (caseStudyLinks.length === 0) return;
 
