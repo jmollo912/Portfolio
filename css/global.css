@@ -898,8 +898,20 @@ body {
   z-index: 1;
 }
 
-.floating-nav a.nav-icon-link:hover .nav-icon-wrap {
-  transform: scale(1.2);
+.floating-nav a.nav-icon-link[data-nav-label="Home"]:hover .nav-icon-wrap {
+  transform: scale(1.4) rotate(-8deg);
+}
+
+.floating-nav a.nav-icon-link[data-nav-label="Work"]:hover .nav-icon-wrap {
+  transform: scale(1.4) rotate(6deg);
+}
+
+.floating-nav a.nav-icon-link[data-nav-label="Sandbox"]:hover .nav-icon-wrap {
+  transform: scale(1.4) rotate(-5deg);
+}
+
+.floating-nav a.nav-icon-link[data-nav-label="About"]:hover .nav-icon-wrap {
+  transform: scale(1.4) rotate(9deg);
 }
 
 .nav-icon-wrap {
@@ -6926,7 +6938,8 @@ body :where(
   }
 
   /* Floating nav icon hover — icon only, not marker pill */
-  .floating-nav a.nav-icon-link:hover .nav-icon-wrap {
+  .floating-nav a.nav-icon-link:hover .nav-icon-wrap,
+  .floating-nav a.nav-icon-link[data-nav-label]:hover .nav-icon-wrap {
     transform: none;
   }
 
